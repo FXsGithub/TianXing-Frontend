@@ -1,7 +1,43 @@
-# Vue 3 + Vite
+# 天行平台前端 V1.0
 
-This template should help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+## 技术栈
 
-## Recommended IDE Setup
+打包工具：Vite
 
-- [VS Code](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+前端框架：Vue
+
+组件库：Element Plus
+
+图表组件库：Echarts
+
+## 建议开发工具
+
+- [WebStorm](https://www.jetbrains.com/webstorm/)
+
+## 运行方式
+
+1.安装nodejs
+
+2.npm换淘宝源
+```shell
+npm config set registry https://registry.npm.taobao.org
+```
+
+3.运行命令
+
+```shell
+git clone https://github.com/FXsGithub/TianXing-Frontend
+cd TianXing-Frontend
+npm install 
+npm run dev
+```
+
+## 发布方式
+
+运行命令
+
+```shell
+npm run build
+```
+
+即可调用打包工具vite打包产生dist目录，dist目录内即为可部署的网站。
