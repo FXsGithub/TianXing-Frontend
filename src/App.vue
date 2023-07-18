@@ -1,29 +1,152 @@
 <script setup>
-import HelloWorld from './components/HelloWorld.vue'
+// import HelloWorld from './components/HelloWorld.vue'
 </script>
 
 <template>
-  <el-row class="mb-4">
-    <el-button>Default</el-button>
-    <el-button type="primary">Primary</el-button>
-    <el-button type="success">Success</el-button>
-    <el-button type="info">Info</el-button>
-    <el-button type="warning">Warning</el-button>
-    <el-button type="danger">Danger</el-button>
-  </el-row>
+  <div class="common-layout">
+    <el-container>
+      <el-header style="height: 60px;background: #888888">同济大学“天行”气象预测平台</el-header>
+      <el-container style="height: calc(100vh - 60px); background: aquamarine">
+        <el-aside width="200px" style="background: antiquewhite">Aside</el-aside>
+        <el-main style="padding: 0">
+          <el-scrollbar >
+          Main
+          MainMain
+          Main<br>Main
+          MainMain
+          Main<br>Main
+          MainMain
+          Main<br>Main
+          MainMain
+          Main<br>Main
+          MainMain
+          Main<br>Main
+          MainMain
+          Main<br>Main
+          MainMain
+          Main<br>Main
+          MainMain
+          Main<br>Main
+          MainMain
+          Main<br>Main
+          MainMain
+          Main<br>Main
+          MainMain
+          Main<br>Main
+          MainMain
+          Main<br>Main
+          MainMain
+          Main<br>Main
+          MainMain
+          Main<br>Main
+          MainMain
+          Main<br>Main
+          MainMain
+          Main<br>Main
+          MainMain
+          Main<br>Main
+          MainMain
+          Main<br>Main
+          MainMain
+          Main<br>Main
+          MainMain
+          Main<br>Main
+          MainMain
+          Main<br>Main
+          MainMain
+          Main<br>Main
+          MainMain
+          Main<br>Main
+          MainMain
+          Main<br>Main
+          MainMain
+          Main<br>Main
+          MainMain
+          Main<br>Main
+          MainMain
+          Main<br>Main
+          MainMain
+          Main<br>Main
+          MainMain
+          Main<br>Main
+          MainMain
+          Main<br>Main
+          MainMain
+          Main<br>Main
+          MainMain
+          Main<br>Main
+          MainMain
+          Main<br>Main
+          MainMain
+          Main<br>Main
+          MainMain
+          Main<br>Main
+          MainMain
+          Main<br>Main
+          MainMain
+          Main<br>Main
+          MainMain
+          Main<br>Main
+          MainMain
+          Main<br>Main
+          MainMain
+          Main<br>Main
+          MainMain
+          Main<br>Main
+          MainMain
+          Main<br>Main
+          MainMain
+          Main<br>Main
+          MainMain
+          Main<br>Main
+          MainMain
+          Main<br>Main
+          MainMain
+          Main<br>Main
+          MainMain
+          Main<br>Main
+          MainMain
+          Main<br>Main
+          MainMain
+          Main<br>Main
+          MainMain
+          Main<br>Main
+          MainMain
+          Main<br>Main
+          MainMain
+          Main<br>Main
+          MainMain
+          Main<br>Main
+          MainMain
+          Main<br>Main
+          MainMain
+          Main<br>Main
+          MainMain
+          Main<br>Main
+          MainMain
+          Main<br>
+          </el-scrollbar>
+        </el-main>
+      </el-container>
+    </el-container>
+
+  </div>
+
 </template>
 
 <style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
+.el-row {
+  margin-bottom: 20px;
 }
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
+.el-row:last-child {
+  margin-bottom: 0;
 }
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
+.el-col {
+  border-radius: 4px;
+}
+
+.grid-content {
+  border-radius: 4px;
+  min-height: 36px;
 }
 </style>
