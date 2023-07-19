@@ -9,6 +9,7 @@ import {
   Location,
   Setting,
 } from '@element-plus/icons-vue'
+
 const handleOpen = (key: string, keyPath: string[]) => {
   console.log(key, keyPath)
 }
@@ -18,72 +19,114 @@ const handleClose = (key: string, keyPath: string[]) => {
 </script>
 
 <template>
+  <el-scrollbar>
   <div class="common-layout">
     <el-container>
       <el-header class="header">
         <img src="./assets/logo.jpg" alt="logo"/>
         <img src="./assets/title.png" alt="logo"/>
       </el-header>
-      <el-container class="container">
-        <el-main style="padding: 0">
-          <el-scrollbar>
-            <el-row class="tac">
-              <el-col :span="4">
-                <el-menu
-                    default-active="2"
-                    class="el-menu-vertical-demo"
-                    @open="handleOpen"
-                    @close="handleClose"
-                >
-                  <el-sub-menu index="1">
-                    <template #title>
-                      <el-icon>
-                        <location/>
-                      </el-icon>
-                      <span>Navigator One</span>
-                    </template>
-                    <el-menu-item-group title="Group One">
-                      <el-menu-item index="1-1">item one</el-menu-item>
-                      <el-menu-item index="1-2">item two</el-menu-item>
-                    </el-menu-item-group>
-                    <el-menu-item-group title="Group Two">
-                      <el-menu-item index="1-3">item three</el-menu-item>
-                    </el-menu-item-group>
-                    <el-sub-menu index="1-4">
-                      <template #title>item four</template>
-                      <el-menu-item index="1-4-1">item one</el-menu-item>
-                    </el-sub-menu>
-                  </el-sub-menu>
-                  <el-menu-item index="2">
+
+      <el-main class="container" style="padding: 0">
+        <el-scrollbar>
+          <el-row class="tac">
+            <el-col :span="4">
+              <el-menu
+                  default-active="2"
+                  class="el-menu-vertical-demo"
+                  @open="handleOpen"
+                  @close="handleClose"
+              >
+                <el-menu-item index="0">
+                  <el-icon>
+                    <icon-menu/>
+                  </el-icon>
+                  首页
+                </el-menu-item>
+                <el-sub-menu index="1">
+                  <template #title>
                     <el-icon>
                       <icon-menu/>
                     </el-icon>
-                    <span>Navigator Two</span>
-                  </el-menu-item>
-                  <el-menu-item index="3" disabled>
-                    <el-icon>
-                      <document/>
-                    </el-icon>
-                    <span>Navigator Three</span>
-                  </el-menu-item>
-                  <el-menu-item index="4">
-                    <el-icon>
-                      <setting/>
-                    </el-icon>
-                    <span>Navigator Four</span>
-                  </el-menu-item>
-                </el-menu>
-              </el-col>
+                    <span>ENSO</span>
+                  </template>
 
-            </el-row>
-          </el-scrollbar>
-        </el-main>
-        <el-footer class="footer"><div>Copyright© 2023 同济大学软件学院智慧大气与智慧海洋实验室&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;互联网ICP备案：<a href="https://beian.miit.gov.cn/">鲁ICP备2023007740号-1</a>.</div></el-footer>
-      </el-container>
+                  <el-menu-item index="1-2">预测结果</el-menu-item>
+                  <el-menu-item index="1-3">预测检验</el-menu-item>
+
+
+                </el-sub-menu>
+                <el-menu-item index="2">
+                  <el-icon>
+                    <icon-menu/>
+                  </el-icon>
+                  <span>模态可视化</span>
+                </el-menu-item>
+
+                <el-sub-menu index="3">
+                  <template #title>
+                    <el-icon>
+                      <icon-menu/>
+                    </el-icon>
+                    <span>海冰</span>
+                  </template>
+
+                  <el-menu-item index="3-1">预测结果</el-menu-item>
+                  <el-menu-item index="3-2">预测检验</el-menu-item>
+
+
+                </el-sub-menu>
+
+                <el-sub-menu index="4">
+                  <template #title>
+                    <el-icon>
+                      <icon-menu/>
+                    </el-icon>
+                    <span>NAO</span>
+                  </template>
+
+                  <el-menu-item index="4-1">预测结果</el-menu-item>
+                  <el-menu-item index="4-2">预测检验</el-menu-item>
+
+
+                </el-sub-menu>
+
+                <el-sub-menu index="5">
+                  <template #title>
+                    <el-icon>
+                      <icon-menu/>
+                    </el-icon>
+                    <span>全体天气</span>
+                  </template>
+
+                  <el-menu-item index="5-1">预测结果</el-menu-item>
+                  <el-menu-item index="5-2">预测检验</el-menu-item>
+
+
+                </el-sub-menu>
+              </el-menu>
+            </el-col>
+            <el-col :span="20" class="content">
+              <div v-for="item in 80">{{ item }}</div>
+
+            </el-col>
+          </el-row>
+        </el-scrollbar>
+      </el-main>
+
+
+
+      <el-footer class="footer">
+        <div>Copyright© 2023
+          同济大学软件学院智慧大气与智慧海洋实验室&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;互联网ICP备案：<a
+              href="https://beian.miit.gov.cn/">鲁ICP备2023007740号-1</a>.
+        </div>
+      </el-footer>
+
     </el-container>
 
   </div>
-
+  </el-scrollbar>
 </template>
 
 <!--注意这个lang="scss"-->
@@ -104,15 +147,20 @@ const handleClose = (key: string, keyPath: string[]) => {
   box-shadow: 1px 0 18px rgba(51, 51, 51, .08)
 }
 
-.container{
-  height: calc(100vh - 64px);
+.container {
+  height: calc(100vh - 64px - 24px);
 }
 
-.footer{
-  div{
+.content {
+
+}
+
+.footer {
+  div {
     height: 24px;
     line-height: 24px;
   }
+
   height: 24px;
   box-shadow: 1px 0 18px rgba(51, 51, 51, .08);
   opacity: 80%;
