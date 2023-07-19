@@ -3,7 +3,7 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 // 在这里引入组件
-// import HelloWorld from './components/HelloWorld.vue'
+import MainPage from './components/MainPage.vue'
 import {
   Document,
   Menu as IconMenu,
@@ -67,7 +67,7 @@ const currentPage = ref("首页")
 
 
                 </el-sub-menu>
-                <el-menu-item index="2">
+                <el-menu-item index="模态可视化">
                   <el-icon>
                     <icon-menu/>
                   </el-icon>
@@ -118,7 +118,7 @@ const currentPage = ref("首页")
               </el-menu>
             </el-col>
             <el-col :span="20" class="page-content">
-              <div v-if="currentPage=='首页'">首页</div>
+              <div v-if="currentPage=='首页'"><main-page></main-page></div>
               <div v-if="currentPage=='ENSO预测结果'">ENSO预测结果</div>
               <div v-if="currentPage=='ENSO预测检验'">ENSO预测检验</div>
             </el-col>
