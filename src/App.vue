@@ -1,6 +1,7 @@
 <!--这个文件是首页，是网站的入口(root)-->
 
 <script lang="ts" setup>
+import { ref } from 'vue'
 // 在这里引入组件
 // import HelloWorld from './components/HelloWorld.vue'
 import {
@@ -16,6 +17,13 @@ const handleOpen = (key: string, keyPath: string[]) => {
 const handleClose = (key: string, keyPath: string[]) => {
   console.log(key, keyPath)
 }
+const handleSelect = (key: string, keyPath: string[]) => {
+  console.log(key, keyPath);
+  currentPage.value=key;
+}
+
+const currentPage = ref("首页")
+
 </script>
 
 <template>
@@ -38,14 +46,15 @@ const handleClose = (key: string, keyPath: string[]) => {
                   class="el-menu-vertical-demo"
                   @open="handleOpen"
                   @close="handleClose"
+                  @select="handleSelect"
               >
-                <el-menu-item index="0">
+                <el-menu-item index="首页">
                   <el-icon>
                     <icon-menu/>
                   </el-icon>
                   首页
                 </el-menu-item>
-                <el-sub-menu index="1">
+                <el-sub-menu index="ENSO">
                   <template #title>
                     <el-icon>
                       <icon-menu/>
@@ -53,8 +62,8 @@ const handleClose = (key: string, keyPath: string[]) => {
                     <span>ENSO</span>
                   </template>
 
-                  <el-menu-item index="1-2">预测结果</el-menu-item>
-                  <el-menu-item index="1-3">预测检验</el-menu-item>
+                  <el-menu-item index="ENSO预测结果">预测结果</el-menu-item>
+                  <el-menu-item index="ENSO预测检验">预测检验</el-menu-item>
 
 
                 </el-sub-menu>
@@ -109,8 +118,9 @@ const handleClose = (key: string, keyPath: string[]) => {
               </el-menu>
             </el-col>
             <el-col :span="20" class="page-content">
-              <div v-for="item in 80">{{ item }}</div>
-
+              <div v-if="currentPage=='首页'">首页</div>
+              <div v-if="currentPage=='ENSO预测结果'">ENSO预测结果</div>
+              <div v-if="currentPage=='ENSO预测检验'">ENSO预测检验</div>
             </el-col>
           </el-row>
         </el-scrollbar>
