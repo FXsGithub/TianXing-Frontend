@@ -23,11 +23,13 @@ const handleClose = (key: string, keyPath: string[]) => {
   <div class="common-layout">
     <el-container>
       <el-header class="header">
-        <img src="./assets/logo.jpg" alt="logo"/>
-        <img src="./assets/title.png" alt="logo"/>
+        <div>
+          <img src="./assets/logo.jpg" alt="logo"/>
+          <img src="./assets/title.png" alt="logo"/>
+        </div>
       </el-header>
 
-      <el-main class="container" style="padding: 0">
+      <el-main class="container" style="padding: 0;">
         <el-scrollbar>
           <el-row class="tac">
             <el-col :span="4">
@@ -106,15 +108,13 @@ const handleClose = (key: string, keyPath: string[]) => {
                 </el-sub-menu>
               </el-menu>
             </el-col>
-            <el-col :span="20" class="content">
+            <el-col :span="20" class="page-content">
               <div v-for="item in 80">{{ item }}</div>
 
             </el-col>
           </el-row>
         </el-scrollbar>
       </el-main>
-
-
 
       <el-footer class="footer">
         <div>Copyright© 2023
@@ -133,15 +133,20 @@ const handleClose = (key: string, keyPath: string[]) => {
 <style lang="scss" scoped>
 .header {
 
+  div{
+    width: 88vw;
+    min-width: 1000px;
+  }
   //将css代码统一写在一起，不要使用内联的形式, 右边这种写法非常不规范且难以维护 -> ( <div style="..."></div> )
   //下面这个css选择器，选择了header类元素内的img元素，这是sass语法，会被自动编译为css
   img {
     margin: 8px;
     height: 48px
   }
-
+  min-width: 1000px;
+  display: flex;
+  justify-content: center;
   z-index: 8000;
-  min-width: 800px;
   height: 64px;
   vertical-align: center;
   box-shadow: 1px 0 18px rgba(51, 51, 51, .08)
@@ -149,9 +154,11 @@ const handleClose = (key: string, keyPath: string[]) => {
 
 .container {
   height: calc(100vh - 64px - 24px);
+  display: flex;
+  justify-content: center;
 }
 
-.content {
+.page-content {
 
 }
 
@@ -166,5 +173,10 @@ const handleClose = (key: string, keyPath: string[]) => {
   opacity: 80%;
   font-size: small;
   text-align: center;
+}
+
+.tac{
+  width: 88vw;
+  min-width: 1000px;
 }
 </style>
