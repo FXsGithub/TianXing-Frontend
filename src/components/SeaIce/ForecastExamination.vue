@@ -5,9 +5,10 @@
 <template>
   <div class="pageContent">
     <h1>
-      ENSO预报结果
+      海冰预测检验
     </h1>
   </div>
+
 </template>
 
 <style scoped lang="scss">

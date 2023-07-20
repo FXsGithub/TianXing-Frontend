@@ -4,8 +4,10 @@
 import { ref } from 'vue'
 // 在这里引入组件
 import MainPage from './components/MainPage/MainPage.vue'
-import ForecastExamination from "./components/ENSO/ForecastExamination.vue";
-import ForecastResult from "./components/ENSO/ForecastResult.vue";
+import ENSOForecastExamination from "./components/ENSO/ForecastExamination.vue";
+import ENSOForecastResult from "./components/ENSO/ForecastResult.vue";
+import SeaIceForecastExamination from "./components/SeaIce/ForecastExamination.vue";
+import SeaIceForecastResult from "./components/SeaIce/ForecastResult.vue";
 import {
   Document,
   Menu as IconMenu,
@@ -69,12 +71,7 @@ const currentPage = ref("首页")
 
 
                 </el-sub-menu>
-                <el-menu-item index="模态可视化">
-                  <el-icon>
-                    <icon-menu/>
-                  </el-icon>
-                  <span>模态可视化</span>
-                </el-menu-item>
+
 
                 <el-sub-menu index="3">
                   <template #title>
@@ -84,11 +81,20 @@ const currentPage = ref("首页")
                     <span>海冰</span>
                   </template>
 
-                  <el-menu-item index="3-1">预测结果</el-menu-item>
-                  <el-menu-item index="3-2">预测检验</el-menu-item>
+                  <el-menu-item index="海冰预测结果">预测结果</el-menu-item>
+                  <el-menu-item index="海冰预测检验">预测检验</el-menu-item>
 
 
                 </el-sub-menu>
+
+                <el-menu-item index="模态可视化">
+                  <el-icon>
+                    <icon-menu/>
+                  </el-icon>
+                  <span>模态可视化</span>
+                </el-menu-item>
+
+
 
                 <el-sub-menu index="4">
                   <template #title>
@@ -121,8 +127,10 @@ const currentPage = ref("首页")
             </el-col>
             <el-col :span="20" class="page-content">
               <div v-if="currentPage=='首页'"><main-page></main-page></div>
-              <div v-if="currentPage=='ENSO预测结果'"><ForecastResult></ForecastResult></div>
-              <div v-if="currentPage=='ENSO预测检验'"><ForecastExamination></ForecastExamination></div>
+              <div v-if="currentPage=='ENSO预测结果'"><ENSOForecastResult></ENSOForecastResult></div>
+              <div v-if="currentPage=='ENSO预测检验'"><ENSOForecastExamination></ENSOForecastExamination></div>
+              <div v-if="currentPage=='海冰预测结果'"><SeaIceForecastResult></SeaIceForecastResult></div>
+              <div v-if="currentPage=='海冰预测检验'"><SeaIceForecastExamination></SeaIceForecastExamination></div>
             </el-col>
           </el-row>
         </el-scrollbar>
