@@ -3,7 +3,9 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 // 在这里引入组件
-import MainPage from './components/MainPage.vue'
+import MainPage from './components/MainPage/MainPage.vue'
+import ForecastExamination from "./components/ENSO/ForecastExamination.vue";
+import ForecastResult from "./components/ENSO/ForecastResult.vue";
 import {
   Document,
   Menu as IconMenu,
@@ -119,8 +121,8 @@ const currentPage = ref("首页")
             </el-col>
             <el-col :span="20" class="page-content">
               <div v-if="currentPage=='首页'"><main-page></main-page></div>
-              <div v-if="currentPage=='ENSO预测结果'">ENSO预测结果</div>
-              <div v-if="currentPage=='ENSO预测检验'">ENSO预测检验</div>
+              <div v-if="currentPage=='ENSO预测结果'"><ForecastResult></ForecastResult></div>
+              <div v-if="currentPage=='ENSO预测检验'"><ForecastExamination></ForecastExamination></div>
             </el-col>
           </el-row>
         </el-scrollbar>

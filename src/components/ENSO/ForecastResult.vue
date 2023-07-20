@@ -3,7 +3,7 @@
 </script>
 
 <template>
-  这是首页
+  预报结果
 </template>
 
 <style scoped lang="scss">
