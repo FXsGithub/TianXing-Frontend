@@ -1,9 +1,6 @@
 <script setup>
 
-import {onMounted} from "vue";
 import {ref} from "vue";
-import * as echarts from 'echarts';
-import {nextTick} from "vue";
 import VChart from 'vue-echarts'
 
 const currentDate = new Date();
@@ -20,10 +17,6 @@ const selectedMonth = ref('');
 
 selectedYear.value = year;
 selectedMonth.value = month;
-
-let myChart;
-let myChart2;
-let myChart3;
 
 
 const chartTitle = ref('')
