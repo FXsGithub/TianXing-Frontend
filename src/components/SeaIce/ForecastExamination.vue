@@ -4,8 +4,7 @@ import {onMounted} from "vue";
 import {ref} from "vue";
 import * as echarts from 'echarts';
 import {nextTick} from "vue";
-import { configProviderContextKey } from "element-plus";
-import VueECharts from 'vue-echarts'
+import VChart from 'vue-echarts'
 
 const currentDate = new Date();
 const year = currentDate.getFullYear() - 1 + '';
@@ -41,154 +40,141 @@ function updateChartTitle() {
   chartTitle2.value = `${selectedYear.value}年${selectedMonth.value}月~${Number(selectedYear.value) + 1 + ''}年${selectedMonth.value}月 预测结果误差折线图`;
   chartTitle3.value = `${selectedYear.value}年~${Number(selectedYear.value) + 1 + ''}年 SIC汇报结果误差箱型图`;
 
-  myChart.setOption({
-    title: {
+
+ option1.value.title= {
       text: chartTitle.value,
       left: 'center' //标题水平居中
-    },
-  });
+ }
 
-  myChart2.setOption({
-    title: {
+
+  option2.value.title= {
+
       text: chartTitle2.value,
       left: 'center' //标题水平居中
-    },
-  });
+    }
 
-  myChart3.setOption({
-    title: {
+
+  option3.value.title={
       text: chartTitle3.value,
       left: 'center' //标题水平居中
-    },
-  });
+    }
+
 }
 
 
+const option1=ref({
+  title: {
+    text: chartTitle.value,
+    left: 'center' //标题水平居中
+  },
+  tooltip: {},
+  xAxis: {
+    type: 'category',
+    name: '时间',
+    data: ['1月', '2月', '3月', '4月', '5月', '6月']
+  },
+  yAxis: {
+    type: 'value',
+    name: 'RMSE(%)',
+    data: [10, 12, 14, 16, 18]
+  },
+  legend: { //图例
+    data: ['ours', 'persistence'],
+    orient: 'horizontal',
+    left: 'center',
+    bottom: '5',
+  },
+  series: [
+    {
+      name: 'ours',
+      type: 'line',
+      data: [10, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+    },
+    {
+      name: 'persistence',
+      type: 'line',
+      data: [2, 2, 12, 2, 2, 2, 2, 2, 2, 2, 2, 2]
+    },
+
+  ]
+})
+
+const option2=ref({
+  title: {
+    text: chartTitle2.value,
+    left: 'center' //标题水平居中
+  },
+  tooltip: {},
+  xAxis: {
+    type: 'category',
+    name: '时间',
+    data: ['1月', '2月', '3月', '4月', '5月', '6月']
+  },
+  yAxis: {
+    type: 'value',
+    name: 'RMSE(%)',
+    data: [10, 12, 14, 16, 18]
+  },
+  legend: { //图例
+    data: ['ours', 'persistence'],
+    orient: 'horizontal',
+    left: 'center',
+    bottom: '5',
+  },
+  series: [
+    {
+      name: 'ours',
+      type: 'line',
+      data: [10, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+    },
+    {
+      name: 'persistence',
+      type: 'line',
+      data: [2, 2, 12, 2, 2, 2, 2, 2, 2, 2, 2, 2]
+    },
+
+  ]
+})
 
 
+const option3=ref({
+  title: {
+    text: chartTitle3.value,
+    left: 'center' //标题水平居中
+  },
+  tooltip: {},
+  xAxis: {
+    type: 'category',
+    name: '时间',
+    data: ['1月', '2月', '3月', '4月', '5月', '6月']
+  },
+  yAxis: {
+    type: 'value',
+    name: 'RMSE(%)',
+    data: [10, 12, 14, 16, 18]
+  },
+  legend: { //图例
+    data: ['ours', 'persistence'],
+    orient: 'horizontal',
+    left: 'center',
+    bottom: '5',
+  },
+  series: [
+    {
+      name: 'ours',
+      type: 'line',
+      data: [10, 10, 1, 1, 1, 1, 1, 10, 1, 1, 1, 1]
+    },
+    {
+      name: 'persistence',
+      type: 'line',
+      data: [2, 2, 12, 2, 2, 2, 12, 2, 2, 2, 2, 2]
+    },
 
+  ]
 
-onMounted(
-    ()=>{
-      nextTick(() => {
-        myChart = echarts.init(document.getElementById('SICChart'));
-        myChart.setOption({
-          title: {
-            text: chartTitle.value,
-            left: 'center' //标题水平居中
-          },
-          tooltip: {},
-          xAxis: {
-            type: 'category',
-            name: '时间',
-            data: ['1月', '2月', '3月', '4月', '5月', '6月']
-          },
-          yAxis: {
-            type: 'value',
-            name: 'RMSE(%)',
-            data: [10, 12, 14, 16, 18]
-          },
-          legend: { //图例
-            data: ['ours', 'persistence'],
-            orient: 'horizontal',
-            left: 'center',
-            bottom: '5',
-          },
-          series: [
-            {
-              name: 'ours',
-              type: 'line',
-              data: [10, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
-            },
-            {
-              name: 'persistence',
-              type: 'line',
-              data: [2, 2, 12, 2, 2, 2, 2, 2, 2, 2, 2, 2]
-            },
-            
-          ]
-        });
+})
 
-        myChart2 = echarts.init(document.getElementById('SICChart2'));
-        myChart2.setOption({
-          title: {
-            text: chartTitle2.value,
-            left: 'center' //标题水平居中
-          },
-          tooltip: {},
-          xAxis: {
-            type: 'category',
-            name: '时间',
-            data: ['1月', '2月', '3月', '4月', '5月', '6月']
-          },
-          yAxis: {
-            type: 'value',
-            name: 'RMSE(%)',
-            data: [10, 12, 14, 16, 18]
-          },
-          legend: { //图例
-            data: ['ours', 'persistence'],
-            orient: 'horizontal',
-            left: 'center',
-            bottom: '5',
-          },
-          series: [
-            {
-              name: 'ours',
-              type: 'line',
-              data: [10, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
-            },
-            {
-              name: 'persistence',
-              type: 'line',
-              data: [2, 2, 12, 2, 2, 2, 2, 2, 2, 2, 2, 2]
-            },
-            
-          ]
-        });
-
-        
-        myChart3 = echarts.init(document.getElementById('SICChart3'));
-        myChart3.setOption({
-          title: {
-            text: chartTitle3.value,
-            left: 'center' //标题水平居中
-          },
-          tooltip: {},
-          xAxis: {
-            type: 'category',
-            name: '时间',
-            data: ['1月', '2月', '3月', '4月', '5月', '6月']
-          },
-          yAxis: {
-            type: 'value',
-            name: 'RMSE(%)',
-            data: [10, 12, 14, 16, 18]
-          },
-          legend: { //图例
-            data: ['ours', 'persistence'],
-            orient: 'horizontal',
-            left: 'center',
-            bottom: '5',
-          },
-          series: [
-            {
-              name: 'ours',
-              type: 'line',
-              data: [10, 10, 1, 1, 1, 1, 1, 10, 1, 1, 1, 1]
-            },
-            {
-              name: 'persistence',
-              type: 'line',
-              data: [2, 2, 12, 2, 2, 2, 12, 2, 2, 2, 2, 2]
-            },
-            
-          ]
-          
-        });
-      })
-    }
-)
 
 
 
@@ -208,14 +194,20 @@ onMounted(
     </div>    
     <el-tabs type="border-card">
       <el-tab-pane label="SIC日预测误差">
-        <div class="chart" id="SICChart"></div>
-        <div class="chart2" id="SICChart2"></div>        
+        <div class="chart">
+          <v-chart :option="option1" autoresize></v-chart>
+        </div>
+        <div class="chart">
+          <v-chart :option="option2" autoresize></v-chart>
+        </div>
         <div class="description">
           {{ SICChartErroPrediction }}
         </div>
       </el-tab-pane>
       <el-tab-pane label="SIC误差统计">
-        <div class="chart3" id="SICChart3"></div>
+        <div class="chart">
+          <v-chart :option="option3" autoresize></v-chart>
+        </div>
         <div class="description">
           {{ SICChartErroAdd }}
         </div>
@@ -237,16 +229,8 @@ onMounted(
     height: 500px;
   }
 
-  .chart2 {
-    height: 500px;
-  }
-
-  .chart3 {
-    height: 500px;
-  }
-
   .description {
-    font-size: 16px,
+    font-size: 16px;
   }
 
   .datePickerContainer {
