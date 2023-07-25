@@ -1,12 +1,18 @@
-<script setup>
+<script setup xmlns="http://www.w3.org/1999/html">
 import VChart from 'vue-echarts';
 import {ref} from "vue";
 
 const option1 = ref({})
 const option2 = ref({})
 
+import axios  from "axios";
+
 function handleClick() {
-  option1.value.series[0].data[0].value = 100;
+  axios.get('/ice/prediction?year=2023')
+      .then(res => {
+        console.log(res.data)
+        option1.value = res.data
+      })
 }
 
 option2.value = {
@@ -113,8 +119,12 @@ option1.value = {
 
     <h1>Example</h1>
 
-    <el-button class="-button--example" @click="handleClick">点击使用Mock数据，模拟调用接口返回数据,并更新图表
+    <el-button type="danger" class="-button--example" @click="handleClick">点击使用Mock数据，模拟调用接口返回数据,并更新图表
     </el-button>
+
+    <p>
+      只要把useMock设为true，就可以使用mock数据，设为false就可以调用真实接口（需要设置axios的baseURL），mock模拟的接口定义在mock文件夹下的index.js中即可使用。上面这个按钮每点一次，就会调用一次mock接口，接口返回一些随机数据，然后更新图表。
+    </p>
 
     <el-tabs type="border-card">
       <el-tab-pane label="User">
