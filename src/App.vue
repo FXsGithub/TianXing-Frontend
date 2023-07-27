@@ -133,6 +133,9 @@ const currentPage = ref("首页")
               </el-menu>
             </el-col>
             <el-col :span="20" class="page-content">
+              <router-link to="/NAOForecastResult">NAO</router-link>
+              <router-link to="/NAOForecastExamination">NAO</router-link>
+              <router-view/>
               <div v-if="currentPage=='首页'"><main-page></main-page></div>
               <div v-if="currentPage=='ENSO预测结果'"><ENSOForecastResult></ENSOForecastResult></div>
               <div v-if="currentPage=='ENSO预测检验1'"><ENSOForecastExamination1></ENSOForecastExamination1></div>
