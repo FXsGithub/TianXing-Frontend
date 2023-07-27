@@ -1,10 +1,9 @@
 <script setup>
   import { ref,onMounted } from "vue";
+  import { reactive } from "vue";
   import * as echarts from "echarts";
   import { nextTick } from "vue";
   import { configProviderContextKey } from "element-plus";
-
-
   var app = {};
 
 var chartDom = document.getElementById('main');
@@ -15,6 +14,30 @@ let noise = getNoiseHelper();
 let xData = [];
 let yData = [];
 noise.seed(Math.random());
+const months = {
+  '01': '一月',
+  '02': '二月',
+  '03': '三月',
+  '04': '四月',
+  '05': '五月',
+  '06': '六月',
+  '07': '七月',
+  '08': '八月',
+  '09': '九月',
+  '10': '十月',
+  '11': '十一月',
+  '12': '十二月'
+}
+const chart1Data = reactive({
+  prediction: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  mean: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  upper: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  lower: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  description : ''
+});
+
+
+
   /* 时间选择器 -- begin */
   const currentDate = new Date();
   const year = currentDate.getFullYear() - 1 + '';
@@ -51,16 +74,55 @@ noise.seed(Math.random());
   chart1Title.value = `${start_year.value}年${start_month.value}月~${end_year.value}年${end_month.value}月 ENSO预测结果`
   chart2Title.value = `${start_year.value}年${start_month.value}月 SST集合平均预测结果`
 
-  function updateChartTitle() {
+  const updateChartTitle = async () => {
+  
     get_end_year();
     get_end_month();
     chart1Title.value = `${start_year.value}年${start_month.value}月~${end_year.value}年${end_month.value}月 ENSO预测结果`;
     chart2Title.value = `${start_year.value}年${start_month.value}月 SST集合平均预测结果`
+
+    try {
+    const requestData = {
+      year: selectedYear.value,
+      month: selectedMonth.value
+    };
+
+    // 测试数据
+chart1Data.prediction = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+chart1Data.mean = [12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1];
+    chart1Data.upper = [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2];
+    chart1Data.lower = [10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10];
+
     myChart1.setOption({
       title: {
         text: chart1Title.value,
         left: 'center' //标题水平居中
       },
+      xAxis: {
+        data: monthArray()
+      },
+      series: [
+        {
+          name: 'prediction',
+          type: 'line',
+          data: chart1Data.prediction
+        },
+        {
+          name: 'mean',
+          type: 'line',
+          data: chart1Data.mean
+        },
+        {
+          name: 'upper',
+          type: 'line',
+          data: chart1Data.upper
+        },
+        {
+          name: 'lower',
+          type: 'line',
+          data: chart1Data.lower
+        },
+      ]
     });
 
     myChart2.setOption({
@@ -70,6 +132,10 @@ noise.seed(Math.random());
       },
     });
   }
+ catch (error) {
+    console.error(error);
+  }
+}
   /* 时间选择器 -- end */
 
 
@@ -80,67 +146,48 @@ noise.seed(Math.random());
     nextTick(() => {
       let myChart1 = echarts.init(document.getElementById("chart1"));
       myChart1.setOption({
-        title: {
-          text: "Stacked Line",
-        },
-        tooltip: {
-          trigger: "axis",
-        },
-        legend: {
-          data: ["2022年2月", "2022年3月", "2022年2月", "Direct", "Search Engine"],
-        },
-        grid: {
-          left: "3%",
-          right: "4%",
-          bottom: "3%",
-          containLabel: true,
-        },
-        toolbox: {
-          feature: {
-            saveAsImage: {},
+          title: {
+            text: chartTitle.value,
+            left: 'center' //标题水平居中
           },
-        },
-        xAxis: {
-          type: "category",
-          boundaryGap: false,
-          data: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
-        },
-        yAxis: {
-          type: "value",
-        },
-        series: [
-          {
-            name: "2022年2月",
-            type: "line",
-            stack: "Total",
-            data: [120, 132, 101, 134, 90, 230, 210],
+          tooltip: {},
+          xAxis: {
+            type: 'category',
+            name: '时间',
+            data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月']
           },
-          {
-            name: "Union Ads",
-            type: "line",
-            stack: "Total",
-            data: [220, 182, 191, 234, 290, 330, 310],
+          yAxis: {
+            type: 'value',
           },
-          {
-            name: "Video Ads",
-            type: "line",
-            stack: "Total",
-            data: [150, 232, 201, 154, 190, 330, 410],
+          legend: { //图例
+            data: ['prediction', 'mean', 'upper', 'lower'],
+            orient: 'horizontal',
+            left: 'center',
+            bottom: '5',
           },
-          {
-            name: "Direct",
-            type: "line",
-            stack: "Total",
-            data: [320, 332, 301, 334, 390, 330, 320],
-          },
-          {
-            name: "Search Engine",
-            type: "line",
-            stack: "Total",
-            data: [820, 932, 901, 934, 1290, 1330, 1320],
-          },
-        ],
-      }); 
+          series: [
+            {
+              name: 'prediction',
+              type: 'line',
+              data: chart1Data.prediction
+            },
+            {
+              name: 'mean',
+              type: 'line',
+              data: chart1Data.mean
+            },
+            {
+              name: 'upper',
+              type: 'line',
+              data: chart1Data.upper
+            },
+            {
+              name: 'lower',
+              type: 'line',
+              data: chart1Data.lower
+            },
+          ]
+        });
       
   });
 
@@ -151,8 +198,8 @@ noise.seed(Math.random());
     nextTick(() => {
       let myChart2 = echarts.init(document.getElementById("chart2"));
     let data = generateData(2, -5, 5);
-option = {
-  tooltip: {},
+    myChart1.setOption({
+      tooltip: {},
   xAxis: {
     type: 'category',
     data: xData
@@ -197,7 +244,8 @@ option = {
       animation: false
     }
   ]
-};
+  
+})
     })
   })
     
@@ -349,11 +397,10 @@ function getNoiseHelper() {
         </el-tab-pane>
         <el-tab-pane label="模态预测">
           <el-button-group>
-            <el-button type="primary" icon="el-icon-arrow-left"></el-button>
+            <el-button type="primary" icon="el-icon-arrow-left" @click="month_subtraction"></el-button>
             <div class="chart" id="chart2"></div>
-            <el-button type="primary"><i class="el-icon-arrow-right el-icon--right"></i></el-button>
+            <el-button type="primary" @click="month_addtion"><i class="el-icon-arrow-right el-icon--right"></i></el-button>
           <p>测试内容</p>
-
 
           
           </el-button-group>
