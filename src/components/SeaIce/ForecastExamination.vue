@@ -37,6 +37,7 @@ const chartX = ref('')
 chartX.value = [`${selectedYear.value}/${selectedMonth.value}/`,`${selectedYear.value}/${selectedMonth.value}/`,`${selectedYear.value}/${selectedMonth.value}/`,
           `${selectedYear.value}/${selectedMonth.value}/`,`${selectedYear.value}/${selectedMonth.value}/`,`${selectedYear.value}/${selectedMonth.value}/`,
           `${selectedYear.value}/${selectedMonth.value}/`]
+//还缺axio的请求代码，这段不太会，想参考一下别人的
 
 
 function updateChartTitle() {
