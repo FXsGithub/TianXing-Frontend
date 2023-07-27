@@ -36,7 +36,7 @@ const currentPage = ref("首页")
     <el-container>
       <el-header class="header">
         <div>
-          <img src="./assets/logo.jpg" alt="logo"/>
+          <img src="./assets/logo.png" alt="logo"/>
           <img src="./assets/title.png" alt="logo"/>
         </div>
       </el-header>
@@ -153,6 +153,7 @@ const currentPage = ref("首页")
 <style lang="scss" scoped>
 .header {
 
+  background: rgb(246,248,250);
   div{
     width: 88vw;
     min-width: 1000px;
@@ -169,7 +170,7 @@ const currentPage = ref("首页")
   z-index: 8000;
   height: 64px;
   vertical-align: center;
-  box-shadow: 1px 0 18px rgba(51, 51, 51, .08)
+  box-shadow: 1px 0 18px rgba(51, 51, 51, .06)
 }
 
 .container {
@@ -189,7 +190,7 @@ const currentPage = ref("首页")
   }
 
   height: 24px;
-  box-shadow: 1px 0 18px rgba(51, 51, 51, .08);
+  box-shadow: 1px 0 18px rgba(51, 51, 51, .06);
   opacity: 80%;
   font-size: small;
   text-align: center;
