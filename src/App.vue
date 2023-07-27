@@ -9,6 +9,8 @@ import ENSOForecastExamination2 from "./components/ENSO/ForecastExamination2.vue
 import ENSOForecastResult from "./components/ENSO/ForecastResult.vue";
 import SeaIceForecastExamination from "./components/SeaIce/ForecastExamination.vue";
 import SeaIceForecastResult from "./components/SeaIce/ForecastResult.vue";
+import NAOForecastExamination from "./components/NAO/ForecastExamination.vue";
+import NAOForecastResult from "./components/NAO/ForecastResult.vue";
 import {
   Document,
   Menu as IconMenu,
@@ -68,8 +70,8 @@ const currentPage = ref("首页")
                   </template>
 
                   <el-menu-item index="ENSO预测结果">预测结果</el-menu-item>
-                  <el-menu-item index="ENSO预测检验2">预测检验1</el-menu-item>
-                  <el-menu-item index="ENSO预测检验1">预测检验2</el-menu-item>
+                  <el-menu-item index="ENSO预测检验1">预测检验1</el-menu-item>
+                  <el-menu-item index="ENSO预测检验2">预测检验2</el-menu-item>
 
 
                 </el-sub-menu>
@@ -89,6 +91,21 @@ const currentPage = ref("首页")
 
                 </el-sub-menu>
 
+                <el-sub-menu index="4">
+                  <template #title>
+                    <el-icon>
+                      <icon-menu/>
+                    </el-icon>
+                    <span>NAO</span>
+                  </template>
+
+                  <el-menu-item index="NAO预测结果">预测结果</el-menu-item>
+                  <el-menu-item index="NAO预测检验">预测检验</el-menu-item>
+
+
+                </el-sub-menu>
+
+
                 <el-menu-item index="模态可视化">
                   <el-icon>
                     <icon-menu/>
@@ -98,19 +115,7 @@ const currentPage = ref("首页")
 
 
 
-                <el-sub-menu index="4">
-                  <template #title>
-                    <el-icon>
-                      <icon-menu/>
-                    </el-icon>
-                    <span>NAO</span>
-                  </template>
 
-                  <el-menu-item index="4-1">预测结果</el-menu-item>
-                  <el-menu-item index="4-2">预测检验</el-menu-item>
-
-
-                </el-sub-menu>
 
                 <el-sub-menu index="5">
                   <template #title>
@@ -134,6 +139,8 @@ const currentPage = ref("首页")
               <div v-if="currentPage=='ENSO预测检验2'"><ENSOForecastExamination2></ENSOForecastExamination2></div>
               <div v-if="currentPage=='海冰预测结果'"><SeaIceForecastResult></SeaIceForecastResult></div>
               <div v-if="currentPage=='海冰预测检验'"><SeaIceForecastExamination></SeaIceForecastExamination></div>
+              <div v-if="currentPage=='NAO预测结果'"><NAOForecastResult></NAOForecastResult></div>
+              <div v-if="currentPage=='NAO预测检验'"><NAOForecastExamination></NAOForecastExamination></div>
             </el-col>
           </el-row>
         </el-scrollbar>
