@@ -1,17 +1,24 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 
+import Home from '../components/MainPage/MainPage.vue'
 import NAOForecastResult from '../components/NAO/ForecastResult.vue'
 import NAOForecastExamination from '../components/NAO/ForecastExamination.vue'
 
 const routes = [
+
+    {
+        path: '/',
+        name: 'Home',
+        component: Home
+    },
     {
         path: '/NAOForecastResult',
-        name: 'Home',
+        name: 'NAOForecastResult',
         component: NAOForecastResult
     },
     {
         path: '/NAOForecastExamination',
-        name: 'About',
+        name: '/NAOForecastExamination',
         component: NAOForecastExamination
     }
 ]
