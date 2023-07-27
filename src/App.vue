@@ -5,6 +5,7 @@ import { ref } from 'vue'
 // 在这里引入组件
 import MainPage from './components/MainPage/MainPage.vue'
 import ENSOForecastExamination1 from "./components/ENSO/ForecastExamination1.vue";
+import ENSOForecastExamination2 from "./components/ENSO/ForecastExamination2.vue";
 import ENSOForecastResult from "./components/ENSO/ForecastResult.vue";
 import SeaIceForecastExamination from "./components/SeaIce/ForecastExamination.vue";
 import SeaIceForecastResult from "./components/SeaIce/ForecastResult.vue";
@@ -130,6 +131,7 @@ const currentPage = ref("首页")
               <div v-if="currentPage=='首页'"><main-page></main-page></div>
               <div v-if="currentPage=='ENSO预测结果'"><ENSOForecastResult></ENSOForecastResult></div>
               <div v-if="currentPage=='ENSO预测检验1'"><ENSOForecastExamination1></ENSOForecastExamination1></div>
+              <div v-if="currentPage=='ENSO预测检验2'"><ENSOForecastExamination2></ENSOForecastExamination2></div>
               <div v-if="currentPage=='海冰预测结果'"><SeaIceForecastResult></SeaIceForecastResult></div>
               <div v-if="currentPage=='海冰预测检验'"><SeaIceForecastExamination></SeaIceForecastExamination></div>
             </el-col>
