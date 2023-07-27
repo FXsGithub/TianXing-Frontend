@@ -644,20 +644,7 @@ onMounted(() => {
     </div>
 
     <el-tabs type="border-card">
-      <el-tab-pane label="逐月比对">
-        <div class="chart1" id="chart_of_monthly_comparison" style="height: 400px;"></div>
-        <p class="text1">于2023年冬季发展为厄尔尼诺时间，Nino3.4指数峰值为1.19，随后逐渐减弱，与24年4月过渡为中性状态
-        </p>
-      </el-tab-pane>
-      <el-tab-pane label="预报误差">
-        <el-button-group id="arrow">
-          <el-button type="primary" :icon="ArrowLeft">Previous Page</el-button>
-          <el-button type="primary">
-            Next Page<el-icon class="el-icon--right"><ArrowRight /></el-icon>
-          </el-button>
-        </el-button-group>
-        <div class="chart2" id="chart_of_error_histogram" style="width: 1000px; height: 400px;"></div>
-      </el-tab-pane>
+
       <el-tab-pane label="误差分析">
         <div class="chart3" id="chart_of_error_analysis" style="width: 1000px;height: 400px;"></div>
         <p class="text3">{{Chart3_Description.text}}

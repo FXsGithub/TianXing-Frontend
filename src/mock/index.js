@@ -81,10 +81,11 @@ if (useMock) {
         ],
     })
 
-    Mock.mock('/enso/predictionExamination/errorCorr?year=2022&month=2','get',{
+    Mock.mock(/\/enso\/predictionExamination\/errorCorr\?year=[0-9]*&month=[0-9]*/,'get',{
         nino34_mean : '@float(0,1)',
     })
-    Mock.mock('/enso/predictionExamination/errorBox?year=2022&month=2', 'get',{
+
+    Mock.mock(/\/enso\/predictionExamination\/errorBox\?year=[0-9]*&month=[0-9]*/, 'get',{
         nino34_mean: {
             q1: 0.3,
             q3: 0.5,
