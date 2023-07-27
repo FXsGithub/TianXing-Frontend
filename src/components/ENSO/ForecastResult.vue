@@ -133,7 +133,7 @@ chart1Data.mean = [12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1];
     });
   }
  catch (error) {
-    console.error(error);
+    console.error (error);
   }
 }
   /* 时间选择器 -- end */
@@ -147,7 +147,7 @@ chart1Data.mean = [12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1];
       let myChart1 = echarts.init(document.getElementById("chart1"));
       myChart1.setOption({
           title: {
-            text: chartTitle.value,
+            text: chart1Title.value,
             left: 'center' //标题水平居中
           },
           tooltip: {},
@@ -198,8 +198,8 @@ chart1Data.mean = [12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1];
     nextTick(() => {
       let myChart2 = echarts.init(document.getElementById("chart2"));
     let data = generateData(2, -5, 5);
-    myChart1.setOption({
-      tooltip: {},
+option = {
+  tooltip: {},
   xAxis: {
     type: 'category',
     data: xData
@@ -244,8 +244,7 @@ chart1Data.mean = [12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1];
       animation: false
     }
   ]
-  
-})
+};
     })
   })
     
