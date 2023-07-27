@@ -47,7 +47,7 @@ const currentPage = ref("首页")
                     @close="handleClose"
                     @select="handleSelect"
                 >
-                  <el-menu-item index="首页">
+                  <el-menu-item index="">
                     <el-icon>
                       <icon-menu/>
                     </el-icon>
@@ -61,9 +61,9 @@ const currentPage = ref("首页")
                       <span>ENSO</span>
                     </template>
 
-                    <el-menu-item index="ENSO预测结果">预测结果</el-menu-item>
-                    <el-menu-item index="ENSO预测检验1">预测检验1</el-menu-item>
-                    <el-menu-item index="ENSO预测检验2">预测检验2</el-menu-item>
+                    <el-menu-item index="ENSOForecastResult">预测结果</el-menu-item>
+                    <el-menu-item index="ENSOForecastExamination1">预测检验1</el-menu-item>
+                    <el-menu-item index="ENSOForecastExamination2">预测检验2</el-menu-item>
 
 
                   </el-sub-menu>
@@ -77,8 +77,8 @@ const currentPage = ref("首页")
                       <span>海冰</span>
                     </template>
 
-                    <el-menu-item index="海冰预测结果">预测结果</el-menu-item>
-                    <el-menu-item index="海冰预测检验">预测检验</el-menu-item>
+                    <el-menu-item index="SeaIceForecastResult">预测结果</el-menu-item>
+                    <el-menu-item index="SeaIceForecastExamination">预测检验</el-menu-item>
 
 
                   </el-sub-menu>
