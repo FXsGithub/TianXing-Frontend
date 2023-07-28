@@ -13,6 +13,10 @@ const route = useRoute()
 
 const isNewsIndex = computed(() => route.path === '/news' || route.path === '/News' )
 
+for(let i in files){
+  console.log(Object.getOwnPropertyNames(files[i]))
+}
+
 </script>
 
 <template>

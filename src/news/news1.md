@@ -1,8 +1,6 @@
-# test page
+---
+title: "新闻标题1"
+date: "2023-08-01"
+---
 
-test content
-
-
-```shell
-git add --all
-```
+这里是新闻的内容1...

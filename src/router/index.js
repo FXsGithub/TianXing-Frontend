@@ -1,7 +1,8 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 
 // 在这里引入组件
-import MainPage from '../components/MainPage/MainPage.vue'
+import Home from '../components/MainPage/Home.vue'
+import Demo from '../components/MainPage/Demo.vue'
 import ENSOForecastExamination1 from "../components/ENSO/ForecastExamination1.vue";
 import ENSOForecastExamination2 from "../components/ENSO/ForecastExamination2.vue";
 import ENSOForecastResult from "../components/ENSO/ForecastResult.vue";
@@ -10,6 +11,7 @@ import SeaIceForecastResult from "../components/SeaIce/ForecastResult.vue";
 import NAOForecastExamination from "../components/NAO/ForecastExamination.vue";
 import NAOForecastResult from "../components/NAO/ForecastResult.vue";
 import News from '../components/About/News.vue'
+import Achievements from "../components/About/Achievement.vue";
 
 import {defineAsyncComponent} from "vue";
 
@@ -33,8 +35,13 @@ const routes = [
 
     {
         path: '/',
-        name: 'MainPage',
-        component: MainPage
+        name: 'Home',
+        component: Home
+    },
+    {
+        path: '/Demo',
+        name: 'Demo',
+        component: Demo
     },
     {
         path: '/ENSOForecastExamination1',
@@ -68,6 +75,11 @@ const routes = [
         path: '/NAOForecastExamination',
         name: '/NAOForecastExamination',
         component: NAOForecastExamination
+    },
+    {
+        path: '/Achievements',
+        name:'Achievements',
+        component: Achievements
     }
 ]
 
