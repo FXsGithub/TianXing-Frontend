@@ -4,6 +4,10 @@
 import {ref} from 'vue'
 
 import {
+  Notification,
+  Star,
+  DataAnalysis,
+  House,
   Document,
   Menu as IconMenu,
   Location,
@@ -47,16 +51,29 @@ const currentPage = ref("首页")
                     @close="handleClose"
                     @select="handleSelect"
                 >
+                  <el-divider content-position="left">关于我们</el-divider>
+
                   <el-menu-item index="">
-                    <el-icon>
-                      <icon-menu/>
-                    </el-icon>
+                    <el-icon><House /></el-icon>
                     首页
                   </el-menu-item>
+
+                  <el-menu-item index="information">
+                    <el-icon><Notification /></el-icon>
+                    信息发布
+                  </el-menu-item>
+
+                  <el-menu-item index="achievements">
+                    <el-icon><Star /></el-icon>
+                    成果展示
+                  </el-menu-item>
+
+                  <el-divider content-position="left">数据分析</el-divider>
+
                   <el-sub-menu index="ENSO">
                     <template #title>
                       <el-icon>
-                        <icon-menu/>
+                        <DataAnalysis/>
                       </el-icon>
                       <span>ENSO</span>
                     </template>
@@ -71,9 +88,7 @@ const currentPage = ref("首页")
 
                   <el-sub-menu index="3">
                     <template #title>
-                      <el-icon>
-                        <icon-menu/>
-                      </el-icon>
+                      <el-icon><DataAnalysis /></el-icon>
                       <span>海冰</span>
                     </template>
 
@@ -86,7 +101,7 @@ const currentPage = ref("首页")
                   <el-sub-menu index="4">
                     <template #title>
                       <el-icon>
-                        <icon-menu/>
+                        <DataAnalysis/>
                       </el-icon>
                       <span>NAO</span>
                     </template>
@@ -104,7 +119,7 @@ const currentPage = ref("首页")
 
                   <el-menu-item index="模态可视化">
                     <el-icon>
-                      <icon-menu/>
+                      <DataAnalysis/>
                     </el-icon>
                     <span>模态可视化</span>
                   </el-menu-item>
@@ -113,7 +128,7 @@ const currentPage = ref("首页")
                   <el-sub-menu index="5">
                     <template #title>
                       <el-icon>
-                        <icon-menu/>
+                        <DataAnalysis/>
                       </el-icon>
                       <span>全体天气</span>
                     </template>
