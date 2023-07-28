@@ -18,12 +18,15 @@ let newsComponents = []
 Object.keys(files).map(filePath => {
   // 你可能需要根据文件路径创建路由路径。这是一个简单的例子：
   console.log(filePath)
-  import(filePath).then((mdModule) => {
+  filePath = filePath.split('/').pop().split('.')[0]
+  console.log(filePath)
+
+  import(`../../news/${filePath}.md`).then((mdModule) => {
         console.log(mdModule.frontmatter)
       }
-  )
+  )}
 
-})
+)
 
 // console.log(newsComponents)
 
