@@ -105,6 +105,52 @@ if (useMock) {
         text:'此处的12副图分别为从2022年2月~2023年1月起报的预测结果、官方记录结果及二者绝对差值图（柱状）。',
         data:['@float(0,1)', '@float(0,1)', '@float(0,1)', '@float(0,1)', '@float(0,1)', '@float(0,1)', '@float(0,1)','@float(0,1)','@float(0,1)','@float(0,1)','@float(0,1)','@float(0,1)'],
     })
+
+    Mock.mock(/\/seaice\/predictionResult\/SIE\?year=\d{4}&month=\d{2}/, 'get', function (options) {
+        const url = options.url;
+        const params = new URLSearchParams(url.substring(url.indexOf('?')));
+        const year = params.get('year');
+        const month = params.get('month');
+
+        return {
+            description: 'SIE Mock描述',
+            prediction: generateData(),
+            mean: generateData(),
+            upper: generateData(),
+            lower: generateData(),
+        };
+
+        function generateData() {
+            const data = [];
+            for (let i = 0; i < 12; i++) {
+                data.push(Mock.Random.natural(1, 12));
+            }
+            return data;
+        }
+    });
+
+    Mock.mock(/\/seaice\/predictionResult\/SIC\?year=\d{4}&month=\d{2}&day=\d{2}/, 'get', function (options) {
+        const url = options.url;
+        const params = new URLSearchParams(url.substring(url.indexOf('?')));
+        const year = params.get('year');
+        const month = params.get('month');
+        const day = params.get('day');
+
+        return {
+            description: 'SIC Mock描述',
+            data: generateData(),
+        };
+
+        function generateData() {
+            const data = [];
+            for (let i = -100; i <= 100; i++) {
+                for (let j = -100; j <= 100; j++) {
+                    data.push([String(i), String(j), Mock.Random.float(0, 0.5, 6, 6)]);
+                }
+            }
+            return data;
+        }
+    });
 }
 
 export default Mock
