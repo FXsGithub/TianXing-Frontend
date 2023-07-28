@@ -71,15 +71,16 @@ const routes = [
     }
 ]
 
-let newsOption = {
+let rootNewsRoutes = {
     path: '/News',
     name: '/News',
     component: News,
 }
 
-newsOption.children = newsRoutes;
+rootNewsRoutes.children = newsRoutes;
 
-routes.push(newsOption)
+//动态添加路由，根据news文件夹下面的每一个页面创建路由，rootNewsRoutes是newsRoutes的father
+routes.push(rootNewsRoutes)
 
 
 const router = createRouter({
