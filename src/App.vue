@@ -58,7 +58,7 @@ const currentPage = ref("首页")
                     首页
                   </el-menu-item>
 
-                  <el-menu-item index="information">
+                  <el-menu-item index="News">
                     <el-icon><Notification /></el-icon>
                     信息发布
                   </el-menu-item>

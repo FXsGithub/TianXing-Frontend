@@ -9,6 +9,9 @@ import SeaIceForecastExamination from "../components/SeaIce/ForecastExamination.
 import SeaIceForecastResult from "../components/SeaIce/ForecastResult.vue";
 import NAOForecastExamination from "../components/NAO/ForecastExamination.vue";
 import NAOForecastResult from "../components/NAO/ForecastResult.vue";
+import News from '../components/About/News.vue'
+import News1 from  '../news/news1.md'
+import News2 from '../news/news2.md'
 
 const routes = [
 
@@ -49,6 +52,21 @@ const routes = [
         path: '/NAOForecastExamination',
         name: '/NAOForecastExamination',
         component: NAOForecastExamination
+    },
+    {
+        path: '/News',
+        name: '/News',
+        component: News,
+        children:[
+            {
+                path:'News1',
+                component : News1
+            },
+            {
+                path:'News2',
+                component : News2
+            }
+        ]
     }
 ]
 
