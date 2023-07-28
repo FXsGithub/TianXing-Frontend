@@ -19,11 +19,14 @@ const newsFiles = import.meta.glob('../news/*.md')
 const newsRoutes = Object.keys(newsFiles).map(filePath => {
     // 你可能需要根据文件路径创建路由路径。这是一个简单的例子：
     const path = `/news/${filePath.split('/').pop().replace('.md', '')}`
-    const component = newsFiles[filePath]
+
+    filePath = filePath.split('/').pop().split('.')[0]
+
+    console.log(filePath)
     // 返回一个路由对象。
     return {
         path,
-        component: defineAsyncComponent(() => component())
+        component: ()=>import(`../news/${filePath}.md`)
     }
 })
 
