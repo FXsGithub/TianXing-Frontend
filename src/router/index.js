@@ -10,8 +10,24 @@ import SeaIceForecastResult from "../components/SeaIce/ForecastResult.vue";
 import NAOForecastExamination from "../components/NAO/ForecastExamination.vue";
 import NAOForecastResult from "../components/NAO/ForecastResult.vue";
 import News from '../components/About/News.vue'
-import News1 from  '../news/news1.md'
-import News2 from '../news/news2.md'
+
+import {defineAsyncComponent} from "vue";
+
+const newsFiles = import.meta.glob('../news/*.md')
+const newsRoutes = Object.keys(newsFiles).map(filePath => {
+    // 你可能需要根据文件路径创建路由路径。这是一个简单的例子：
+    const path = `/news/${filePath.split('/').pop().replace('.md', '')}`
+
+    // 每个值是一个返回模块的 promise，你可以通过调用这个函数来获取模块。
+    const component = newsFiles[filePath]
+
+    // 返回一个路由对象。
+    return {
+        path,
+        component: defineAsyncComponent(() => component())
+    }
+})
+
 
 const routes = [
 
@@ -52,23 +68,19 @@ const routes = [
         path: '/NAOForecastExamination',
         name: '/NAOForecastExamination',
         component: NAOForecastExamination
-    },
-    {
-        path: '/News',
-        name: '/News',
-        component: News,
-        children:[
-            {
-                path:'News1',
-                component : News1
-            },
-            {
-                path:'News2',
-                component : News2
-            }
-        ]
     }
 ]
+
+let newsOption = {
+    path: '/News',
+    name: '/News',
+    component: News,
+}
+
+newsOption.children = newsRoutes;
+
+routes.push(newsOption)
+
 
 const router = createRouter({
     history:createWebHashHistory(),
