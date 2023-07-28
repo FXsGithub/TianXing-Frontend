@@ -19,10 +19,7 @@ const newsFiles = import.meta.glob('../news/*.md')
 const newsRoutes = Object.keys(newsFiles).map(filePath => {
     // 你可能需要根据文件路径创建路由路径。这是一个简单的例子：
     const path = `/news/${filePath.split('/').pop().replace('.md', '')}`
-
-    // 每个值是一个返回模块的 promise，你可以通过调用这个函数来获取模块。
     const component = newsFiles[filePath]
-
     // 返回一个路由对象。
     return {
         path,
@@ -98,6 +95,12 @@ routes.push(rootNewsRoutes)
 const router = createRouter({
     history:createWebHashHistory(),
     routes
+})
+
+router.onError((error, to) => {
+    if (error.message.includes('Failed to fetch dynamically imported module')) {
+        window.location = to.fullPath
+    }
 })
 
 export default router

@@ -6,16 +6,26 @@ let newsFiles = Object.keys(files).map(filePath => {
   return filePath.split('/').pop().replace('.md', '')
 })
 
-import { computed } from 'vue'
-import { useRoute } from 'vue-router'
+import {computed, defineAsyncComponent} from 'vue'
+import {useRoute} from 'vue-router'
 
 const route = useRoute()
 
-const isNewsIndex = computed(() => route.path === '/news' || route.path === '/News' )
+const isNewsIndex = computed(() => route.path === '/news' || route.path === '/News')
 
-for(let i in files){
-  console.log(Object.getOwnPropertyNames(files[i]))
-}
+let newsComponents = []
+
+Object.keys(files).map(filePath => {
+  // 你可能需要根据文件路径创建路由路径。这是一个简单的例子：
+  console.log(filePath)
+  import(filePath).then((mdModule) => {
+        console.log(mdModule.frontmatter)
+      }
+  )
+
+})
+
+// console.log(newsComponents)
 
 </script>
 
@@ -23,7 +33,7 @@ for(let i in files){
   <div class="pageContent">
 
     <div v-if="isNewsIndex">
-      <h1 >信息发布</h1>
+      <h1>信息发布</h1>
 
       <li v-for="file in newsFiles" :key="file">
         <router-link :to="`/news/${file}`">{{ file }}</router-link>
