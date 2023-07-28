@@ -6,28 +6,31 @@ let newsFiles = Object.keys(files).map(filePath => {
   return filePath.split('/').pop().replace('.md', '')
 })
 
-import {computed, defineAsyncComponent} from 'vue'
+import {computed, defineAsyncComponent, ref} from 'vue'
 import {useRoute} from 'vue-router'
 
 const route = useRoute()
 
 const isNewsIndex = computed(() => route.path === '/news' || route.path === '/News')
 
-let newsComponents = []
+const newsComponents = ref([])
+Promise.all(
+    Object.keys(files).map(filePath => {
+      filePath = filePath.split('/').pop().split('.')[0]
 
-Object.keys(files).map(filePath => {
-  // 你可能需要根据文件路径创建路由路径。这是一个简单的例子：
+      return import(`../../news/${filePath}.md`).then((mdModule) => {
+        mdModule.frontmatter.fileName = filePath
+        newsComponents.value.push(mdModule.frontmatter)
+      })
+    })
+).then(() => {
+  // 按日期从新到旧排序
+  newsComponents.value.sort((a, b) => {
+    return new Date(b.date) - new Date(a.date)
+  })
 
-  filePath = filePath.split('/').pop().split('.')[0]
-
-  import(`../../news/${filePath}.md`).then((mdModule) => {
-        console.log(mdModule.frontmatter)
-      }
-  )}
-
-)
-
-// console.log(newsComponents)
+  // console.log(newsComponents.value[0]) // Now this should print the most recent news
+})
 
 </script>
 
@@ -37,9 +40,10 @@ Object.keys(files).map(filePath => {
     <div v-if="isNewsIndex">
       <h1>信息发布</h1>
 
-      <li v-for="file in newsFiles" :key="file">
-        <router-link :to="`/news/${file}`">{{ file }}</router-link>
+      <li v-for="file in newsComponents">
+        <router-link :to="`/news/${file.fileName}`">{{ file.title }} &nbsp&nbsp {{ file.date }}</router-link>
       </li>
+
     </div>
 
     <router-view></router-view>

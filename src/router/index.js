@@ -22,7 +22,6 @@ const newsRoutes = Object.keys(newsFiles).map(filePath => {
 
     filePath = filePath.split('/').pop().split('.')[0]
 
-    console.log(filePath)
     // 返回一个路由对象。
     return {
         path,
