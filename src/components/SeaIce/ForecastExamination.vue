@@ -2,6 +2,7 @@
 
 import { ref} from "vue";
 import VChart from 'vue-echarts'
+import axios from 'axios';
 
 const currentDate = new Date();
 const year = currentDate.getFullYear() - 1 + '';
@@ -21,6 +22,8 @@ selectedYear.value = year;
 selectedMonth.value = month;
 
 
+
+
 const chartTitle = ref('')
 chartTitle.value = `${selectedYear.value}年${selectedMonth.value}月~${Number(selectedYear.value) + 1 + ''}年${selectedMonth.value}月 预测结果误差折线图`
 
@@ -33,11 +36,25 @@ chartTitle3.value = `2022年SIC回报结果误差箱型图`
 const chartTitle4 = ref('')
 chartTitle4.value = `SIE预测误差分析`
 
+const option1 = ref({})
+const option2 = ref({})
+const option3 = ref({})
+const option4 = ref({})
+const option5 = ref({})
+const option6 = ref({})
+const option7 = ref({})
+
+
 const chartX = ref('')
-chartX.value = [`${selectedYear.value}/${selectedMonth.value}/`,`${selectedYear.value}/${selectedMonth.value}/`,`${selectedYear.value}/${selectedMonth.value}/`,
-          `${selectedYear.value}/${selectedMonth.value}/`,`${selectedYear.value}/${selectedMonth.value}/`,`${selectedYear.value}/${selectedMonth.value}/`,
-          `${selectedYear.value}/${selectedMonth.value}/`]
-//还缺axio的请求代码，这段不太会，想参考一下别人的
+chartX.value = [`${selectedYear.value}/${selectedMonth.value}/1`,`${selectedYear.value}/${selectedMonth.value}/2`,`${selectedYear.value}/${selectedMonth.value}/3`,
+          `${selectedYear.value}/${selectedMonth.value}/4`,`${selectedYear.value}/${selectedMonth.value}/5`,`${selectedYear.value}/${selectedMonth.value}/6`,
+          `${selectedYear.value}/${selectedMonth.value}/7`,`${selectedYear.value}/${selectedMonth.value}/8`,`${selectedYear.value}/${selectedMonth.value}/9`,
+          `${selectedYear.value}/${selectedMonth.value}/10`,`${selectedYear.value}/${selectedMonth.value}/11`,`${selectedYear.value}/${selectedMonth.value}/12`,
+          `${selectedYear.value}/${selectedMonth.value}/13`,`${selectedYear.value}/${selectedMonth.value}/14`,`${selectedYear.value}/${selectedMonth.value}/15`,
+          `${selectedYear.value}/${selectedMonth.value}/16`,`${selectedYear.value}/${selectedMonth.value}/17`,`${selectedYear.value}/${selectedMonth.value}/18`,
+          `${selectedYear.value}/${selectedMonth.value}/19`,`${selectedYear.value}/${selectedMonth.value}/20`,`${selectedYear.value}/${selectedMonth.value}/21`,
+          `${selectedYear.value}/${selectedMonth.value}/22`,`${selectedYear.value}/${selectedMonth.value}/23`,`${selectedYear.value}/${selectedMonth.value}/24`,
+          `${selectedYear.value}/${selectedMonth.value}/25`,`${selectedYear.value}/${selectedMonth.value}/26`,`${selectedYear.value}/${selectedMonth.value}/27`,]
 
 
 function updateChartTitle() {
@@ -45,9 +62,15 @@ function updateChartTitle() {
   // chartTitle2.value = `${selectedYear.value}年${selectedMonth.value}月~${Number(selectedYear.value) + 1 + ''}年${selectedMonth.value}月 预测结果误差折线图`;
   chartTitle3.value = `2022年SIC回报结果误差箱型图`;
   chartTitle4.value = `SIE预测误差分析`;
-  chartX.value = [`${selectedYear.value}/${selectedMonth.value}/`,`${selectedYear.value}/${selectedMonth.value}/`,`${selectedYear.value}/${selectedMonth.value}/`,
-          `${selectedYear.value}/${selectedMonth.value}/`,`${selectedYear.value}/${selectedMonth.value}/`,`${selectedYear.value}/${selectedMonth.value}/`,
-          `${selectedYear.value}/${selectedMonth.value}/`]
+  chartX.value = [`${selectedYear.value}/${selectedMonth.value}/1`,`${selectedYear.value}/${selectedMonth.value}/2`,`${selectedYear.value}/${selectedMonth.value}/3`,
+          `${selectedYear.value}/${selectedMonth.value}/4`,`${selectedYear.value}/${selectedMonth.value}/5`,`${selectedYear.value}/${selectedMonth.value}/6`,
+          `${selectedYear.value}/${selectedMonth.value}/7`,`${selectedYear.value}/${selectedMonth.value}/8`,`${selectedYear.value}/${selectedMonth.value}/9`,
+          `${selectedYear.value}/${selectedMonth.value}/10`,`${selectedYear.value}/${selectedMonth.value}/11`,`${selectedYear.value}/${selectedMonth.value}/12`,
+          `${selectedYear.value}/${selectedMonth.value}/13`,`${selectedYear.value}/${selectedMonth.value}/14`,`${selectedYear.value}/${selectedMonth.value}/15`,
+          `${selectedYear.value}/${selectedMonth.value}/16`,`${selectedYear.value}/${selectedMonth.value}/17`,`${selectedYear.value}/${selectedMonth.value}/18`,
+          `${selectedYear.value}/${selectedMonth.value}/19`,`${selectedYear.value}/${selectedMonth.value}/20`,`${selectedYear.value}/${selectedMonth.value}/21`,
+          `${selectedYear.value}/${selectedMonth.value}/22`,`${selectedYear.value}/${selectedMonth.value}/23`,`${selectedYear.value}/${selectedMonth.value}/24`,
+          `${selectedYear.value}/${selectedMonth.value}/25`,`${selectedYear.value}/${selectedMonth.value}/26`,`${selectedYear.value}/${selectedMonth.value}/27`,]
 
  option1.value.title= {
       text: chartTitle.value,
@@ -55,6 +78,10 @@ function updateChartTitle() {
  }
 
  option1.value.xAxis= {
+        data: chartX.value
+ }
+
+ option2.value.xAxis= {
         data: chartX.value
  }
 
@@ -81,16 +108,16 @@ function updateChartTitle() {
 
 }
 
-// watchEffect(() => {
-//     // const months = ['1月', '2月', '3月', '4月', '5月', '6月'];
-//     // const startMonth = Number(selectedMonth.value);
-//     const xAxisData = Number(selectedMonth.value);
-//     option1.value.xAxis.data = xAxisData;
-//     option2.value.xAxis.data = xAxisData;
-//   });
+// axios.get('http://mockjs.xiaoyaoji.cn/mock/20OIzKbo31s/seaice/errorBox')   //使用mock测试时使用此行，否则改为上行
+
+axios.get('/mock/20OIzKbo31s/seaice/error')
+      .then(res => {
+        console.log(res.data)
+        option1.value = res.data
+      })
 
 
-const option1=ref({
+option1.value={
   title: {
     text: chartTitle.value,
     left: 'center' //标题水平居中
@@ -116,18 +143,29 @@ const option1=ref({
     {
       name: 'ours',
       type: 'line',
-      data: [10, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+      data: [10, 1, 1, 1, 1, 1, 1, 1, 1,
+              1, 1, 1,10,12,14,16,18,10,
+              1, 1, 1, 1, 1, 1, 1, 1, 1]
+              
     },
     {
       name: 'persistence',
       type: 'line',
-      data: [2, 2, 12, 2, 2, 2, 2, 2, 2, 2, 2, 2]
+      data: [2, 2, 12, 2, 2, 2, 2, 2, 2, 
+              1, 1, 1,10,12,14,16,18,10,
+              1, 1, 1, 1, 1, 1, 1, 10, 1]
     },
 
   ]
-})
+}
 
-const option2=ref({
+axios.get('/mock/20OIzKbo31s/seaice/error')
+      .then(res => {
+        console.log(res.data)
+        option2.value = res.data
+      })
+
+option2.value={
   // title: {
   //   text: chartTitle2.value,
   //   left: 'center' //标题水平居中
@@ -153,19 +191,30 @@ const option2=ref({
     {
       name: 'ours',
       type: 'line',
-      data: [10, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+      data: [2, 2, 12, 2, 2, 2, 2, 2, 2, 
+              1, 1, 1,10,12,14,16,18,10,
+              1, 1, 1, 1, 1, 1, 1, 10, 1]
     },
     {
       name: 'persistence',
       type: 'line',
-      data: [2, 2, 12, 2, 2, 2, 2, 2, 2, 2, 2, 2]
+      data: [10, 1, 1, 1, 1, 1, 1, 1, 1,
+              1, 1, 1,10,12,14,16,18,10,
+              1, 1, 1, 1, 1, 1, 1, 1, 1]
     },
 
   ]
-})
+}
 
 
-const option3=ref({
+axios.get('/mock/20OIzKbo31s/seaice/errorBox')
+      .then(res => {
+        console.log(res.data)
+        option3.value = res.data
+      })
+
+
+option3.value={
   title: {
     text: chartTitle3.value,
     left: 'center' //标题水平居中
@@ -183,7 +232,7 @@ const option3=ref({
   },
   series: [
     {
-      name: 'MITgcm output（without DA）',
+      name: 'withoutDA_withoutBC',
       type: 'candlestick',
       data: [
         [5, 15, 10, 20],
@@ -196,7 +245,7 @@ const option3=ref({
       ]
     },
     {
-      name: 'MITgcm output（without DA）with BC',
+      name: 'withoutDA_withBC_RMSE',
       type: 'candlestick',
       data: [
         [15, 9, 10, 20],
@@ -209,7 +258,7 @@ const option3=ref({
       ]
     },
     {
-      name: 'MITgcm output（with DA）',
+      name: 'withDA_withoutBC_RMSE',
       type: 'candlestick',
       data: [
         [5, 5, 10, 20],
@@ -222,7 +271,7 @@ const option3=ref({
       ]
     },
     {
-      name: 'MITgcm output（with DA）with BC',
+      name: 'MITgcm(with DA)withBC_RMSE',
       type: 'candlestick',
       data: [
         [15, 15, 10, 20],
@@ -236,9 +285,16 @@ const option3=ref({
     }
   ]
 
-})
+}
 
-const option4=ref({
+axios.get('/mock/20OIzKbo31s/seaice/predictionExamination/errorAnalysis')
+      .then(res => {
+        console.log(res.data)
+        option4.value = res.data
+      })
+
+
+option4.value={
   title: {
     text: chartTitle4.value,
     left: 'center' //标题水平居中
@@ -247,7 +303,9 @@ const option4=ref({
   xAxis: {
     type: 'category',
     // name: '时间',
-    data: ['','','2020','','','', '2021','','','', '2022','']
+    data: ['2020 spring','2020 summer','2020 fall','2020 winter',
+           '2021 spring','2021 summer', '2021 fall','2021 winter',
+           '2022 spring','2022 summer', '2022 fall','2022 winter']
   },
   yAxis: {
     type: 'value',
@@ -267,9 +325,16 @@ const option4=ref({
       data: [0, 0.2, 0.1, 0.8, 0.3, 0.2, 0.1, 0.1, 0.6, 0.5, 0.1, 1.1,1.7]
     }    
   ]
-})
+}
 
-const option5=ref({
+axios.get('/mock/20OIzKbo31s/seaice/predictionExamination/errorAnalysis')
+      .then(res => {
+        console.log(res.data)
+        option5.value = res.data
+      })
+
+
+option5.value={
   title: {
     // text: chartTitle4.value,
     left: 'center' //标题水平居中
@@ -278,7 +343,9 @@ const option5=ref({
   xAxis: {
     type: 'category',
     // name: '时间',
-    data: ['','','2020','','','', '2021','','','', '2022','']
+    data: ['2020 spring','2020 summer','2020 fall','2020 winter',
+           '2021 spring','2021 summer', '2021 fall','2021 winter',
+           '2022 spring','2022 summer', '2022 fall','2022 winter']
   },
   yAxis: {
     type: 'value',
@@ -304,10 +371,15 @@ const option5=ref({
     },
 
   ]
-})
+}
 
+axios.get('/mock/20OIzKbo31s/seaice/predictionExamination/errorAnalysis')
+      .then(res => {
+        console.log(res.data)
+        option6.value = res.data
+      })
 
-const option6=ref({
+option6.value={
   title: {
     // text: chartTitle4.value,
     left: 'center' //标题水平居中
@@ -316,7 +388,9 @@ const option6=ref({
   xAxis: {
     type: 'category',
     // name: '时间',
-    data: ['','','2020','','','', '2021','','','', '2022','']
+    data: ['2020 spring','2020 summer','2020 fall','2020 winter',
+           '2021 spring','2021 summer', '2021 fall','2021 winter',
+           '2022 spring','2022 summer', '2022 fall','2022 winter']
   },
   yAxis: {
     type: 'value',
@@ -336,9 +410,15 @@ const option6=ref({
       data: [0.970, 0.985, 0.990, 0.978, 0.980, 0.995, 1.000, 0.975, 0.990, 1.000, 0.990, 1.000,0.976]
     }    
   ]
-})
+}
 
-const option7=ref({
+axios.get('/mock/20OIzKbo31s/seaice/predictionExamination/errorAnalysis')
+      .then(res => {
+        console.log(res.data)
+        option7.value = res.data
+      })
+
+option7.value={
   title: {
     // text: chartTitle4.value,
     left: 'center' //标题水平居中
@@ -347,7 +427,9 @@ const option7=ref({
   xAxis: {
     type: 'category',
     // name: '时间',
-    data: ['','','2020','','','', '2021','','','', '2022','']
+    data:['2020 spring','2020 summer','2020 fall','2020 winter',
+           '2021 spring','2021 summer', '2021 fall','2021 winter',
+           '2022 spring','2022 summer', '2022 fall','2022 winter']
   },
   yAxis: {
     type: 'value',
@@ -372,7 +454,7 @@ const option7=ref({
       data: [0.5, 0.95, 0.99, 1.5, 1.6, 2.2, 0.3, 2.2, 3.5, 3.5, 2.2, 1.0,1.5]
     }       
   ]
-})
+}
 
 
 
