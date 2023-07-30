@@ -31,11 +31,9 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 1000px;
     height: 400px;
   }
   .text{
-    width: 1000px;
     font-weight:400;
     font-size:120%;
     text-align: justify;
