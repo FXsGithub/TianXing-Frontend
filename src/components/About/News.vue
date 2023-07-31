@@ -36,15 +36,19 @@ Promise.all(
 
 <template>
   <div class="pageContent News">
-
     <div v-if="isNewsIndex">
       <h1>信息发布</h1>
-
+      <el-card class="box-card">
       <li v-for="file in newsComponents" class="list-item">
-
-        <router-link :to="`/news/${file.fileName}`"><span class="title">{{ file.title }}</span> &nbsp; <span class="date">{{ file.date }}</span></router-link>
+        <img :src="file.image"  class="image"/>
+        <router-link :to="`/news/${file.fileName}`">
+          <span class="date" >{{ file.date }}</span>
+          <span class="title">{{ file.title }}</span> &nbsp;
+        </router-link>
         <hr class="horizontal-line" />
       </li>
+      </el-card>
+      
 
     </div>
 
@@ -60,6 +64,29 @@ a {
 .list-item {
   list-style-type: none; /* 去除默认的圆点样式 */
   padding-left: 1em; /* 添加左边距，以模拟圆点位置 */
+  height: 120px;
+  position: relative;
+}
+
+/*新闻列表图片*/
+.image {
+  width: 120px;
+  height: 80px;
+  position: absolute;
+  left: 30px;
+  top: 10px;
+  }
+
+  /* 自定义标题的样式 */
+.title {
+  font-size: 18px; /* 设置标题的字体大小 */
+  font-weight: bold; /* 设置标题的字体粗细为加粗 */
+  color: #1b1b1b; /* 设置标题的文字颜色 */
+  /* 添加其他样式，根据需要调整 */
+  position: absolute;
+  bottom:0px;
+  left:30px;
+  z-index:1;
 }
 
 /* 设置圆点颜色为淡灰色 */
@@ -67,26 +94,44 @@ a {
   content: "•"; /* 使用伪元素添加圆点 */
   color: #999; /* 设置圆点颜色为淡灰色 */
   margin-right: 0.5em; /* 调整圆点与文字之间的间距 */
-}
+  position: absolute;
+  bottom:0px;
 
-/* 自定义标题的样式 */
-.title {
-  font-size: 16px; /* 设置标题的字体大小 */
-  font-weight: bold; /* 设置标题的字体粗细为加粗 */
-  color: #333; /* 设置标题的文字颜色 */
-  /* 添加其他样式，根据需要调整 */
 }
 
 /* 自定义日期的样式 */
 .date {
   font-size: 16px; /* 设置日期的字体大小 */
   color: #666; /* 设置日期的文字颜色 */
+  float:right;/* 设置日期的文字右对齐 */
+  position: absolute;
+  left:680px;
+  bottom:0px;
+  
+
 }
 
 .horizontal-line {
-  border: none; /* 去除默认的边框样式 */
+  border-top-style:dashed;/*虚线样式*/
   height: 1px; /* 设置水平线高度 */
-  background-color: #ccc; /* 设置水平线颜色为浅灰色 */
+  color: #5c5b5b; /* 设置水平线颜色为浅灰色 */
   margin: 0.5em 0; /* 调整水平线的上下间距 */
+  position: relative;
+  z-index:999;
+  bottom:-95px;
+}
+
+
+/*以下为新闻列表卡片样式*/
+.text {
+  font-size: 14px;
+}
+
+.item {
+  padding: 18px 0;
+}
+
+.box-card {
+  width: 1020x;
 }
 </style>
