@@ -257,8 +257,8 @@ option1.value={
       },
       series: [
     {
-      name: 'ours',
-      type: 'scatter',
+      // name: 'ours',
+      type: 'heatmap',
       data: [
           // [60, 20],
           // [116.410886, 39.881949],
@@ -277,7 +277,7 @@ option1.value={
 //       })
 
 
-axios.get('/mock/20OIzKbo31s/nao/predictionResult/nao', { params })
+axios.get('/mock/20OIzKbo31s/nao/findGridData/nao', { params })
     .then(response => {
       //console.log(response.data);
       option1.value={
@@ -305,9 +305,9 @@ axios.get('/mock/20OIzKbo31s/nao/predictionResult/nao', { params })
       },
       series: [
     {
-      name: 'ours',
-      type: 'scatter',
-      data: response.data.predictionData,
+      // name: 'ours',
+      type: 'heatmap',
+      data: response.data.data1,
     },
     
   ]
@@ -349,8 +349,8 @@ option2.value={
       },
       series: [
     {
-      name: 'ours',
-      type: 'scatter',
+      // name: 'ours',
+      type: 'heatmap',
       data: [
           // [60, 20],
           // [116.410886, 39.881949],
@@ -396,8 +396,8 @@ axios.get('/mock/20OIzKbo31s/nao/predictionResult/nao', { params })
       },
       series: [
     {
-      name: 'ours',
-      type: 'scatter',
+      // name: 'ours',
+      type: 'heatmap',
       data: response.data.predictionData,
     },
     
@@ -437,8 +437,8 @@ option3.value={
       },
       series: [
     {
-      name: 'ours',
-      type: 'scatter',
+      // name: 'ours',
+      type: 'heatmap',
       data: [
           // [60, 20],
           // [116.410886, 39.881949],
@@ -485,8 +485,8 @@ axios.get('/mock/20OIzKbo31s/nao/predictionResult/nao', { params })
       },
       series: [
     {
-      name: 'ours',
-      type: 'scatter',
+      // name: 'ours',
+      type: 'heatmap',
       data: response.data.predictionData,
     },
     
@@ -528,8 +528,8 @@ option4.value={
       },
       series: [
     {
-      name: 'ours',
-      type: 'scatter',
+      // name: 'ours',
+      type: 'heatmap',
       data: [
           // [60, 20],
           // [116.410886, 39.881949],
@@ -576,8 +576,8 @@ axios.get('/mock/20OIzKbo31s/nao/predictionResult/nao', { params })
       },
       series: [
     {
-      name: 'ours',
-      type: 'scatter',
+      // name: 'ours',
+      type: 'heatmap',
       data: response.data.predictionData,
     },
     
@@ -617,8 +617,8 @@ option5.value={
       },
       series: [
     {
-      name: 'ours',
-      type: 'scatter',
+      // name: 'ours',
+      type: 'heatmap',
       data: [
           // [60, 20],
           // [116.410886, 39.881949],
@@ -666,8 +666,8 @@ axios.get('/mock/20OIzKbo31s/nao/predictionResult/nao', { params })
       },
       series: [
     {
-      name: 'ours',
-      type: 'scatter',
+      // name: 'ours',
+      type: 'heatmap',
       data: response.data.predictionData,
     },
     
@@ -708,8 +708,8 @@ option6.value={
       },
       series: [
     {
-      name: 'ours',
-      type: 'scatter',
+      // name: 'ours',
+      type: 'heatmap',
       data: [
           // [60, 20],
           // [116.410886, 39.881949],
