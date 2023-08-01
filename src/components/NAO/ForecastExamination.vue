@@ -258,7 +258,7 @@ option1.value={
       series: [
     {
       // name: 'ours',
-      type: 'heatmap',
+      type: 'scatter',
       data: [
           // [60, 20],
           // [116.410886, 39.881949],
@@ -306,7 +306,7 @@ axios.get('/mock/20OIzKbo31s/nao/findGridData/nao', { params })
       series: [
     {
       // name: 'ours',
-      type: 'heatmap',
+      type: 'scatter',
       data: response.data.data1,
     },
     
@@ -350,7 +350,7 @@ option2.value={
       series: [
     {
       // name: 'ours',
-      type: 'heatmap',
+      type: 'scatter',
       data: [
           // [60, 20],
           // [116.410886, 39.881949],
@@ -397,7 +397,7 @@ axios.get('/mock/20OIzKbo31s/nao/predictionResult/nao', { params })
       series: [
     {
       // name: 'ours',
-      type: 'heatmap',
+      type: 'scatter',
       data: response.data.predictionData,
     },
     
@@ -438,7 +438,7 @@ option3.value={
       series: [
     {
       // name: 'ours',
-      type: 'heatmap',
+      type: 'scatter',
       data: [
           // [60, 20],
           // [116.410886, 39.881949],
@@ -486,7 +486,7 @@ axios.get('/mock/20OIzKbo31s/nao/predictionResult/nao', { params })
       series: [
     {
       // name: 'ours',
-      type: 'heatmap',
+      type: 'scatter',
       data: response.data.predictionData,
     },
     
@@ -529,7 +529,7 @@ option4.value={
       series: [
     {
       // name: 'ours',
-      type: 'heatmap',
+      type: 'scatter',
       data: [
           // [60, 20],
           // [116.410886, 39.881949],
@@ -577,7 +577,7 @@ axios.get('/mock/20OIzKbo31s/nao/predictionResult/nao', { params })
       series: [
     {
       // name: 'ours',
-      type: 'heatmap',
+      type: 'scatter',
       data: response.data.predictionData,
     },
     
@@ -618,7 +618,7 @@ option5.value={
       series: [
     {
       // name: 'ours',
-      type: 'heatmap',
+      type: 'scatter',
       data: [
           // [60, 20],
           // [116.410886, 39.881949],
@@ -667,7 +667,7 @@ axios.get('/mock/20OIzKbo31s/nao/predictionResult/nao', { params })
       series: [
     {
       // name: 'ours',
-      type: 'heatmap',
+      type: 'scatter',
       data: response.data.predictionData,
     },
     
@@ -709,11 +709,11 @@ option6.value={
       series: [
     {
       // name: 'ours',
-      type: 'heatmap',
+      type: 'scatter',
       data: [
-          // [60, 20],
-          // [116.410886, 39.881949],
-          // [116.402574, 39.912345],
+          [60, 20],
+          [116.410886, 39.881949],
+          [116.402574, 39.912345],
           // 其他数据点...
         ]
     },
