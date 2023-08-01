@@ -183,6 +183,15 @@ function monthArray() {
   return keys.slice(index).map(key => months[key]).concat(keys.slice(0, index).map(key => months[key])).slice(0, 6);
 }
 
+function updateCharts() {
+  if(selectedNAOI.value == true) {
+    updateNAOIChart();
+  }
+  else {
+    updateSLPChart();
+  }
+}
+
 onMounted(
   () => {
     nextTick(() => {
@@ -201,9 +210,9 @@ onMounted(
       {{ selectedYear }}年{{ selectedMonth }}月 北大西洋SLP预测结果
     </h1>
     <div class="datePickerContainer">
-      <el-date-picker @change="updateNAOIChart" v-model="selectedYear" type="year" format="YYYY" value-format="YYYY" :clearable="false" style="width: 80px; height: 25px"/>
+      <el-date-picker @change="updateCharts" v-model="selectedYear" type="year" format="YYYY" value-format="YYYY" :clearable="false" style="width: 80px; height: 25px"/>
       <div class="text">年</div>
-      <el-date-picker @change="updateNAOIChart" v-model="selectedMonth" type="month" format="MM" value-format="MM" :clearable="false" style="width: 60px; height: 25px"/>
+      <el-date-picker @change="updateCharts" v-model="selectedMonth" type="month" format="MM" value-format="MM" :clearable="false" style="width: 60px; height: 25px"/>
       <div class="text">月</div>
     </div>
     <el-tabs type="border-card" @tab-click="selectChart" :stretch="true">
