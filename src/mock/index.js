@@ -138,18 +138,43 @@ if (useMock) {
 
         return {
             description: 'SIC Mock描述',
-            data: generateData(),
+            image: ''
+        };
+    });
+
+    Mock.mock(/\/nao\/predictionResult\/NAOI\?year=\d{4}&month=\d{2}/, 'get', function (options) {
+        const url = options.url;
+        const params = new URLSearchParams(url.substring(url.indexOf('?')));
+        const year = params.get('year');
+        const month = params.get('month');
+
+        return {
+            description: '可以提前三个月预测到NAO的发生',
+            observations: generateData(),
+            eccc: generateData(),
+            ecmwf: generateData(),
+            naomcr: generateData(),
         };
 
         function generateData() {
             const data = [];
-            for (let i = -100; i <= 100; i++) {
-                for (let j = -100; j <= 100; j++) {
-                    data.push([String(i), String(j), Mock.Random.float(0, 0.5, 6, 6)]);
-                }
+            for (let i = 0; i < 12; i++) {
+                data.push(Mock.Random.natural(1, 12));
             }
             return data;
         }
+    });
+
+    Mock.mock(/\/nao\/predictionResult\/SLP\?year=\d{4}&month=\d{2}/, 'get', function (options) {
+        const url = options.url;
+        const params = new URLSearchParams(url.substring(url.indexOf('?')));
+        const year = params.get('year');
+        const month = params.get('month');
+        
+        return {
+            description: 'SLP Mock描述',
+            image: ''
+        };
     });
 }
 
