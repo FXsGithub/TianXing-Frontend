@@ -121,6 +121,12 @@ const updateNAOIChart = async () => {
           data: monthArray()
         },
         yAxis: {
+          name: "冬季NAOI",
+          nameLocation: "center",
+          nameTextStyle: {
+            fontSize: 16,
+            padding: [0, 0, 15, 0],
+          },
           type: 'value',
         },
         legend: { //图例
