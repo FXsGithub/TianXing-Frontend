@@ -908,7 +908,7 @@ option7.value={
     data:['1','2','3','4','5','6']
   },
   yAxis: {
-    type: 'value',
+  type: 'value',
     name: '相关系数技巧',
     min: -0.2,
     data: [-0.2, 0.0, 0.2, 0.4, 0.6 ,0.8]

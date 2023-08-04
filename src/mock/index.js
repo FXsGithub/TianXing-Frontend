@@ -1512,6 +1512,17 @@ if (useMock) {
       ]
 })
 
+    Mock.mock(/GB\/predictionResult\/temperature\?year=[0-9]*&month=[0-9]*&day=[0-9]*&hour=[0-9]*/, 'get', {
+        title:"2019年1月1日6时2米气温预测结果",
+        imgSrc:"https://www.tjensoprediction.com/imgs/WEA/t2m/20190101/1.png",
+        text:"全球整体气温偏高，澳大利亚出现异常高温"
+    })
+    Mock.mock(/GB\/predictionResult\/rain\?year=[0-9]*&month=[0-9]*&day=[0-9]*&hour=[0-9]*/, 'get', {
+        title:"2019年1月1日6时地表降水预测结果",
+        imgSrc:"https://www.tjensoprediction.com/imgs/WEA/tp/20190101/1.png",
+        text:"赤道地区与北半球降水较多，南半球降水较少"
+    })
+
 
 }
 

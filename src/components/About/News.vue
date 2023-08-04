@@ -40,7 +40,7 @@ Promise.all(
       <h1>信息发布</h1>
       <el-card class="box-card">
       <li v-for="file in newsComponents" class="list-item">
-        <img :src="file.image"  class="image"/>
+        <img :src="file.image"  class="image" alt=""/>
         <router-link :to="`/news/${file.fileName}`">
           <span class="date" >{{ file.date }}</span>
           <span class="title">{{ file.title }}</span> &nbsp;
@@ -84,7 +84,7 @@ a {
   color: #1b1b1b; /* 设置标题的文字颜色 */
   /* 添加其他样式，根据需要调整 */
   position: absolute;
-  bottom:0px;
+  bottom:0;
   left:30px;
   z-index:1;
 }
@@ -95,7 +95,7 @@ a {
   color: #999; /* 设置圆点颜色为淡灰色 */
   margin-right: 0.5em; /* 调整圆点与文字之间的间距 */
   position: absolute;
-  bottom:0px;
+  bottom:0;
 
 }
 
@@ -106,7 +106,7 @@ a {
   float:right;/* 设置日期的文字右对齐 */
   position: absolute;
   left:680px;
-  bottom:0px;
+  bottom:0;
   
 
 }

@@ -14,6 +14,7 @@ import News from '../components/About/News.vue'
 import Achievements from "../components/About/Achievement.vue";
 
 import {defineAsyncComponent} from "vue";
+import GlobalWeatherForecastResult from "../components/GlobalWeather/GlobalWeatherForecastResult.vue";
 
 const newsFiles = import.meta.glob('../news/*.md')
 const newsRoutes = Object.keys(newsFiles).map(filePath => {
@@ -79,7 +80,12 @@ const routes = [
         path: '/Achievements',
         name:'Achievements',
         component: Achievements
-    }
+    },
+    {
+        path: '/GlobalWeatherForecastResult',
+        name:'GlobalWeatherForecastResult',
+        component: GlobalWeatherForecastResult
+    },
 ]
 
 let rootNewsRoutes = {

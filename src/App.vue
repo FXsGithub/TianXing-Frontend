@@ -135,11 +135,10 @@ const handleSelect = (key: string, keyPath: string[]) => {
                       <el-icon>
                         <DataAnalysis/>
                       </el-icon>
-                      <span>全体天气</span>
+                      <span>全球天气</span>
                     </template>
 
-                    <el-menu-item index="5-1">预测结果</el-menu-item>
-                    <el-menu-item index="5-2">预测检验</el-menu-item>
+                    <el-menu-item index="GlobalWeatherForecastResult">预测结果</el-menu-item>
 
 
                   </el-sub-menu>
