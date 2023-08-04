@@ -47,7 +47,9 @@ axios.get('/GB/predictionResult/rain?year='+start_year+'&month='+start_month+'&d
         <p class="picture_title">
           {{ title_of_temperature }}
         </p>
-        <img class="picture" :src="imgSrc_of_temperature" alt="">
+        <div class="pic_container">
+          <img class="picture" :src="imgSrc_of_temperature" alt="">
+        </div>
         <p class="picture_text">
           {{ text_of_temperature }}
         </p>
@@ -56,7 +58,9 @@ axios.get('/GB/predictionResult/rain?year='+start_year+'&month='+start_month+'&d
         <p class="picture_title">
           {{ title_of_rain }}
         </p>
-        <img class="picture" :src="imgSrc_of_rain" alt="">
+        <div class="pic_container">
+          <img class="picture" :src="imgSrc_of_rain" alt="">
+        </div>
         <p class="picture_text">
           {{ text_of_rain }}
         </p>
@@ -80,10 +84,15 @@ axios.get('/GB/predictionResult/rain?year='+start_year+'&month='+start_month+'&d
   text-align: center;
   font-size: 14px;
 }
-.picture{
+.picture {
   max-width: 90%;
   display: block; /* 将元素设置为块级元素 */
-  margin-left: auto;
-  margin-right: auto;
+  margin-left: 35px;
+  margin-top: -175px;
+  margin-bottom: -160px;
 }
+.pic_container{
+  overflow: hidden;
+}
+
 </style>
