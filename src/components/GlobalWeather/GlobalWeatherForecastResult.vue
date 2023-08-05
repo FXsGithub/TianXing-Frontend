@@ -109,7 +109,7 @@ axios.get('/GB/predictionResult/rain?year='+selectedYear+'&month='+selectedMonth
       </div>
     </div>
 
-
+    <div class="tabs-container">
     <el-tabs type="border-card">
       <el-tab-pane label="气温预测">
         <p class="picture_title">
@@ -138,6 +138,7 @@ axios.get('/GB/predictionResult/rain?year='+selectedYear+'&month='+selectedMonth
       </el-tab-pane>
     </el-tabs>
   </div>
+  </div>
 </template>
 
 <style scoped lang="scss">
@@ -165,6 +166,7 @@ axios.get('/GB/predictionResult/rain?year='+selectedYear+'&month='+selectedMonth
   border-right: solid 1px var(--el-border-color);
   flex: 1;
 }
+
 .datetime-picker .block:last-child {
   border-right: none;
 }
@@ -174,7 +176,10 @@ axios.get('/GB/predictionResult/rain?year='+selectedYear+'&month='+selectedMonth
   font-size: 14px;
   margin-bottom: 20px;
 }
-
+.datePickerContainer {
+  /* 其他样式 */
+  margin-bottom: 20px; /* 添加底部外边距 */
+}
 
     
     /* 可参考图片样式 */
@@ -185,7 +190,20 @@ axios.get('/GB/predictionResult/rain?year='+selectedYear+'&month='+selectedMonth
       left:70px;
     }
 
+    .pageContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* 居中内容 */
+}
+.tabs-container {
+  width: 100%; /* 占满父容器的宽度 */
+  display: flex;
+  justify-content: center; /* 在容器中水平居中 */
+}
 
+.el-tabs {
+  width: 100%; /* 占满父容器的宽度 */
+}
 .title {
   text-align: center
 }
@@ -208,7 +226,8 @@ axios.get('/GB/predictionResult/rain?year='+selectedYear+'&month='+selectedMonth
   overflow: hidden;
 }
 .border-card{
-  position: absolute;
+  position:absolute;
+  top:100%;
 }
 
 </style>
