@@ -44,6 +44,7 @@ const selectedMonth = ref(null); // 新变量，用于存储选定的月份
 const selectedDay = ref(null); // 新变量，用于存储选定的日期
 const selectedHour = ref(null); // 新变量，用于存储选定的小时
 
+
 const title_of_temperature = ref({})
 const imgSrc_of_temperature = ref({})
 const text_of_temperature = ref({})
@@ -52,6 +53,11 @@ const title_of_rain = ref({})
 const imgSrc_of_rain = ref({})
 const text_of_rain = ref({})
 
+/* 避免未选择时屏幕上出现{} */
+title_of_temperature.value = '';
+text_of_temperature.value = '';
+title_of_rain.value = '';
+text_of_rain.value = '';
 
 const handleDateTimeChange = () => {
   // 当日期时间选择发生变化时被调用
@@ -64,25 +70,24 @@ const handleDateTimeChange = () => {
     selectedDay.value = selectedDate.getDate(); // 获取日期值并存储到 selectedDay
     selectedHour.value = selectedDate.getHours(); // 获取小时值并存储到 selectedHour
   }
-};
-
-//这是编造的接口形式，之后会根据实际的修改
-axios.get('/GB/predictionResult/temperature?year='+selectedYear+'&month='+selectedMonth+'&day='+selectedDay+'&hour='+selectedHour)
+  
+  //这是编造的接口形式，之后会根据实际的修改
+  axios.get('/GB/predictionResult/temperature?year='+selectedYear.value+'&month='+selectedMonth.value+'&day='+selectedDay.value+'&hour='+selectedHour.value)
     .then(res => {
       console.log(res.data.imgSrc);
       title_of_temperature.value=res.data.title;
       imgSrc_of_temperature.value = res.data.imgSrc;
       text_of_temperature.value=res.data.text;
     });
-//imgSrc_of_temperature="https://www.tjensoprediction.com/imgs/WEA/t2m/20190101/1.png";
-axios.get('/GB/predictionResult/rain?year='+selectedYear+'&month='+selectedMonth+'&day='+selectedDay+'&hour='+selectedHour)
+  axios.get('/GB/predictionResult/rain?year='+selectedYear.value+'&month='+selectedMonth.value+'&day='+selectedDay.value+'&hour='+selectedHour.value)
     .then(res => {
       console.log(res.data.imgSrc);
       title_of_rain.value=res.data.title;
       imgSrc_of_rain.value = res.data.imgSrc;
       text_of_rain.value=res.data.text;
     });
-//imgSrc_of_rain="https://www.tjensoprediction.com/imgs/WEA/tp/20190101/1.png";
+};
+
 </script>
 
 <template>
