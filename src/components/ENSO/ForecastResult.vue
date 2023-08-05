@@ -1,5 +1,5 @@
 <script setup>
-  import {ref, onMounted, reactive, watch} from "vue";
+  import {ref, onMounted, reactive, watch,computed} from "vue";
   import * as echarts from "echarts";
   import axios  from "axios";
   import VChart from 'vue-echarts';
@@ -13,14 +13,63 @@
   var index_month=0; //切换页时修改这个索引
   
   const chart1 = ref({})
-  // const chart1Title = ref('')
-  // chart1Title.value = `${start_year.value}年${start_month.value}月~${Number(start_year.value) + 1 + ''}年${start_month.value}月 预测结果折线图`
+   const chart1Title = ref('**年*月~**年*月Niño3.4指数结果预测')
+  
   
   /* chart1  的下方文字描述 */
   let Chart1_Description = reactive({single:true, text:'此处为预测结果指数预测折线图嘎嘎嘎嘎嘎嘎嘎嘎嘎嘎噶。'})
   
+
+
+
+
+
+
+
+
+  const currentIndex = ref(0); // 当前图片索引
+
+onMounted(() => {
+  currentIndex.value = 0; // 设置初始图片索引
+});
+
+const prevImage = () => {
+  currentIndex.value = currentIndex.value === 0 ? image_route.length - 1 : currentIndex.value - 1;
+};
+
+const nextImage = () => {
+  currentIndex.value = (currentIndex.value + 1) % image_route.length;
+};
+
+const currentImageUrl = computed(() => {
+  if (image_route[currentIndex.value]?.url) {
+    return image_route[currentIndex.value].url;
+  }
+  return null;
+});
+
+
+
+// 创建一个计算属性，用于构建图片的标题
+const imageTitle = computed(() => {
+  if (start_year.value && start_month.value) {
+    return `${start_year.value}年${start_month.value}月Niño3.4区SST集合平均预测结果`;
+  } else {
+    return `**年*月Niño3.4区SST集合平均预测结果`;
+  }
+});
+
+
+
+
+
+
+
+
+
+
   //chart2 图片路径选择
-  var image_route = [
+  const image_route = [
   
     {url: "src/components/ENSO/FR_image/202302img/0.png"},
     {url: "src/components/ENSO/FR_image/202302img/1.png"},
@@ -49,13 +98,20 @@
   const month = currentDate.getMonth() < 10 ? '0' + (currentDate.getMonth() + 1 + '') : currentDate.getMonth() + 1 + ''
   const start_year = ref(year);
   const start_month = ref(month);
+  // 时间选择器范围框定--start
+
+const limitedDateRange = (time) => {
+  const year = new Date(time).getFullYear();
+  const month = new Date(time).getMonth();
+  return year !== 2023 || month < 1 || month > 3; // Months are 0-based
+};
+
+// 时间选择器范围框定--end
   /* 时间选择器 -- end */
     
   
   
    
-  
-      /*图2显示*/
   /* 赋初值 */
   //指数预测
   axios.get('/enso/predictionExamination/monthlyComparison?year='+Number(start_year.value)+'&month='+Number(start_month.value))
@@ -66,13 +122,31 @@
   
   /* 图表更新 */
   function update_charts() {
-    // chart1Title.value = `${start_year.value}年${start_month.value}月~${Number(start_year.value) + 1 + ''}年${start_month.value}月 预测结果折线图`
-    axios.get('/enso/predictionExamination/monthlyComparison?year='+Number(start_year.value)+'&month='+Number(start_month.value))
-        .then(res => {
-          console.log(res.data);
-          chart1.value = res.data
-        });
-      }
+        if (start_year.value && start_month.value) {
+    axios
+      .get('/enso/predictionExamination/monthlyComparison', {
+        params: {
+          year: Number(start_year.value),
+          month: Number(start_month.value)
+        }
+      })
+      .then(res => {
+        chart1.value = res.data;
+      });
+
+    const endDate = new Date(
+      Number(start_year.value),
+      Number(start_month.value) + 18
+    );
+    const endYear = endDate.getFullYear();
+    const endMonth = endDate.getMonth() + 1;
+    const endDateString = `${endYear}年${endMonth < 10 ? '0' : ''}${endMonth}月`;
+
+    chart1Title.value = `${start_year.value}年${start_month.value}月~${endDateString}Niño3.4`;
+  } else {
+    chart1Title.value = `**年*月~**年*月Niño3.4指数结果预测`;
+  }
+}
   
   
   
@@ -87,34 +161,29 @@
         </h1>
         <p></p>
         <div class="datePickerContainer">
-          <el-date-picker @change="update_charts()" v-model="start_year" type="year" format="YYYY" value-format="YYYY" :clearable="false" style="width: 80px; height: 25px"/>
+          <el-date-picker @change="update_charts()" v-model="start_year" type="year" format="YYYY" value-format="YYYY" :clearable="false" :disabledDate="limitedDateRange" style="width: 80px; height: 25px"/>
           <div class="text">年</div>
-          <el-date-picker @change="update_charts()" v-model="start_month" type="month" format="MM" value-format="MM" :clearable="false" style="width: 60px; height: 25px"/>
+          <el-date-picker @change="update_charts()" v-model="start_month" type="month" format="MM" value-format="MM" :clearable="false" :disabledDate="limitedDateRange" style="width: 60px; height: 25px"/>
           <div class="text">月</div>
         </div>
     
         <el-tabs type="border-card">
           <el-tab-pane label="指数预测">
-  
+            <p class="chart-title">{{ chart1Title }}</p>
             <v-chart class="chart" :option="chart1" autoresize></v-chart>
             <p class="text_of_graph">{{ Chart1_Description.text }}</p>
           </el-tab-pane>
+
+
           <el-tab-pane label="模态预测">
-            <div class="chart2-container">
-  
-            <!-- 走马灯遍历 -->
-            <div class="block text-center">
-              <span class="demonstration">标题</span>
-              <el-carousel height="450px">
-                
-                <el-carousel-item v-for="item in image_route" :key="item">
-                  <img :src="item.url" alt="" class="image"/>
-                </el-carousel-item>
-              </el-carousel>
-            </div>
-             
-  
             
+              <div class="block text-center">
+                <div class="image-title">{{ imageTitle }}</div>
+                <div class="chart2-container">
+                <img :src="currentImageUrl" alt="" class="image" />
+                <el-button type="primary" class="arrow-left" :icon="ArrowLeft" @click="prevImage" />
+                <el-button type="primary" class="arrow-right" :icon="ArrowRight" @click="nextImage" />
+              </div>
             </div>
            
           </el-tab-pane>
@@ -142,7 +211,12 @@
   .chart {
     height: 400px;
   }
-  
+  .chart-title {
+  text-align: center;
+  font-size: 16px;
+  font-weight: bold;
+  margin: 10px 0;
+}
   
   .text_of_graph{
     text-align: center;
@@ -173,17 +247,21 @@
     transform: translateY(-50%); /* 垂直居中箭头按钮 */
   }
   
-  /* 走马灯样式 */
-  .demonstration {
-    color: var(--el-text-color-secondary);
-    
-  }
+  /* chart2图片样式 */
+  .image-title {
+    text-align: center;
+  font-size: 25px; /* 调整标题字体大小 */
+  margin: 20px 0; /* 调整标题上下间距 */
+  font-weight: bold; /* 设置加粗 */
+  margin-right: 100px; /* 添加左外边距 */
+}
   
   .chart2-container{
      /* 记得再往上调点 */
     width: 740px; 
     height: 600px; 
-     /* 惹 */
+    margin-top: 0px; /* 调整上边距 */
+    align-items: center; /* 垂直居中 */
   }
   
   .el-carousel__item h3 {
