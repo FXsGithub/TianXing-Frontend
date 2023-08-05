@@ -3,8 +3,7 @@ import { createRouter, createWebHashHistory } from 'vue-router'
 // 在这里引入组件
 import Home from '../components/MainPage/Home.vue'
 import Demo from '../components/MainPage/Demo.vue'
-import ENSOForecastExamination1 from "../components/ENSO/ForecastExamination1.vue";
-import ENSOForecastExamination2 from "../components/ENSO/ForecastExamination2.vue";
+import ENSOForecastExamination from "../components/ENSO/ForecastExamination.vue";
 import ENSOForecastResult from "../components/ENSO/ForecastResult.vue";
 import SeaIceForecastExamination from "../components/SeaIce/ForecastExamination.vue";
 import SeaIceForecastResult from "../components/SeaIce/ForecastResult.vue";
@@ -44,15 +43,11 @@ const routes = [
         component: Demo
     },
     {
-        path: '/ENSOForecastExamination1',
-        name: 'ENSOForecastExamination1',
-        component: ENSOForecastExamination1
+        path: '/ENSOForecastExamination',
+        name: 'ENSOForecastExamination',
+        component: ENSOForecastExamination
     },
     {
-        path: '/ENSOForecastExamination2',
-        name: 'ENSOForecastExamination2',
-        component: ENSOForecastExamination2
-    },{
         path: '/ENSOForecastResult',
         name: 'ENSOForecastResult',
         component: ENSOForecastResult

@@ -32,48 +32,52 @@ let Chart4_Description = reactive({single:true, text:'此处为不同起报月�
 //逐月对比
 axios.get('/enso/predictionExamination/monthlyComparison?year='+Number(start_year.value)+'&month='+Number(start_month.value))
     .then(res => {
-      console.log(res.data);
-      chart1.value = res.data
+      chart1.value = res.data.option
+      Chart1_Description.text = res.data.text
     });
 //预报误差
 axios.get('/enso/predictionExamination/error?year='+Number(start_year.value)+'&month='+Number(start_month.value))
     .then(res => {
-      console.log(res.data.option);
       chart2_option=res.data.option;
       chart2.value = chart2_option[0];
+      Chart2_Description.text = res.data.text
     });
 //误差分析
 axios.get('/enso/predictionExamination/errorBox?year='+Number(start_year.value)+'&month='+Number(start_month.value))
     .then(res => {
-      chart3.value = res.data
+      chart3.value = res.data.option
+      Chart3_Description.text = res.data.text
     });
 //相关系数
 axios.get('/enso/predictionExamination/errorCorr?year='+Number(start_year.value)+'&month='+Number(start_month.value))
     .then(res => {
-      chart4.value =res.data
+      chart4.value = res.data.option
+      Chart4_Description.text = res.data.text
     });
 /* 图表更新 */
 function update_charts() {
   axios.get('/enso/predictionExamination/monthlyComparison?year='+Number(start_year.value)+'&month='+Number(start_month.value))
       .then(res => {
-        console.log(res.data);
-        chart1.value = res.data
+        chart1.value = res.data.option
+        Chart1_Description.text = res.data.text
       });
   axios.get('/enso/predictionExamination/error?year='+Number(start_year.value)+'&month='+Number(start_month.value))
       .then(res => {
-        console.log(res.data.option);
         chart2_option=[]; //先置空
         index_month=0; //设置索引月为0
         chart2_option=res.data.option;
         chart2.value = chart2_option[0];
+        Chart2_Description.text = res.data.text
       });
   axios.get('/enso/predictionExamination/errorBox?year='+Number(start_year.value)+'&month='+Number(start_month.value))
       .then(res => {
-        chart3.value = res.data
+        chart3.value = res.data.option
+        Chart3_Description.text = res.data.text
       });
   axios.get('/enso/predictionExamination/errorCorr?year='+Number(start_year.value)+'&month='+Number(start_month.value))
       .then(res => {
-        chart4.value =res.data
+        chart4.value =res.data.option
+        Chart4_Description.text = res.data.text 
       });
 }
 /* chart2左右切换 -- begin */

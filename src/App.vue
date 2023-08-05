@@ -84,8 +84,8 @@ const handleSelect = (key: string, keyPath: string[]) => {
                     </template>
 
                     <el-menu-item index="ENSOForecastResult">预测结果</el-menu-item>
-                    <el-menu-item index="ENSOForecastExamination1">预测检验1</el-menu-item>
-                    <el-menu-item index="ENSOForecastExamination2">预测检验2</el-menu-item>
+                    <el-menu-item index="ENSOForecastExamination">预测检验</el-menu-item>
+                    
 
 
                   </el-sub-menu>
