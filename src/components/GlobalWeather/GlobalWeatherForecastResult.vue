@@ -2,38 +2,195 @@
 
 import axios from "axios";
 import {ref} from "vue";
+import {ArrowLeft, ArrowRight} from "@element-plus/icons-vue";
+import VChart from "vue-echarts";
 
-//等时间选择器的值
-const start_year = 2019;
-const start_month = 1;
-const start_day = 1;
-const start_hour = 6;
+//时间选择器范围框定--start
 
-const title_of_temperature = ref({})
+const disabledMinute = () => {
+  const allowedMinute = [0];
+  const disabledMinute = [];
+
+  for (let i = 0; i < 60; i++) {
+    if (!allowedMinute.includes(i)) {
+      disabledMinute.push(i);
+    }
+  }
+
+  return disabledMinute;
+};
+
+const disabledSecond = () => {
+  const allowedSecond = [0];
+  const disabledSecond = [];
+
+  for (let i = 0; i < 60; i++) {
+    if (!allowedSecond.includes(i)) {
+      disabledSecond.push(i);
+    }
+  }
+
+  return disabledSecond;
+};
+
+const limitedDateRange = (time) => {
+  const year = new Date(time).getFullYear();
+  const month = new Date(time).getMonth();
+  return year !== 2023 || month < 1 || month > 3; // Months are 0-based
+};
+
+//时间选择器范围框定--end
+
+const selectedDateTime = ref(null);
+const selectedYear = ref(null); // 新变量，用于存储选定的年份
+const selectedMonth = ref(null); // 新变量，用于存储选定的月份
+const selectedDay = ref(null); // 新变量，用于存储选定的日期
+const selectedHour = ref(null); // 新变量，用于存储选定的小时
+
+//第一次进入为用户赋初值
+const date = new Date(2019,0,1,0,0,0);
+selectedDateTime.value = date;
+selectedYear.value = date.getFullYear();
+selectedMonth.value = date.getMonth() + 1;
+selectedDay.value = date.getDate();
+selectedHour.value = date.getHours();
+
+
+var index_tempe=0; //切换气温预测时修改这个索引
+var index_rain=0; //切换降水预测时修改这个索引
+
+const prefix="https://www.tjensoprediction.com"
+
+var title_of_temperature_Array;
+var imgSrc_of_temperature_Array;
+var text_of_temperature_Array;
+
+var title_of_rain_Array;
+var imgSrc_of_rain_Array ;
+var text_of_rain_Array;
+
 const imgSrc_of_temperature = ref({})
-const text_of_temperature = ref({})
-
-const title_of_rain = ref({})
 const imgSrc_of_rain = ref({})
+const title_of_temperature = ref({})
+const text_of_temperature = ref({})
+const title_of_rain = ref({})
 const text_of_rain = ref({})
 
-//这是编造的接口形式，之后会根据实际的修改
-axios.get('/GB/predictionResult/temperature?year='+start_year+'&month='+start_month+'&day='+start_day+'&hour='+start_hour)
+/* 避免未选择时屏幕上出现{} */
+title_of_temperature.value = '';
+text_of_temperature.value = '';
+title_of_rain.value = '';
+text_of_rain.value = '';
+
+/* 赋初值 */
+axios.get('/GB/predictionResult/temperature?year='+selectedYear.value+'&month='+selectedMonth.value+'&day='+selectedDay.value+'&hour='+selectedHour.value)
     .then(res => {
-      console.log(res.data.imgSrc);
-      title_of_temperature.value=res.data.title;
-      imgSrc_of_temperature.value = res.data.imgSrc;
-      text_of_temperature.value=res.data.text;
+      index_tempe = 0;
+      console.log(res.data.title);
+      title_of_temperature_Array = res.data.title;
+      imgSrc_of_temperature_Array = res.data.imgSrc;
+      text_of_temperature_Array = res.data.text;
+      title_of_temperature.value = title_of_temperature_Array[0];
+      imgSrc_of_temperature.value = `${prefix}${imgSrc_of_temperature_Array[0]}`;
+      text_of_temperature.value = text_of_temperature_Array[0];
     });
-//imgSrc_of_temperature="https://www.tjensoprediction.com/imgs/WEA/t2m/20190101/1.png";
-axios.get('/GB/predictionResult/rain?year='+start_year+'&month='+start_month+'&day='+start_day+'&hour='+start_hour)
+axios.get('/GB/predictionResult/rain?year='+selectedYear.value+'&month='+selectedMonth.value+'&day='+selectedDay.value+'&hour='+selectedHour.value)
     .then(res => {
-      console.log(res.data.imgSrc);
-      title_of_rain.value=res.data.title;
-      imgSrc_of_rain.value = res.data.imgSrc;
-      text_of_rain.value=res.data.text;
+      index_rain = 0;
+      console.log(res.data.title);
+      title_of_rain_Array = res.data.title;
+      imgSrc_of_rain_Array = res.data.imgSrc;
+      text_of_rain_Array = res.data.text;
+      title_of_rain.value = title_of_rain_Array[0];
+      imgSrc_of_rain.value = `${prefix}${imgSrc_of_rain_Array[0]}`;
+      text_of_rain.value = text_of_rain_Array[0];
     });
-//imgSrc_of_rain="https://www.tjensoprediction.com/imgs/WEA/tp/20190101/1.png";
+
+const handleDateTimeChange = () => {
+  // 当日期时间选择发生变化时被调用
+  console.log(selectedDateTime.value); // 输出当前选择的日期和时间
+
+  if (selectedDateTime.value) {
+    const selectedDate = new Date(selectedDateTime.value);
+    selectedYear.value = selectedDate.getFullYear(); // 获取年份值并存储到 selectedYear
+    selectedMonth.value = selectedDate.getMonth() + 1; // 获取月份值并存储到 selectedMonth
+    selectedDay.value = selectedDate.getDate(); // 获取日期值并存储到 selectedDay
+    selectedHour.value = selectedDate.getHours(); // 获取小时值并存储到 selectedHour
+  }
+
+  //这是编造的接口形式，之后会根据实际的修改
+  axios.get('/GB/predictionResult/temperature?year='+selectedYear.value+'&month='+selectedMonth.value+'&day='+selectedDay.value+'&hour='+selectedHour.value)
+      .then(res => {
+        index_tempe = 0;
+        console.log(res.data.title);
+        title_of_temperature_Array = res.data.title;
+        imgSrc_of_temperature_Array = res.data.imgSrc;
+        text_of_temperature_Array = res.data.text;
+        title_of_temperature.value = title_of_temperature_Array[0];
+        imgSrc_of_temperature.value = `${prefix}${imgSrc_of_temperature_Array[0]}`;
+        text_of_temperature.value = text_of_temperature_Array[0];
+      });
+
+  axios.get('/GB/predictionResult/rain?year='+selectedYear.value+'&month='+selectedMonth.value+'&day='+selectedDay.value+'&hour='+selectedHour.value)
+      .then(res => {
+        index_rain = 0;
+        console.log(res.data.imgSrc);
+        title_of_rain_Array = res.data.title;
+        imgSrc_of_rain_Array = res.data.imgSrc;
+        text_of_rain_Array = res.data.text;
+        title_of_rain.value = title_of_rain_Array[0];
+        imgSrc_of_rain.value = `${prefix}${imgSrc_of_rain_Array[0]}`;
+        text_of_rain.value = text_of_rain_Array[0];
+      });
+}
+
+
+/* 左右切换 -- begin */
+function change_time_tempe(flag) {
+
+  if(flag==="left"){
+    if(index_tempe>0){
+      index_tempe--;
+    }
+    else{
+      index_tempe=19;
+    }
+  }
+  else if(flag==="right"){
+    if(index_tempe<19){
+      index_tempe++;
+    }
+    else{
+      index_tempe=0;
+    }
+  }
+  title_of_temperature.value=title_of_temperature_Array[index_tempe];
+  imgSrc_of_temperature.value=`${prefix}${imgSrc_of_temperature_Array[index_tempe]}`;
+  text_of_temperature.value=text_of_temperature_Array[index_tempe];
+}
+function change_time_rain(flag) {
+
+  if(flag==="left"){
+    if(index_rain>0){
+      index_rain--;
+    }
+    else{
+      index_rain=19;
+    }
+  }
+  else if(flag==="right"){
+    if(index_rain<19){
+      index_rain++;
+    }
+    else{
+      index_rain=0;
+    }
+  }
+  title_of_rain.value=title_of_rain_Array[index_rain];
+  imgSrc_of_rain.value=`${prefix}${imgSrc_of_rain_Array[index_rain]}`;
+  text_of_rain.value=text_of_rain_Array[index_rain];
+}
+/* 左右切换 -- end */
 </script>
 
 <template>
@@ -42,37 +199,112 @@ axios.get('/GB/predictionResult/rain?year='+start_year+'&month='+start_month+'&d
       全球天气预报结果
     </h1>
 
-    <el-tabs type="border-card">
-      <el-tab-pane label="气温预测">
-        <p class="picture_title">
-          {{ title_of_temperature }}
-        </p>
-        <div class="pic_container">
-          <img class="picture" :src="imgSrc_of_temperature" alt="">
+    <div class="datePickerContainer">
+      <!-- 已控制时间选择范围 -->
+      <div class="datetime-picker">
+        <span class="demonstration">提示：选择2023年2月至4月整时的时间</span>
+        <div class="block">
+          <el-date-picker
+              v-model="selectedDateTime"
+              type="datetime"
+              placeholder="请选择时间"
+              @change="handleDateTimeChange"
+              :disabledDate="limitedDateRange"
+              :disabledMinutes="disabledMinute"
+              :disabledSeconds="disabledSecond"
+          />
         </div>
-        <p class="picture_text">
-          {{ text_of_temperature }}
-        </p>
-      </el-tab-pane>
-      <el-tab-pane label="降水预测">
-        <p class="picture_title">
-          {{ title_of_rain }}
-        </p>
-        <div class="pic_container">
-          <img class="picture" :src="imgSrc_of_rain" alt="">
-        </div>
-        <p class="picture_text">
-          {{ text_of_rain }}
-        </p>
-      </el-tab-pane>
-      <el-tab-pane label="风场预测">
-        <p>hahahah</p>
-      </el-tab-pane>
-    </el-tabs>
+      </div>
+    </div>
+
+    <div class="tabs-container">
+      <el-tabs type="border-card">
+        <el-tab-pane label="气温预测">
+          <div class="whole_container">
+            <p class="picture_title">
+              {{ title_of_temperature }}
+            </p>
+            <div class="pic_container">
+              <img class="picture" :src="imgSrc_of_temperature" alt="">
+            </div>
+            <p class="picture_text">
+              {{ text_of_temperature }}
+            </p>
+            <el-button type="primary" class="arrow-left" :icon="ArrowLeft" @click="change_time_tempe('left')"></el-button>
+            <el-button type="primary" class="arrow-right" :icon="ArrowRight" @click="change_time_tempe('right')"></el-button>
+          </div>
+
+        </el-tab-pane>
+        <el-tab-pane label="降水预测">
+          <div class="whole_container">
+            <p class="picture_title">
+              {{ title_of_rain }}
+            </p>
+            <div class="pic_container">
+              <img class="picture" :src="imgSrc_of_rain" alt="">
+            </div>
+            <p class="picture_text">
+              {{ text_of_rain }}
+            </p>
+            <el-button type="primary" class="arrow-left" :icon="ArrowLeft" @click="change_time_rain('left')"></el-button>
+            <el-button type="primary" class="arrow-right" :icon="ArrowRight" @click="change_time_rain('right')"></el-button>
+          </div>
+        </el-tab-pane>
+        <el-tab-pane label="风场预测">
+          <p>hahahah</p>
+        </el-tab-pane>
+      </el-tabs>
+    </div>
   </div>
 </template>
 
 <style scoped lang="scss">
+/*时间选择器样式*/
+.datetime-picker {
+  float: right;
+  display: flex;
+  width: 25%;
+  padding: 0;
+  flex-direction: column-reverse; /* 设置为列方向，同时将内容从底部开始排列 */
+}
+
+/* 为demonstration添加样式 */
+.datetime-picker .demonstration {
+  display: inline-block;
+  white-space: nowrap;
+  color: var(--el-text-color-secondary);
+  font-size: 14px;
+  margin-bottom: 0; /* 调整为0，使文字紧贴上方 */
+}
+
+.datetime-picker .block {
+  padding: 20px 0;
+  text-align: center;
+  border-right: solid 1px var(--el-border-color);
+  flex: 1;
+}
+
+.datetime-picker .block:last-child {
+  border-right: none;
+}
+.datetime-picker .demonstration {
+  display: block;
+  color: var(--el-text-color-secondary);
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+.datePickerContainer {
+  /* 其他样式 */
+  margin-bottom: 20px; /* 添加底部外边距 */
+}
+.el-tabs {
+  width: 100%; /* 占满父容器的宽度 */
+}
+.tabs-container {
+  width: 100%; /* 占满父容器的宽度 */
+  display: flex;
+  justify-content: center; /* 在容器中水平居中 */
+}
 .title {
   text-align: center
 }
@@ -87,12 +319,36 @@ axios.get('/GB/predictionResult/rain?year='+start_year+'&month='+start_month+'&d
 .picture {
   max-width: 90%;
   display: block; /* 将元素设置为块级元素 */
-  margin-left: 35px;
+  margin-left: 10px;
   margin-top: -175px;
   margin-bottom: -160px;
 }
 .pic_container{
   overflow: hidden;
+}
+
+/* 预报误差页面的容器 */
+.whole_container {
+  position: relative;
+}
+/* 设置左箭头按钮的样式 */
+.el-button.arrow-left {
+  position: absolute;
+  top: 50%; /* 将箭头按钮的顶部与父容器的中间对齐 */
+  left: 0; /* 将箭头按钮的左侧与父容器的左侧对齐 */
+  width: 40px; /* 设置按钮宽度 */
+  height: 80px; /* 设置按钮高度 */
+  transform: translateY(-50%); /* 垂直居中箭头按钮 */
+}
+
+/* 设置右箭头按钮的样式 */
+.el-button.arrow-right {
+  position: absolute;
+  top: 50%; /* 将箭头按钮的顶部与父容器的中间对齐 */
+  right: 0; /* 将箭头按钮的右侧与父容器的右侧对齐 */
+  width: 40px; /* 设置按钮宽度 */
+  height: 80px; /* 设置按钮高度 */
+  transform: translateY(-50%); /* 垂直居中箭头按钮 */
 }
 
 </style>
