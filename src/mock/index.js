@@ -176,6 +176,20 @@ if (useMock) {
             image: ''
         };
     });
+
+    Mock.mock(/\/globalweather\/predictionResult\/wind\?year=\d{4}&month=\d{1,2}&day=\d{1,2}&hour=\d{1,2}/, 'get', function (options) {
+        const url = options.url;
+        const params = new URLSearchParams(url.substring(url.indexOf('?')));
+        const year = params.get('year');
+        const month = params.get('month');
+        
+        return {
+            latitudeWindDescription: '纬向风场 Mock描述',
+            longitudeWindDescription: '经向风场 Mock描述',
+            latitudeWindImage: 'https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png',
+            longitudeWindImage: 'https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png'
+        };
+    });
 }
 
 export default Mock
