@@ -58,7 +58,8 @@ selectedHour.value = date.getHours();
 
 var index_tempe=0; //切换气温预测时修改这个索引
 var index_rain=0; //切换降水预测时修改这个索引
-
+var index_wind=0;//切换风场的第一张图修改这个索引
+var index_wind2=0;//切换风场的第二张图修改这个索引
 const prefix="https://www.tjensoprediction.com"
 
 var title_of_temperature_Array;
@@ -69,18 +70,36 @@ var title_of_rain_Array;
 var imgSrc_of_rain_Array ;
 var text_of_rain_Array;
 
+var title_of_wind_Array;
+var imgSrc_of_wind_Array ;
+var text_of_wind_Array;
+
+var title_of_wind2_Array;
+var imgSrc_of_wind2_Array ;
+var text_of_wind2_Array;
+
 const imgSrc_of_temperature = ref({})
 const imgSrc_of_rain = ref({})
+const imgSrc_of_wind = ref({})
+const imgSrc_of_wind2 = ref({})
 const title_of_temperature = ref({})
 const text_of_temperature = ref({})
 const title_of_rain = ref({})
 const text_of_rain = ref({})
+const title_of_wind = ref({})
+const text_of_wind = ref({})
+const title_of_wind2 = ref({})
+const text_of_wind2 = ref({})
 
 /* 避免未选择时屏幕上出现{} */
 title_of_temperature.value = '';
 text_of_temperature.value = '';
 title_of_rain.value = '';
 text_of_rain.value = '';
+title_of_wind.value = '';
+text_of_wind.value = '';
+title_of_wind2.value = '';
+text_of_wind2.value = '';
 
 /* 赋初值 */
 axios.get('/GB/predictionResult/temperature?year='+selectedYear.value+'&month='+selectedMonth.value+'&day='+selectedDay.value+'&hour='+selectedHour.value)
@@ -104,6 +123,28 @@ axios.get('/GB/predictionResult/rain?year='+selectedYear.value+'&month='+selecte
       title_of_rain.value = title_of_rain_Array[0];
       imgSrc_of_rain.value = `${prefix}${imgSrc_of_rain_Array[0]}`;
       text_of_rain.value = text_of_rain_Array[0];
+    });
+axios.get('/GB/predictionResult/wind?year='+selectedYear.value+'&month='+selectedMonth.value+'&day='+selectedDay.value+'&hour='+selectedHour.value)
+    .then(res => {
+      index_wind = 0;
+      console.log(res.data.title);
+      title_of_wind_Array = res.data.title;
+      imgSrc_of_wind_Array = res.data.imgSrc;
+      text_of_wind_Array = res.data.text;
+      title_of_wind.value = title_of_wind_Array[0];
+      imgSrc_of_wind.value = `${prefix}${imgSrc_of_wind_Array[0]}`;
+      text_of_wind.value = text_of_wind_Array[0];
+    });
+axios.get('/GB/predictionResult/wind2?year='+selectedYear.value+'&month='+selectedMonth.value+'&day='+selectedDay.value+'&hour='+selectedHour.value)
+    .then(res => {
+      index_wind2 = 0;
+      console.log(res.data.title);
+      title_of_wind2_Array = res.data.title;
+      imgSrc_of_wind2_Array = res.data.imgSrc;
+      text_of_wind2_Array = res.data.text;
+      title_of_wind2.value = title_of_wind2_Array[0];
+      imgSrc_of_wind2.value = `${prefix}${imgSrc_of_wind2_Array[0]}`;
+      text_of_wind2.value = text_of_wind2_Array[0];
     });
 
 const handleDateTimeChange = () => {
@@ -141,6 +182,18 @@ const handleDateTimeChange = () => {
         title_of_rain.value = title_of_rain_Array[0];
         imgSrc_of_rain.value = `${prefix}${imgSrc_of_rain_Array[0]}`;
         text_of_rain.value = text_of_rain_Array[0];
+      });
+
+  axios.get('/GB/predictionResult/wind2?year='+selectedYear.value+'&month='+selectedMonth.value+'&day='+selectedDay.value+'&hour='+selectedHour.value)
+      .then(res => {
+        index_wind2 = 0;
+        console.log(res.data.imgSrc);
+        title_of_wind2_Array = res.data.title;
+        imgSrc_of_wind2_Array = res.data.imgSrc;
+        text_of_wind2_Array = res.data.text;
+        title_of_wind2.value = title_of_wind2_Array[0];
+        imgSrc_of_wind2.value = `${prefix}${imgSrc_of_wind2_Array[0]}`;
+        text_of_wind2.value = text_of_wind2_Array[0];
       });
 }
 
@@ -189,6 +242,52 @@ function change_time_rain(flag) {
   title_of_rain.value=title_of_rain_Array[index_rain];
   imgSrc_of_rain.value=`${prefix}${imgSrc_of_rain_Array[index_rain]}`;
   text_of_rain.value=text_of_rain_Array[index_rain];
+}
+
+function change_time_wind(flag) {
+
+if(flag==="left"){
+  if(index_wind>0){
+    index_wind--;
+  }
+  else{
+    index_wind=19;
+  }
+}
+else if(flag==="right"){
+  if(index_wind<19){
+    index_wind++;
+  }
+  else{
+    index_wind=0;
+  }
+}
+title_of_wind.value=title_of_wind_Array[index_wind];
+imgSrc_of_wind.value=`${prefix}${imgSrc_of_wind_Array[index_wind]}`;
+text_of_wind.value=text_of_wind_Array[index_wind];
+}
+
+function change_time_wind2(flag) {
+
+if(flag==="left"){
+  if(index_wind2>0){
+    index_wind2--;
+  }
+  else{
+    index_wind2=19;
+  }
+}
+else if(flag==="right"){
+  if(index_wind2<19){
+    index_wind2++;
+  }
+  else{
+    index_wind2=0;
+  }
+}
+title_of_wind2.value=title_of_wind2_Array[index_wind2];
+imgSrc_of_wind2.value=`${prefix}${imgSrc_of_wind2_Array[index_wind2]}`;
+text_of_wind2.value=text_of_wind2_Array[index_wind2];
 }
 /* 左右切换 -- end */
 </script>
@@ -251,7 +350,32 @@ function change_time_rain(flag) {
           </div>
         </el-tab-pane>
         <el-tab-pane label="风场预测">
-          <p>hahahah</p>
+          <div class="whole_container">
+            <p class="picture_title">
+              {{ title_of_wind }}
+            </p>
+            <div class="pic_container">
+              <img class="picture" :src="imgSrc_of_wind" alt="">
+            </div>
+            <p class="picture_text">
+              {{ text_of_wind }}
+            </p>
+            <el-button type="primary" class="arrow-left" :icon="ArrowLeft" @click="change_time_wind('left')"></el-button>
+            <el-button type="primary" class="arrow-right" :icon="ArrowRight" @click="change_time_wind('right')"></el-button>
+          </div>
+          <div class="whole_container2">
+            <p class="picture_title2">
+              {{ title_of_wind2 }}
+            </p>
+            <div class="pic_container">
+              <img class="picture" :src="imgSrc_of_wind2" alt="">
+            </div>
+            <p class="picture_text">
+              {{ text_of_wind2 }}
+            </p>
+            <el-button type="primary" class="arrow-left" :icon="ArrowLeft" @click="change_time_wind2('left')"></el-button>
+            <el-button type="primary" class="arrow-right" :icon="ArrowRight" @click="change_time_wind2('right')"></el-button>
+          </div>
         </el-tab-pane>
       </el-tabs>
     </div>
