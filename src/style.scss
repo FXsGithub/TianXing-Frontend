@@ -5,3 +5,27 @@ body{
 .page-content{
   padding:0 40px 40px 40px;
 }
+
+/* 新闻样式设置 */
+.News{
+  h1{
+    text-align: center;
+  }
+  h6{
+    margin: 0; /* 去除标题的默认上下间距 */
+    font-weight: normal; /* 设置字体粗细为正常（即不加粗） */
+    color: #999; /* 设置颜色为浅灰色 */
+    font-size: 14px; /* 设置字体大小为14像素 */
+    text-align: center;
+  }
+  p {
+    text-indent: 2em;
+  }
+  img {
+    //max-width: 100%;
+    max-width: 500px;
+    max-height: 300px; /* 根据需要设置最大高度 */
+    display: block; /* 将元素设置为块级元素 */
+    margin: 0 auto; /* 居中显示 */
+  }
+}

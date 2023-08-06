@@ -3,6 +3,7 @@
 <script lang="ts" setup>
 import {ref} from 'vue'
 
+
 import {
   Notification,
   Star,
@@ -25,7 +26,6 @@ const handleSelect = (key: string, keyPath: string[]) => {
   window.location.href = '/#/' + key;
 }
 
-const currentPage = ref("首页")
 
 </script>
 
@@ -53,12 +53,17 @@ const currentPage = ref("首页")
                 >
                   <el-divider content-position="left">关于我们</el-divider>
 
+                  <el-menu-item index="Demo">
+                    <el-icon><House /></el-icon>
+                    Demo页
+                  </el-menu-item>
+
                   <el-menu-item index="">
                     <el-icon><House /></el-icon>
                     首页
                   </el-menu-item>
 
-                  <el-menu-item index="information">
+                  <el-menu-item index="News">
                     <el-icon><Notification /></el-icon>
                     信息发布
                   </el-menu-item>
@@ -78,9 +83,10 @@ const currentPage = ref("首页")
                       <span>ENSO</span>
                     </template>
 
-                    <el-menu-item index="ENSOForecastResult">预测结果</el-menu-item>
-                    <el-menu-item index="ENSOForecastExamination1">预测检验1</el-menu-item>
-                    <el-menu-item index="ENSOForecastExamination2">预测检验2</el-menu-item>
+                    <el-menu-item index="ENSOForecastResult">预测结果1</el-menu-item>
+                     <el-menu-item index="ENSOForecastResult2">预测结果2</el-menu-item>
+                    <el-menu-item index="ENSOForecastExamination">预测检验</el-menu-item>
+                    
 
 
                   </el-sub-menu>
@@ -133,8 +139,7 @@ const currentPage = ref("首页")
                       <span>全球天气</span>
                     </template>
 
-                    <el-menu-item index="GlobalWeatherForecast">预测结果</el-menu-item>
-
+                    <el-menu-item index="GlobalWeatherForecastResult">预测结果</el-menu-item>
 
                   </el-sub-menu>
                 </el-menu>
