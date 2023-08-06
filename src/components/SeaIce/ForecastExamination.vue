@@ -285,7 +285,7 @@ option2.value={
 }
 
 
-axios.get('/seaice/errorBox?year='+Number(selectedYear.value))
+axios.get('/seaice/initial/SICErrorBox')
     .then(response => {
       console.log(response.data);
       option3.value={
