@@ -1482,6 +1482,90 @@ Mock.mock(/GB\/ForecastResult\/heat4\?year=[0-9]*&month=[0-9]*/, 'get', {
         text:'此处的12副图分别为从2022年2月~2023年1月起报的预测结果、官方记录结果及二者绝对差值图（柱状）。'
     })
 
+    Mock.mock(/\/seaice\/predictionResult\/SIE\?year=\d{4}&month=\d{2}/, 'get', function (options) {
+        const url = options.url;
+        const params = new URLSearchParams(url.substring(url.indexOf('?')));
+        const year = params.get('year');
+        const month = params.get('month');
+
+        return {
+            description: 'SIE Mock描述',
+            prediction: generateData(),
+            mean: generateData(),
+            upper: generateData(),
+            lower: generateData(),
+        };
+
+        function generateData() {
+            const data = [];
+            for (let i = 0; i < 12; i++) {
+                data.push(Mock.Random.natural(1, 12));
+            }
+            return data;
+        }
+    });
+
+    Mock.mock(/\/seaice\/predictionResult\/SIC\?year=\d{4}&month=\d{2}&day=\d{2}/, 'get', function (options) {
+        const url = options.url;
+        const params = new URLSearchParams(url.substring(url.indexOf('?')));
+        const year = params.get('year');
+        const month = params.get('month');
+        const day = params.get('day');
+
+        return {
+            description: 'SIC Mock描述',
+            image: ''
+        };
+    });
+
+    Mock.mock(/\/nao\/predictionResult\/NAOI\?year=\d{4}&month=\d{2}/, 'get', function (options) {
+        const url = options.url;
+        const params = new URLSearchParams(url.substring(url.indexOf('?')));
+        const year = params.get('year');
+        const month = params.get('month');
+
+        return {
+            description: '可以提前三个月预测到NAO的发生',
+            observations: generateData(),
+            eccc: generateData(),
+            ecmwf: generateData(),
+            naomcr: generateData(),
+        };
+
+        function generateData() {
+            const data = [];
+            for (let i = 0; i < 12; i++) {
+                data.push(Mock.Random.natural(1, 12));
+            }
+            return data;
+        }
+    });
+
+    Mock.mock(/\/nao\/predictionResult\/SLP\?year=\d{4}&month=\d{2}/, 'get', function (options) {
+        const url = options.url;
+        const params = new URLSearchParams(url.substring(url.indexOf('?')));
+        const year = params.get('year');
+        const month = params.get('month');
+        
+        return {
+            description: 'SLP Mock描述',
+            image: ''
+        };
+    });
+
+    Mock.mock(/\/globalweather\/predictionResult\/wind\?year=\d{4}&month=\d{1,2}&day=\d{1,2}&hour=\d{1,2}/, 'get', function (options) {
+        const url = options.url;
+        const params = new URLSearchParams(url.substring(url.indexOf('?')));
+        const year = params.get('year');
+        const month = params.get('month');
+        
+        return {
+            latitudeWindDescription: '纬向风场 Mock描述',
+            longitudeWindDescription: '经向风场 Mock描述',
+            latitudeWindImage: 'https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png',
+            longitudeWindImage: 'https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png'
+        };
+    });
 
      // added by rqx 2023/7/28 
 

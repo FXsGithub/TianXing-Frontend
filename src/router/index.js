@@ -10,6 +10,7 @@ import SeaIceForecastResult from "../components/SeaIce/ForecastResult.vue";
 import ENSOForecastResult2 from "../components/ENSO/ForecastResult2.vue";
 import NAOForecastExamination from "../components/NAO/ForecastExamination.vue";
 import NAOForecastResult from "../components/NAO/ForecastResult.vue";
+
 import News from '../components/About/News.vue'
 import Achievements from "../components/About/Achievement.vue";
 
@@ -29,7 +30,6 @@ const newsRoutes = Object.keys(newsFiles).map(filePath => {
         component: ()=>import(`../news/${filePath}.md`)
     }
 })
-
 
 const routes = [
 

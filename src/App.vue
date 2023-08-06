@@ -141,7 +141,6 @@ const handleSelect = (key: string, keyPath: string[]) => {
 
                     <el-menu-item index="GlobalWeatherForecastResult">预测结果</el-menu-item>
 
-
                   </el-sub-menu>
                 </el-menu>
               </el-col>
