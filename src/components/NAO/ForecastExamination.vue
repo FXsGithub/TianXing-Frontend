@@ -92,6 +92,13 @@ axios.get('/nao/predictionExamination/error?year='+Number(selectedYear.value)+'&
       list = res.data.imgSrc;
       text_of_option1.value = res.data.text;
   });
+axios.get('/nao/predictionExamination/naoi')
+    .then(res => {
+      console.log(res.data);
+      // title_of_option1.value='提前1个月预测';
+      // list = res.data.imgSrc;
+      option7.value = res.data;
+  });
 // axios.get('/nao/predictionExamination/error?year='+Number(selectedYear.value)+'&month='+Number(selectedMonth.value))
 //     .then(res => {
 //       console.log(res.data.imgSrc);
@@ -129,55 +136,55 @@ axios.get('/nao/predictionExamination/error?year='+Number(selectedYear.value)+'&
 //     });
 
 
-option1.value={
-  title: {
-    // text: chartTitle.value,
-    text: '提前1个月预测',
-    left: 'center' //标题水平居中
-  },
-  tooltip: {
-          position: 'top'
-        },
-        animation: false,
+// option1.value={
+//   title: {
+//     // text: chartTitle.value,
+//     text: '提前1个月预测',
+//     left: 'center' //标题水平居中
+//   },
+//   tooltip: {
+//           position: 'top'
+//         },
+//         animation: false,
        
-        xAxis: {
-          type: 'category',
-          data: [1.0,2.0,3.0,4.0,5.0,6.0,7.0,8.0,9.0,10.0,11.0,12.0,13.0]
-        },
-        yAxis: {
-          type: 'category',
-          data: [1.0,2.0,3.0,4.0,5.0,6.0,7.0,8.0,9.0,10.0,11.0,12.0,13.0,14.0,15.0,16.0,17.0,18.0,19.0,20.0,21.0,22.0,23.0,24.0,25.0,26.0,27.0]
-        },
-        visualMap: {
-          min: -2.5,
-          max: 2.5,
-          calculable: true,
-          orient: 'horizontal',
-          left: '2000px',
-          bottom: '15%',
-          inRange: {
-            color: ['blue', '#ffffff', 'red'] // 配置颜色范围
-          }
-        },
-        series: [{
-          name: 'try',
-          type: 'heatmap',
-          // data: heatMapData1,
-          data: [],
-          label: {
-            show: false
-          },
-          itemStyle: {
-            emphasis: {
-              shadowBlur: 10,
-              shadowColor: 'rgba(0, 0, 0, 0.5)'
-            }
-          }
-        }]
+//         xAxis: {
+//           type: 'category',
+//           data: [1.0,2.0,3.0,4.0,5.0,6.0,7.0,8.0,9.0,10.0,11.0,12.0,13.0]
+//         },
+//         yAxis: {
+//           type: 'category',
+//           data: [1.0,2.0,3.0,4.0,5.0,6.0,7.0,8.0,9.0,10.0,11.0,12.0,13.0,14.0,15.0,16.0,17.0,18.0,19.0,20.0,21.0,22.0,23.0,24.0,25.0,26.0,27.0]
+//         },
+//         visualMap: {
+//           min: -2.5,
+//           max: 2.5,
+//           calculable: true,
+//           orient: 'horizontal',
+//           left: '2000px',
+//           bottom: '15%',
+//           inRange: {
+//             color: ['blue', '#ffffff', 'red'] // 配置颜色范围
+//           }
+//         },
+//         series: [{
+//           name: 'try',
+//           type: 'heatmap',
+//           // data: heatMapData1,
+//           data: [],
+//           label: {
+//             show: false
+//           },
+//           itemStyle: {
+//             emphasis: {
+//               shadowBlur: 10,
+//               shadowColor: 'rgba(0, 0, 0, 0.5)'
+//             }
+//           }
+//         }]
           
   
 
-}
+// }
 
 
 // axios.get(`http://localhost:8888/nao/predictionExamination/error?year=${year}&month=${month}`, { params1 })
