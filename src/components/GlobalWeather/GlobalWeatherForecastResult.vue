@@ -183,7 +183,17 @@ const handleDateTimeChange = () => {
         imgSrc_of_rain.value = `${prefix}${imgSrc_of_rain_Array[0]}`;
         text_of_rain.value = text_of_rain_Array[0];
       });
-
+  axios.get('/GB/predictionResult/wind?year='+selectedYear.value+'&month='+selectedMonth.value+'&day='+selectedDay.value+'&hour='+selectedHour.value)
+    .then(res => {
+      index_wind = 0;
+      console.log(res.data.title);
+      title_of_wind_Array = res.data.title;
+      imgSrc_of_wind_Array = res.data.imgSrc;
+      text_of_wind_Array = res.data.text;
+      title_of_wind.value = title_of_wind_Array[0];
+      imgSrc_of_wind.value = `${prefix}${imgSrc_of_wind_Array[0]}`;
+      text_of_wind.value = text_of_wind_Array[0];
+    });
   axios.get('/GB/predictionResult/wind2?year='+selectedYear.value+'&month='+selectedMonth.value+'&day='+selectedDay.value+'&hour='+selectedHour.value)
       .then(res => {
         index_wind2 = 0;
