@@ -145,13 +145,13 @@ axios.get('/seaice/error?year='+Number(selectedYear.value)+'&month='+Number(sele
     {
       name: 'ours',
       type: 'line',
-      data:  response.data.BACC,
+      data:  response.data["2023_BACC"],
               
     },
     {
       name: 'persistence',
       type: 'line',
-      data:  response.data.per_BACC,
+      data:  response.data["2023_per_BACC"],
     },
 
   ]
@@ -230,12 +230,12 @@ axios.get('/seaice/error?year='+Number(selectedYear.value)+'&month='+Number(sele
     {
       name: 'ours',
       type: 'line',
-      data: response.data.RMSE,
+      data: response.data["2023_RMSE"],
     },
     {
       name: 'persistence',
       type: 'line',
-     data: response.data.per_RMSE,
+     data: response.data["2023_per_RMSE"],
     },
 
   ]
@@ -308,25 +308,25 @@ axios.get('/seaice/initial/SICErrorBox')
     {
       name: 'withoutDA_withoutBC',
       type: 'candlestick',
-      data: response.data.withoutDA_withoutBC
+      data: response.data["withoutDA_withoutBC"]
       
     },
     {
       name: 'withoutDA_withBC_RMSE',
       type: 'candlestick',
-      data: response.data.withoutDA_withBC_RMSE
+      data: response.data["withoutDA_withBC_RMSE"]
       
     },
     {
       name: 'withDA_withoutBC_RMSE',
       type: 'candlestick',
-      data: response.data.withDA_withoutBC_RMSE
+      data: response.data["withDA_withoutBC_RMSE"]
       
     },
     {
       name: 'MITgcm(with DA)withBC_RMSE',
       type: 'candlestick',
-      data: response.data.withDA_withBC_RMSE
+      data: response.data["MITgcm(with DA)withBC_RMSE"]
       
     }
   ]
@@ -416,7 +416,7 @@ option3.value={
   series: [
     {
       type: 'line',
-      data: response.data.RMSD
+      data: response.data["RMSD"]
     }    
   ]
 }
@@ -494,12 +494,12 @@ axios.get('/seaice/predictionExamination/errorAnalysis?year='+Number(selectedYea
     {
       name: 'bais',
       type: 'bar',
-      data: response.data.BAIS
+      data: response.data["BAIS"]
     },
     {
       name: 'variance',
       type: 'bar',
-      data: response.data.VAR
+      data: response.data["VAR"]
     },
 
   ]
@@ -583,7 +583,7 @@ axios.get('/seaice/predictionExamination/errorAnalysis?year='+Number(selectedYea
   series: [
     {
       type: 'line',
-      data: response.data.CORRELATION
+      data: response.data["CORRELATION"]
     }    
   ]
 }
@@ -660,12 +660,12 @@ axios.get('/seaice/predictionExamination/errorAnalysis?year='+Number(selectedYea
     {
       name: 'observation',
       type: 'line',
-      data: response.data.OBS_STD
+      data: response.data["OBS_STD"]
     },
     {
       name: 'IceTFT',
       type: 'line',
-      data: response.data.PRE_STD
+      data: response.data["PRE_STD"]
     } 
  ]
 }
