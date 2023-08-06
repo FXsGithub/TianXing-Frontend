@@ -129,7 +129,7 @@ import {
         <p class="text_of_graph">{{ Chart1_Description.text }}</p>
       </el-tab-pane>
       <el-tab-pane label="预报误差">
-        <div class="chart2-container">
+        <div class="chart-container">
           <v-chart class="chart" :option="chart2" autoresize></v-chart>
           <el-button type="primary" class="arrow-left" :icon="ArrowLeft" @click="change_Month('left')"></el-button>
           <el-button type="primary" class="arrow-right" :icon="ArrowRight" @click="change_Month('right')"></el-button>
