@@ -16,7 +16,7 @@ const month = currentDate.getMonth() < 10 ? '0' + (currentDate.getMonth() + 1 + 
 
 
 
-const SICChartErroPrediction = ref('这张图显示了2023年6月的4周SIC预测结果与基线方法的比较。预测结果始终优于persistence，在第28天，预测结果比persistence的RMSE低26.48%，证明了预测结果的有效性。')
+const SICChartErroPrediction = ref('这张图显示了2023年1月的4周SIC预测结果与基线方法的比较。预测结果始终优于persistence，在第28天，预测结果比persistence的RMSE低26.48%，证明了预测结果的有效性。')
 
 const SICChartErroAdd = ref('这张图显示了2022年里四种SIC预测结果提前1到7天的统计结果。MITgcm output (with DA) with BC显著降低了SIC的预测误差，RMSE一直低于0.09，更好地提高了SIC预报结果准确性。')
 
@@ -32,7 +32,9 @@ selectedMonth.value = month;
 
 
 const chartTitle = ref('')
-chartTitle.value = `${selectedYear.value}年${selectedMonth.value}月~${Number(selectedYear.value) + 1 + ''}年${selectedMonth.value}月 预测结果误差折线图`
+//chartTitle.value = `${selectedYear.value}年${selectedMonth.value}月~${Number(selectedYear.value) + 1 + ''}年${selectedMonth.value}月 预测结果误差折线图`
+chartTitle.value = `2023年1月预测结果误差折线图`
+
 
 const chartTitle2 = ref('')
 chartTitle2.value = `${selectedYear.value}年${selectedMonth.value}月~${Number(selectedYear.value) + 1 + ''}年${selectedMonth.value}月 预测结果误差折线图`
@@ -65,7 +67,7 @@ chartX.value = [`${selectedYear.value}/${selectedMonth.value}/1`,`${selectedYear
 
 
 function updateChartTitle() {
-  chartTitle.value = `${selectedYear.value}年${selectedMonth.value}月~${Number(selectedYear.value) + 1 + ''}年${selectedMonth.value}月 预测结果误差折线图`;
+  //chartTitle.value = `${selectedYear.value}年${selectedMonth.value}月~${Number(selectedYear.value) + 1 + ''}年${selectedMonth.value}月 预测结果误差折线图`;
   // chartTitle2.value = `${selectedYear.value}年${selectedMonth.value}月~${Number(selectedYear.value) + 1 + ''}年${selectedMonth.value}月 预测结果误差折线图`;
   chartTitle3.value = `2022年SIC回报结果误差箱型图`;
   chartTitle4.value = `SIE预测误差分析`;
@@ -116,7 +118,7 @@ function updateChartTitle() {
 }
 
 
-axios.get('/seaice/error?year='+Number(selectedYear.value)+'&month='+Number(selectedMonth.value))
+axios.get('http://www.tjensoprediction.com:8080/seaice/error?year=2023&month=1')
     .then(response => {
       console.log(response.data);
   option1.value={
@@ -157,7 +159,7 @@ axios.get('/seaice/error?year='+Number(selectedYear.value)+'&month='+Number(sele
   ]
 }
 
- SICChartErroPrediction.value = response.data.description;
+ //SICChartErroPrediction.value = response.data.description;
  })
     .catch(error => {
       console.error(error);
@@ -165,51 +167,50 @@ axios.get('/seaice/error?year='+Number(selectedYear.value)+'&month='+Number(sele
       
 
 
-option1.value={
-  title: {
-    text: chartTitle.value,
-    left: 'center' //标题水平居中
-  },
-  tooltip: {},
-  xAxis: {
-    type: 'category',
-    name: '时间',
-    data: chartX.value
-  },
-  yAxis: {
-    type: 'value',
-    name: 'BACC(%)',
-    data: [10, 12, 14, 16, 18]
-  },
-  legend: { //图例
-    data: ['ours', 'persistence'],
-    orient: 'horizontal',
-    left: 'center',
-    bottom: '5',
-  },
-  series: [
-    {
-      name: 'ours',
-      type: 'line',
-      data: []
+// option1.value={
+//   title: {
+//     text: chartTitle.value,
+//     left: 'center' //标题水平居中
+//   },
+//   tooltip: {},
+//   xAxis: {
+//     type: 'category',
+//     name: '时间',
+//     data: chartX.value
+//   },
+//   yAxis: {
+//     type: 'value',
+//     name: 'BACC(%)',
+//     data: [10, 12, 14, 16, 18]
+//   },
+//   legend: { //图例
+//     data: ['ours', 'persistence'],
+//     orient: 'horizontal',
+//     left: 'center',
+//     bottom: '5',
+//   },
+//   series: [
+//     {
+//       name: 'ours',
+//       type: 'line',
+//       data: []
               
-    },
-    {
-      name: 'persistence',
-      type: 'line',
-      data: []
-    },
+//     },
+//     {
+//       name: 'persistence',
+//       type: 'line',
+//       data: []
+//     },
 
-  ]
-}
+//   ]
+// }
 
 
-axios.get('/seaice/error?year='+Number(selectedYear.value)+'&month='+Number(selectedMonth.value))
+axios.get('http://www.tjensoprediction.com:8080/seaice/error?year=2023&month=1')
     .then(response => {
       console.log(response.data);
       option2.value={
-  
-  tooltip: {},
+    tooltip: {},
   xAxis: {
     type: 'category',
     name: '时间',
@@ -241,51 +242,51 @@ axios.get('/seaice/error?year='+Number(selectedYear.value)+'&month='+Number(sele
   ]
 }
 
-     SICChartErroPrediction.value = response.data.description;
+    // SICChartErroPrediction.value = response.data.description;
     })
     .catch(error => {
       console.error(error);
     });
 
-option2.value={
-  // title: {
-  //   text: chartTitle2.value,
-  //   left: 'center' //标题水平居中
-  // },
-  tooltip: {},
-  xAxis: {
-    type: 'category',
-    name: '时间',
-    data: chartX.value
-  },
-  yAxis: {
-    type: 'value',
-    name: 'RMSE(%)',
-    data: [10, 12, 14, 16, 18]
-  },
-  legend: { //图例
-    data: ['ours', 'persistence'],
-    orient: 'horizontal',
-    left: 'center',
-    bottom: '5',
-  },
-  series: [
-    {
-      name: 'ours',
-      type: 'line',
-      data: []
-    },
-    {
-      name: 'persistence',
-      type: 'line',
-      data: []
-    },
+// option2.value={
+//   // title: {
+//   //   text: chartTitle2.value,
+//   //   left: 'center' //标题水平居中
+//   // },
+//   tooltip: {},
+//   xAxis: {
+//     type: 'category',
+//     name: '时间',
+//     data: chartX.value
+//   },
+//   yAxis: {
+//     type: 'value',
+//     name: 'RMSE(%)',
+//     data: [10, 12, 14, 16, 18]
+//   },
+//   legend: { //图例
+//     data: ['ours', 'persistence'],
+//     orient: 'horizontal',
+//     left: 'center',
+//     bottom: '5',
+//   },
+//   series: [
+//     {
+//       name: 'ours',
+//       type: 'line',
+//       data: []
+//     },
+//     {
+//       name: 'persistence',
+//       type: 'line',
+//       data: []
+//     },
 
-  ]
-}
+//   ]
+// }
 
 
-axios.get('/seaice/initial/SICErrorBox')
+axios.get('http://www.tjensoprediction.com:8080/seaice/errorBox?year=2022')
     .then(response => {
       console.log(response.data);
       option3.value={
@@ -308,85 +309,103 @@ axios.get('/seaice/initial/SICErrorBox')
     {
       name: 'withoutDA_withoutBC',
       type: 'candlestick',
-      data: response.data["withoutDA_withoutBC"]
+      data: response.data["withoutDA_withoutBC"],
+      itemStyle: {
+							color0: 'blue',
+              opacity:0.5
+						},
+     
       
     },
     {
       name: 'withoutDA_withBC_RMSE',
       type: 'candlestick',
-      data: response.data["withoutDA_withBC_RMSE"]
+      data: response.data["withoutDA_withBC_RMSE"],
+      itemStyle: {
+							color0: 'yellow',
+              opacity:0.4
+						},
       
     },
     {
       name: 'withDA_withoutBC_RMSE',
       type: 'candlestick',
-      data: response.data["withDA_withoutBC_RMSE"]
+      data: response.data["withDA_withoutBC_RMSE"],
+      itemStyle: {
+							color0: 'red',
+              opacity:0.4
+						},
       
     },
     {
       name: 'MITgcm(with DA)withBC_RMSE',
       type: 'candlestick',
-      data: response.data["MITgcm(with DA)withBC_RMSE"]
+      data: response.data["MITgcm(with DA)withBC_RMSE"],
+      itemStyle: {
+							color0: 'green',
+              
+						},
+      
       
     }
   ]
 
 }
 
-    SICChartErroAdd.value = response.data.description;
+    //SICChartErroAdd.value = response.data.description;
     })
     .catch(error => {
       console.error(error);
     });
 
 
-option3.value={
-  title: {
-    text: chartTitle3.value,
-    left: 'center' //标题水平居中
-  },
-  tooltip: {},
-  xAxis: {
-    type: 'category',
-    name: 'Lead time',
-    data: ['1day', '2day', '3day', '4day','5day','6day','7day']
-  },
-  yAxis: {
-    type: 'value',
-    name: 'RMSE(%)',
-    data: [0, 5, 10, 15, 20]
-  },
-  series: [
-    {
-      name: 'withoutDA_withoutBC',
-      type: 'candlestick',
-      data: [
-      ]
-    },
-    {
-      name: 'withoutDA_withBC_RMSE',
-      type: 'candlestick',
-      data: [
-      ]
-    },
-    {
-      name: 'withDA_withoutBC_RMSE',
-      type: 'candlestick',
-      data: [
-      ]
-    },
-    {
-      name: 'MITgcm(with DA)withBC_RMSE',
-      type: 'candlestick',
-      data: [
-      ]
-    }
-  ]
+// option3.value={
+//   title: {
+//     text: chartTitle3.value,
+//     left: 'center' //标题水平居中
+//   },
+//   tooltip: {},
+//   xAxis: {
+//     type: 'category',
+//     name: 'Lead time',
+//     data: ['1day', '2day', '3day', '4day','5day','6day','7day']
+//   },
+//   yAxis: {
+//     type: 'value',
+//     name: 'RMSE(%)',
+//     data: [0, 5, 10, 15, 20]
+//   },
+//   series: [
+//     {
+//       name: 'withoutDA_withoutBC',
+//       type: 'candlestick',
+//       data: [
+//       ]
+//     },
+//     {
+//       name: 'withoutDA_withBC_RMSE',
+//       type: 'candlestick',
+//       data: [
+//       ]
+//     },
+//     {
+//       name: 'withDA_withoutBC_RMSE',
+//       type: 'candlestick',
+//       data: [
+//       ]
+//     },
+//     {
+//       name: 'MITgcm(with DA)withBC_RMSE',
+//       type: 'candlestick',
+//       data: [
+//       ]
+//     }
+//   ]
 
-}
+// }
 
 
- axios.get('/seaice/predictionExamination/errorAnalysis?year='+Number(selectedYear.value))
+ axios.get('http://www.tjensoprediction.com:8080/seaice/predictionExamination/errorAnalysis?year=2020-2022')
     .then(response => {
       console.log(response.data);
   option4.value={
@@ -421,7 +440,7 @@ option3.value={
   ]
 }
 
-    SIEChartErroAnalyse.value = response.data.description;
+    //SIEChartErroAnalyse.value = response.data.description;
     })
     .catch(error => {
       console.error(error);
@@ -429,41 +448,41 @@ option3.value={
 
 
 
-option4.value={
-  title: {
-    text: chartTitle4.value,
-    left: 'center' //标题水平居中
-  },
-  tooltip: {},
-  xAxis: {
-    type: 'category',
-    // name: '时间',
-    data: ['2020 spring','2020 summer','2020 fall','2020 winter',
-           '2021 spring','2021 summer', '2021 fall','2021 winter',
-           '2022 spring','2022 summer', '2022 fall','2022 winter']
-  },
-  yAxis: {
-    type: 'value',
-    name: 'RMSD(million km²)',
-    data: [0.0, 0.5, 1.0, 1.5, 2.0 ,2.5 ,3.0]
-  },
-  legend: { //图例
-    data: [''],
-    orient: 'horizontal',
-    left: 'center',
-    bottom: '5',
-  },
-  series: [
-    {
-      // name: 'ours',
-      type: 'line',
-      data: []
-    }    
-  ]
-}
+// option4.value={
+//   title: {
+//     text: chartTitle4.value,
+//     left: 'center' //标题水平居中
+//   },
+//   tooltip: {},
+//   xAxis: {
+//     type: 'category',
+//     // name: '时间',
+//     data: ['2020 spring','2020 summer','2020 fall','2020 winter',
+//            '2021 spring','2021 summer', '2021 fall','2021 winter',
+//            '2022 spring','2022 summer', '2022 fall','2022 winter']
+//   },
+//   yAxis: {
+//     type: 'value',
+//     name: 'RMSD(million km²)',
+//     data: [0.0, 0.5, 1.0, 1.5, 2.0 ,2.5 ,3.0]
+//   },
+//   legend: { //图例
+//     data: [''],
+//     orient: 'horizontal',
+//     left: 'center',
+//     bottom: '5',
+//   },
+//   series: [
+//     {
+//       // name: 'ours',
+//       type: 'line',
+//       data: []
+//     }    
+//   ]
+// }
 
 
-axios.get('/seaice/predictionExamination/errorAnalysis?year='+Number(selectedYear.value))
+axios.get('http://www.tjensoprediction.com:8080/seaice/predictionExamination/errorAnalysis?year=2020-2022')
     .then(response => {
       console.log(response.data);
       option5.value={
@@ -505,55 +524,55 @@ axios.get('/seaice/predictionExamination/errorAnalysis?year='+Number(selectedYea
   ]
 }
 
-    SIEChartErroAnalyse.value = response.data.description;
+    //SIEChartErroAnalyse.value = response.data.description;
     })
     .catch(error => {
       console.error(error);
     });
 
 
-option5.value={
-  title: {
-    // text: chartTitle4.value,
-    left: 'center' //标题水平居中
-  },
-  tooltip: {},
-  xAxis: {
-    type: 'category',
-    // name: '时间',
-    data: ['2020 spring','2020 summer','2020 fall','2020 winter',
-           '2021 spring','2021 summer', '2021 fall','2021 winter',
-           '2022 spring','2022 summer', '2022 fall','2022 winter']
-  },
-  yAxis: {
-    type: 'value',
-    name: 'RMSD²(million km²)',
-    data: [0.2, 0.4, 0.6, 0.8, 1.0 ,1.2 ,1.4 ,1.6 ,1.8]
-  },
-  legend: { //图例
-    data: ['bais', 'variance'],
-    orient: 'horizontal',
-    left: 'center',
-    bottom: '5',
-  },
-  series: [
-    {
-      name: 'bais',
-      type: 'bar',
-      data: []
-    },
-    {
-      name: 'variance',
-      type: 'bar',
-      data: []
-    },
+// option5.value={
+//   title: {
+//     // text: chartTitle4.value,
+//     left: 'center' //标题水平居中
+//   },
+//   tooltip: {},
+//   xAxis: {
+//     type: 'category',
+//     // name: '时间',
+//     data: ['2020 spring','2020 summer','2020 fall','2020 winter',
+//            '2021 spring','2021 summer', '2021 fall','2021 winter',
+//            '2022 spring','2022 summer', '2022 fall','2022 winter']
+//   },
+//   yAxis: {
+//     type: 'value',
+//     name: 'RMSD²(million km²)',
+//     data: [0.2, 0.4, 0.6, 0.8, 1.0 ,1.2 ,1.4 ,1.6 ,1.8]
+//   },
+//   legend: { //图例
+//     data: ['bais', 'variance'],
+//     orient: 'horizontal',
+//     left: 'center',
+//     bottom: '5',
+//   },
+//   series: [
+//     {
+//       name: 'bais',
+//       type: 'bar',
+//       data: []
+//     },
+//     {
+//       name: 'variance',
+//       type: 'bar',
+//       data: []
+//     },
 
-  ]
-}
+//   ]
+// }
 
 
 
-axios.get('/seaice/predictionExamination/errorAnalysis?year='+Number(selectedYear.value))
+axios.get('http://www.tjensoprediction.com:8080/seaice/predictionExamination/errorAnalysis?year=2020-2022')
     .then(response => {
       console.log(response.data);
  option6.value={
@@ -588,48 +607,48 @@ axios.get('/seaice/predictionExamination/errorAnalysis?year='+Number(selectedYea
   ]
 }
 
-    SIEChartErroAnalyse.value = response.data.description;
+    //SIEChartErroAnalyse.value = response.data.description;
     })
     .catch(error => {
       console.error(error);
     });
 
-option6.value={
-  title: {
-    // text: chartTitle4.value,
-    left: 'center' //标题水平居中
-  },
-  tooltip: {},
-  xAxis: {
-    type: 'category',
-    // name: '时间',
-    data: ['2020 spring','2020 summer','2020 fall','2020 winter',
-           '2021 spring','2021 summer', '2021 fall','2021 winter',
-           '2022 spring','2022 summer', '2022 fall','2022 winter']
-  },
-  yAxis: {
-    type: 'value',
-    name: 'Correlation coefficient',
-    data: [0.970, 0.975, 0.980, 0.985, 0.990 ,0.995 ,1.000]
-  },
-  legend: { //图例
-    data: [''],
-    orient: 'horizontal',
-    left: 'center',
-    bottom: '5',
-  },
-  series: [
-    {
-      // name: 'ours',
-      type: 'line',
-      data: []
-    }    
-  ]
-}
+// option6.value={
+//   title: {
+//     // text: chartTitle4.value,
+//     left: 'center' //标题水平居中
+//   },
+//   tooltip: {},
+//   xAxis: {
+//     type: 'category',
+//     // name: '时间',
+//     data: ['2020 spring','2020 summer','2020 fall','2020 winter',
+//            '2021 spring','2021 summer', '2021 fall','2021 winter',
+//            '2022 spring','2022 summer', '2022 fall','2022 winter']
+//   },
+//   yAxis: {
+//     type: 'value',
+//     name: 'Correlation coefficient',
+//     data: [0.970, 0.975, 0.980, 0.985, 0.990 ,0.995 ,1.000]
+//   },
+//   legend: { //图例
+//     data: [''],
+//     orient: 'horizontal',
+//     left: 'center',
+//     bottom: '5',
+//   },
+//   series: [
+//     {
+//       // name: 'ours',
+//       type: 'line',
+//       data: []
+//     }    
+//   ]
+// }
 
 
 
-axios.get('/seaice/predictionExamination/errorAnalysis?year='+Number(selectedYear.value))
+axios.get('http://www.tjensoprediction.com:8080/seaice/predictionExamination/errorAnalysis?year=2020-2022')
     .then(response => {
       console.log(response.data);
   option7.value={
@@ -670,49 +689,49 @@ axios.get('/seaice/predictionExamination/errorAnalysis?year='+Number(selectedYea
  ]
 }
 
-    SIEChartErroAnalyse.value = response.data.description;
+    //SIEChartErroAnalyse.value = response.data.description;
     })
     .catch(error => {
       console.error(error);
     });
 
-option7.value={
-  title: {
-    // text: chartTitle4.value,
-    left: 'center' //标题水平居中
-  },
-  tooltip: {},
-  xAxis: {
-    type: 'category',
-    // name: '时间',
-    data:['2020 spring','2020 summer','2020 fall','2020 winter',
-           '2021 spring','2021 summer', '2021 fall','2021 winter',
-           '2022 spring','2022 summer', '2022 fall','2022 winter']
-  },
-  yAxis: {
-    type: 'value',
-    name: 'standard deviation(million km²)',
-    data: [0.0, 0.5, 1.0, 1.5, 2.0 ,2.5 ,3.0,3.5]
-  },
-  legend: { //图例
-    data: ['observation','IceTFT'],
-    orient: 'horizontal',
-    left: 'center',
-    bottom: '5',
-  },
-  series: [
-    {
-      name: 'observation',
-      type: 'line',
-      data: []
-    },
-    {
-      name: 'IceTFT',
-      type: 'line',
-      data: []
-    } 
-  ]
-}
+// option7.value={
+//   title: {
+//     // text: chartTitle4.value,
+//     left: 'center' //标题水平居中
+//   },
+//   tooltip: {},
+//   xAxis: {
+//     type: 'category',
+//     // name: '时间',
+//     data:['2020 spring','2020 summer','2020 fall','2020 winter',
+//            '2021 spring','2021 summer', '2021 fall','2021 winter',
+//            '2022 spring','2022 summer', '2022 fall','2022 winter']
+//   },
+//   yAxis: {
+//     type: 'value',
+//     name: 'standard deviation(million km²)',
+//     data: [0.0, 0.5, 1.0, 1.5, 2.0 ,2.5 ,3.0,3.5]
+//   },
+//   legend: { //图例
+//     data: ['observation','IceTFT'],
+//     orient: 'horizontal',
+//     left: 'center',
+//     bottom: '5',
+//   },
+//   series: [
+//     {
+//       name: 'observation',
+//       type: 'line',
+//       data: []
+//     },
+//     {
+//       name: 'IceTFT',
+//       type: 'line',
+//       data: []
+//     } 
+//   ]
+// }
 
 
 
