@@ -158,28 +158,31 @@ axios.get('http://www.tjensoprediction.com:8080/imgs/WEA_TP/getImgsPath?year='+s
       imgSrc_of_rain.value = `${prefix}${imgSrc_of_rain_Array[0]}`;
       text_of_rain.value = text_of_rain_Array[0];
     });
-// axios.get('/GB/predictionResult/wind?year='+selectedYear.value+'&month='+selectedMonth.value+'&day='+selectedDay.value+'&hour='+selectedHour.value)
-//     .then(res => {
-//       index_wind = 0;
-//       console.log(res.data.title);
-//       title_of_wind_Array = res.data.title;
-//       imgSrc_of_wind_Array = res.data.imgSrc;
-//       text_of_wind_Array = res.data.text;
-//       title_of_wind.value = title_of_wind_Array[0];
-//       imgSrc_of_wind.value = `${prefix}${imgSrc_of_wind_Array[0]}`;
-//       text_of_wind.value = text_of_wind_Array[0];
-//     });
-// axios.get('/GB/predictionResult/wind2?year='+selectedYear.value+'&month='+selectedMonth.value+'&day='+selectedDay.value+'&hour='+selectedHour.value)
-//     .then(res => {
-//       index_wind2 = 0;
-//       console.log(res.data.title);
-//       title_of_wind2_Array = res.data.title;
-//       imgSrc_of_wind2_Array = res.data.imgSrc;
-//       text_of_wind2_Array = res.data.text;
-//       title_of_wind2.value = title_of_wind2_Array[0];
-//       imgSrc_of_wind2.value = `${prefix}${imgSrc_of_wind2_Array[0]}`;
-//       text_of_wind2.value = text_of_wind2_Array[0];
-//     });
+axios.get('http://www.tjensoprediction.com:8080/imgs/WEA_U10/getImgsPath?year='+selectedYear.value+'&month='+selectedMonth.value+'&day='+selectedDay.value+'&hour='+selectedHour.value)
+    .then(res => {
+      index_wind = 0;
+      console.log(res.data.titles);
+      console.log(res.data.texts);
+      title_of_wind_Array = res.data.titles;
+      imgSrc_of_wind_Array = res.data.imgSrc;
+      text_of_wind_Array = res.data.texts;
+      title_of_wind.value = title_of_wind_Array[0];
+      imgSrc_of_wind.value = `${prefix}${imgSrc_of_wind_Array[0]}`;
+      text_of_wind.value = text_of_wind_Array[0];
+    });
+axios.get('http://www.tjensoprediction.com:8080/imgs/WEA_MSLP/getImgsPath?year='+selectedYear.value+'&month='+selectedMonth.value+'&day='+selectedDay.value+'&hour='+selectedHour.value)
+    .then(res => {
+      ndex_wind2 = 0;
+      console.log(res.data.titles);
+      console.log(res.data.texts);
+      title_of_wind2_Array = res.data.titles;
+      imgSrc_of_wind2_Array = res.data.imgSrc;
+      text_of_wind2_Array = res.data.texts;
+      title_of_wind2.value = title_of_wind2_Array[0];
+      imgSrc_of_wind2.value = `${prefix}${imgSrc_of_wind2_Array[0]}`;
+      text_of_wind2.value = text_of_wind2_Array[0];
+    });
+
 
 const handleDateTimeChange = () => {
   // 当日期时间选择发生变化时被调用
@@ -218,28 +221,28 @@ const handleDateTimeChange = () => {
         imgSrc_of_rain.value = `${prefix}${imgSrc_of_rain_Array[0]}`;
         text_of_rain.value = text_of_rain_Array[0];
       });
-  // axios.get('/GB/predictionResult/wind?year='+selectedYear.value+'&month='+selectedMonth.value+'&day='+selectedDay.value+'&hour='+selectedHour.value)
-  //   .then(res => {
-  //     index_wind = 0;
-  //     console.log(res.data.title);
-  //     title_of_wind_Array = res.data.title;
-  //     imgSrc_of_wind_Array = res.data.imgSrc;
-  //     text_of_wind_Array = res.data.text;
-  //     title_of_wind.value = title_of_wind_Array[0];
-  //     imgSrc_of_wind.value = `${prefix}${imgSrc_of_wind_Array[0]}`;
-  //     text_of_wind.value = text_of_wind_Array[0];
-  //   });
-  // axios.get('/GB/predictionResult/wind2?year='+selectedYear.value+'&month='+selectedMonth.value+'&day='+selectedDay.value+'&hour='+selectedHour.value)
-  //     .then(res => {
-  //       index_wind2 = 0;
-  //       console.log(res.data.imgSrc);
-  //       title_of_wind2_Array = res.data.title;
-  //       imgSrc_of_wind2_Array = res.data.imgSrc;
-  //       text_of_wind2_Array = res.data.text;
-  //       title_of_wind2.value = title_of_wind2_Array[0];
-  //       imgSrc_of_wind2.value = `${prefix}${imgSrc_of_wind2_Array[0]}`;
-  //       text_of_wind2.value = text_of_wind2_Array[0];
-  //     });
+  axios.get('http://www.tjensoprediction.com:8080/imgs/WEA_U10/getImgsPath?year='+selectedYear.value+'&month='+selectedMonth.value+'&day='+selectedDay.value+'&hour='+selectedHour.value)
+    .then(res => {
+        index_wind = 0;
+        console.log(res.data.imgSrc);
+        title_of_wind_Array = res.data.titles;
+        imgSrc_of_wind_Array = res.data.imgSrc;
+        text_of_wind_Array = res.data.texts;
+        title_of_wind.value = title_of_wind_Array[0];
+        imgSrc_of_wind.value = `${prefix}${imgSrc_of_wind_Array[0]}`;
+        text_of_wind.value = text_of_wind_Array[0];
+    });
+  axios.get('http://www.tjensoprediction.com:8080/imgs/WEA_MSLP/getImgsPath?year='+selectedYear.value+'&month='+selectedMonth.value+'&day='+selectedDay.value+'&hour='+selectedHour.value)
+      .then(res => {
+        index_wind2 = 0;
+        console.log(res.data.imgSrc);
+        title_of_wind2_Array = res.data.titles;
+        imgSrc_of_wind2_Array = res.data.imgSrc;
+        text_of_wind2_Array = res.data.texts;
+        title_of_wind2.value = title_of_wind2_Array[0];
+        imgSrc_of_wind2.value = `${prefix}${imgSrc_of_wind2_Array[0]}`;
+        text_of_wind2.value = text_of_wind2_Array[0];
+      });
 }
 
 
@@ -289,51 +292,51 @@ function change_time_rain(flag) {
   text_of_rain.value=text_of_rain_Array[index_rain];
 }
 
-// function change_time_wind(flag) {
-//
-// if(flag==="left"){
-//   if(index_wind>0){
-//     index_wind--;
-//   }
-//   else{
-//     index_wind=19;
-//   }
-// }
-// else if(flag==="right"){
-//   if(index_wind<19){
-//     index_wind++;
-//   }
-//   else{
-//     index_wind=0;
-//   }
-// }
-// title_of_wind.value=title_of_wind_Array[index_wind];
-// imgSrc_of_wind.value=`${prefix}${imgSrc_of_wind_Array[index_wind]}`;
-// text_of_wind.value=text_of_wind_Array[index_wind];
-// }
-//
-// function change_time_wind2(flag) {
-//
-// if(flag==="left"){
-//   if(index_wind2>0){
-//     index_wind2--;
-//   }
-//   else{
-//     index_wind2=19;
-//   }
-// }
-// else if(flag==="right"){
-//   if(index_wind2<19){
-//     index_wind2++;
-//   }
-//   else{
-//     index_wind2=0;
-//   }
-// }
-// title_of_wind2.value=title_of_wind2_Array[index_wind2];
-// imgSrc_of_wind2.value=`${prefix}${imgSrc_of_wind2_Array[index_wind2]}`;
-// text_of_wind2.value=text_of_wind2_Array[index_wind2];
-// }
+function change_time_wind(flag) {
+
+if(flag==="left"){
+  if(index_wind>0){
+    index_wind--;
+  }
+  else{
+    index_wind=19;
+  }
+}
+else if(flag==="right"){
+  if(index_wind<19){
+    index_wind++;
+  }
+  else{
+    index_wind=0;
+  }
+}
+title_of_wind.value=title_of_wind_Array[index_wind];
+imgSrc_of_wind.value=`${prefix}${imgSrc_of_wind_Array[index_wind]}`;
+text_of_wind.value=text_of_wind_Array[index_wind];
+}
+
+function change_time_wind2(flag) {
+
+if(flag==="left"){
+  if(index_wind2>0){
+    index_wind2--;
+  }
+  else{
+    index_wind2=19;
+  }
+}
+else if(flag==="right"){
+  if(index_wind2<19){
+    index_wind2++;
+  }
+  else{
+    index_wind2=0;
+  }
+}
+title_of_wind2.value=title_of_wind2_Array[index_wind2];
+imgSrc_of_wind2.value=`${prefix}${imgSrc_of_wind2_Array[index_wind2]}`;
+text_of_wind2.value=text_of_wind2_Array[index_wind2];
+}
 /* 左右切换 -- end */
 </script>
 
@@ -395,19 +398,19 @@ function change_time_rain(flag) {
           </div>
         </el-tab-pane>
         <el-tab-pane label="风场预测">
-<!--          <div class="whole_container">-->
-<!--            <p class="picture_title">-->
-<!--              {{ title_of_wind }}-->
-<!--            </p>-->
-<!--            <div class="pic_container">-->
-<!--              <img class="picture" :src="imgSrc_of_wind" alt="">-->
-<!--            </div>-->
-<!--            <p class="picture_text">-->
-<!--              {{ text_of_wind }}-->
-<!--            </p>-->
-<!--            <el-button type="primary" class="arrow-left" :icon="ArrowLeft" @click="change_time_wind('left')"></el-button>-->
-<!--            <el-button type="primary" class="arrow-right" :icon="ArrowRight" @click="change_time_wind('right')"></el-button>-->
-<!--          </div>-->
+           <div class="whole_container">
+            <p class="picture_title">
+              {{ title_of_wind }}
+            </p>
+            <div class="pic_container">
+              <img class="picture" :src="imgSrc_of_wind" alt="">
+            </div>
+            <p class="picture_text">
+              {{ text_of_wind }}
+            </p>
+            <el-button type="primary" class="arrow-left" :icon="ArrowLeft" @click="change_time_wind('left')"></el-button>
+            <el-button type="primary" class="arrow-right" :icon="ArrowRight" @click="change_time_wind('right')"></el-button>
+           </div>                
 <!--          <div class="whole_container2">-->
 <!--            <p class="picture_title2">-->
 <!--              {{ title_of_wind2 }}-->
