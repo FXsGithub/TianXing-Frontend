@@ -85,14 +85,14 @@ const params1 = {
 
  
 
-axios.get('/nao/predictionExamination/error?year='+Number(selectedYear.value)+'&month='+Number(selectedMonth.value))
+axios.get('http://www.tjensoprediction.com:8080/imgs/WEA_MSLP/getImgsPath?year='+Number(selectedYear.value)+'&month='+Number(selectedMonth.value))
     .then(res => {
       console.log(res.data.imgSrc);
       // title_of_option1.value='提前1个月预测';
       list = res.data.imgSrc;
       text_of_option1.value = res.data.text;
   });
-axios.get('/nao/predictionExamination/naoi')
+axios.get('http://www.tjensoprediction.com:8080/nao/predictionExamination/naoi')
     .then(res => {
       console.log(res.data);
       // title_of_option1.value='提前1个月预测';
@@ -262,62 +262,62 @@ axios.get('/nao/predictionExamination/naoi')
 
 
 
-option7.value={
-  title: {
-    text: '月度NAOI预测技巧',
-    left: 'center' //标题水平居中
-  },
-  tooltip: {},
-  xAxis: {
-    type: 'category',
-    name: '预测提前期（月）',
-    axisLine: {
-          lineStyle: {
-            color: 'black'
-          },
-          onZero: false  // 坐标轴与负刻度对齐
-        },
-    data:['1','2','3','4','5','6']
-  },
-  yAxis: {
-    type: 'value',
-    name: '相关系数技巧',
-    min: -0.2,
-    data: [-0.2, 0.0, 0.2, 0.4, 0.6 ,0.8]
-  },
-  legend: { //图例
-    data: ['95% significance','ECMWF','ECCC','NAO-MCR'],
-    orient: 'horizontal',
-    left: 'center',
-    bottom: '5',
-  },
-  series: [
-    {
-      name: '95% significance',
-      type: 'line',
-      lineStyle: {
-            type: "dashed", // 将线条类型改为虚线
-          },
-      data: [0.35, 0.35, 0.35, 0.35, 0.35, 0.35]
-    },
-    {
-      name: 'ECMWF',
-      type: 'line',
-      data: [0.8, 1.0, 0.5, -0.1, -0.12, 0.3]
-    } ,
-    {
-      name: 'ECCC',
-      type: 'line',
-      data: [0.6, 0.8, 0.75, 0.9, 0.1, 0.0]
-    } ,
-    {
-      name: 'NAO-MCR',
-      type: 'line',
-      data: [0.7, 0.43, 0.45, 0.4, 0.35, 0.45]
-    }      
+// option7.value={
+//   title: {
+//     text: '月度NAOI预测技巧',
+//     left: 'center' //标题水平居中
+//   },
+//   tooltip: {},
+//   xAxis: {
+//     type: 'category',
+//     name: '预测提前期（月）',
+//     axisLine: {
+//           lineStyle: {
+//             color: 'black'
+//           },
+//           onZero: false  // 坐标轴与负刻度对齐
+//         },
+//     data:['1','2','3','4','5','6']
+//   },
+//   yAxis: {
+//     type: 'value',
+//     name: '相关系数技巧',
+//     min: -0.2,
+//     data: [-0.2, 0.0, 0.2, 0.4, 0.6 ,0.8]
+//   },
+//   legend: { //图例
+//     data: ['95% significance','ECMWF','ECCC','NAO-MCR'],
+//     orient: 'horizontal',
+//     left: 'center',
+//     bottom: '5',
+//   },
+//   series: [
+//     {
+//       name: '95% significance',
+//       type: 'line',
+//       lineStyle: {
+//             type: "dashed", // 将线条类型改为虚线
+//           },
+//       data: [0.35, 0.35, 0.35, 0.35, 0.35, 0.35]
+//     },
+//     {
+//       name: 'ECMWF',
+//       type: 'line',
+//       data: [0.8, 1.0, 0.5, -0.1, -0.12, 0.3]
+//     } ,
+//     {
+//       name: 'ECCC',
+//       type: 'line',
+//       data: [0.6, 0.8, 0.75, 0.9, 0.1, 0.0]
+//     } ,
+//     {
+//       name: 'NAO-MCR',
+//       type: 'line',
+//       data: [0.7, 0.43, 0.45, 0.4, 0.35, 0.45]
+//     }      
 
-  ]
-}
+//   ]
+// }
 
 
 
@@ -342,24 +342,7 @@ option7.value={
         <div v-for="i in list">
           <img :src="i">          
         </div>
-        <!-- <div class="chart">
-          <v-chart :option="option1" autoresize></v-chart>
-        </div>
-        <div class="chart">
-          <v-chart :option="option2" autoresize></v-chart>
-        </div>
-        <div class="chart">
-          <v-chart :option="option3" autoresize></v-chart>
-        </div>
-        <div class="chart">
-          <v-chart :option="option4" autoresize></v-chart>
-        </div>
-        <div class="chart">
-          <v-chart :option="option5" autoresize></v-chart>
-        </div>
-        <div class="chart">
-          <v-chart :option="option6" autoresize></v-chart>
-        </div> -->
+       
         <div class="description">
           {{ text_of_option1 }}
         </div>
