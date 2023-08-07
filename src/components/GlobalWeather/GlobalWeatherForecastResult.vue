@@ -6,6 +6,14 @@ import {ArrowLeft, ArrowRight} from "@element-plus/icons-vue";
 import VChart from "vue-echarts";
 
 //时间选择器范围框定--start
+const start_time = ref(null);
+const end_time = ref(null);
+/* 赋初值————默认为气温预测 */
+axios.get('http://www.tjensoprediction.com:8080/imgs/WEA_T2M/getInitData')
+.then(res =>{
+  start_time.value = new Date(res.data.earliestDate);
+  end_time.value = new Date(res.data.latestDate);
+});
 
 const disabledMinute = () => {
   const allowedMinute = [0];
@@ -34,11 +42,34 @@ const disabledSecond = () => {
 };
 
 const limitedDateRange = (time) => {
-  const year = new Date(time).getFullYear();
-  const month = new Date(time).getMonth();
-  return year !== 2023 || month < 1 || month > 3; // Months are 0-based
+  return time.getTime() < start_time.value || time.getTime() > end_time.value;
 };
 
+function handleClick(tab, event) {
+  console.log(tab.props.label);
+  if(tab.props.label == '气温预测'){
+    axios.get('http://www.tjensoprediction.com:8080/imgs/WEA_T2M/getInitData')
+    .then(res =>{
+      start_time.value = new Date(res.data.earliestDate);
+      end_time.value = new Date(res.data.latestDate);
+    });
+  }
+  else if(tab.props.label == '降水预测'){ 
+    axios.get('http://www.tjensoprediction.com:8080/imgs/WEA_TP/getInitData')
+    .then(res =>{
+      start_time.value = new Date(res.data.earliestDate);
+      end_time.value = new Date(res.data.latestDate);
+      //end_time.value = new Date('2019-3-3');    //此行可以证明限制范围有根据选项卡改动
+    });
+  }
+  else{     //风场预测
+    axios.get('http://www.tjensoprediction.com:8080/imgs/WEA_U10/getInitData')
+    .then(res =>{
+      start_time.value = new Date(res.data.earliestDate);
+      end_time.value = new Date(res.data.latestDate);
+    });
+  }
+}
 //时间选择器范围框定--end
 
 const selectedDateTime = ref(null);
@@ -102,50 +133,56 @@ title_of_wind2.value = '';
 text_of_wind2.value = '';
 
 /* 赋初值 */
-axios.get('/GB/predictionResult/temperature?year='+selectedYear.value+'&month='+selectedMonth.value+'&day='+selectedDay.value+'&hour='+selectedHour.value)
+axios.get('http://www.tjensoprediction.com:8080/imgs/WEA_T2M/getImgsPath?year='+selectedYear.value+'&month='+selectedMonth.value+'&day='+selectedDay.value+'&hour='+selectedHour.value)
+//axios.get("http://www.tjensoprediction.com:8080/imgs/WEA_T2M/getImgsPath?year=2019&month=1&day=1&hour=0")
     .then(res => {
       index_tempe = 0;
-      console.log(res.data.title);
-      title_of_temperature_Array = res.data.title;
+      //console.log(res.data.titles);
+      title_of_temperature_Array = res.data.titles;
       imgSrc_of_temperature_Array = res.data.imgSrc;
-      text_of_temperature_Array = res.data.text;
+      text_of_temperature_Array = res.data.texts;
       title_of_temperature.value = title_of_temperature_Array[0];
       imgSrc_of_temperature.value = `${prefix}${imgSrc_of_temperature_Array[0]}`;
       text_of_temperature.value = text_of_temperature_Array[0];
     });
-axios.get('/GB/predictionResult/rain?year='+selectedYear.value+'&month='+selectedMonth.value+'&day='+selectedDay.value+'&hour='+selectedHour.value)
-    .then(res => {
+axios.get('http://www.tjensoprediction.com:8080/imgs/WEA_TP/getImgsPath?year='+selectedYear.value+'&month='+selectedMonth.value+'&day='+selectedDay.value+'&hour='+selectedHour.value)
+//axios.get("http://www.tjensoprediction.com:8080/imgs/WEA_TP/getImgsPath?year=2019&month=1&day=1&hour=0")
+      .then(res => {
       index_rain = 0;
-      console.log(res.data.title);
-      title_of_rain_Array = res.data.title;
+      //console.log(res.data.titles);
+      //console.log(res.data.texts);
+      title_of_rain_Array = res.data.titles;
       imgSrc_of_rain_Array = res.data.imgSrc;
-      text_of_rain_Array = res.data.text;
+      text_of_rain_Array = res.data.texts;
       title_of_rain.value = title_of_rain_Array[0];
       imgSrc_of_rain.value = `${prefix}${imgSrc_of_rain_Array[0]}`;
       text_of_rain.value = text_of_rain_Array[0];
     });
-axios.get('/GB/predictionResult/wind?year='+selectedYear.value+'&month='+selectedMonth.value+'&day='+selectedDay.value+'&hour='+selectedHour.value)
+axios.get('http://www.tjensoprediction.com:8080/imgs/WEA_U10/getImgsPath?year='+selectedYear.value+'&month='+selectedMonth.value+'&day='+selectedDay.value+'&hour='+selectedHour.value)
     .then(res => {
       index_wind = 0;
-      console.log(res.data.title);
-      title_of_wind_Array = res.data.title;
+      console.log(res.data.titles);
+      console.log(res.data.texts);
+      title_of_wind_Array = res.data.titles;
       imgSrc_of_wind_Array = res.data.imgSrc;
-      text_of_wind_Array = res.data.text;
+      text_of_wind_Array = res.data.texts;
       title_of_wind.value = title_of_wind_Array[0];
       imgSrc_of_wind.value = `${prefix}${imgSrc_of_wind_Array[0]}`;
       text_of_wind.value = text_of_wind_Array[0];
     });
-axios.get('/GB/predictionResult/wind2?year='+selectedYear.value+'&month='+selectedMonth.value+'&day='+selectedDay.value+'&hour='+selectedHour.value)
+axios.get('http://www.tjensoprediction.com:8080/imgs/WEA_MSLP/getImgsPath?year='+selectedYear.value+'&month='+selectedMonth.value+'&day='+selectedDay.value+'&hour='+selectedHour.value)
     .then(res => {
-      index_wind2 = 0;
-      console.log(res.data.title);
-      title_of_wind2_Array = res.data.title;
+      ndex_wind2 = 0;
+      console.log(res.data.titles);
+      console.log(res.data.texts);
+      title_of_wind2_Array = res.data.titles;
       imgSrc_of_wind2_Array = res.data.imgSrc;
-      text_of_wind2_Array = res.data.text;
+      text_of_wind2_Array = res.data.texts;
       title_of_wind2.value = title_of_wind2_Array[0];
       imgSrc_of_wind2.value = `${prefix}${imgSrc_of_wind2_Array[0]}`;
       text_of_wind2.value = text_of_wind2_Array[0];
     });
+
 
 const handleDateTimeChange = () => {
   // 当日期时间选择发生变化时被调用
@@ -159,48 +196,49 @@ const handleDateTimeChange = () => {
     selectedHour.value = selectedDate.getHours(); // 获取小时值并存储到 selectedHour
   }
 
-  //这是编造的接口形式，之后会根据实际的修改
-  axios.get('/GB/predictionResult/temperature?year='+selectedYear.value+'&month='+selectedMonth.value+'&day='+selectedDay.value+'&hour='+selectedHour.value)
+  axios.get('http://www.tjensoprediction.com:8080/imgs/WEA_T2M/getImgsPath?year='+selectedYear.value+'&month='+selectedMonth.value+'&day='+selectedDay.value+'&hour='+selectedHour.value)
+  //axios.get("http://www.tjensoprediction.com:8080/imgs/WEA_T2M/getImgsPath?year=2019&month=1&day=1&hour=0")
       .then(res => {
         index_tempe = 0;
-        console.log(res.data.title);
-        title_of_temperature_Array = res.data.title;
+        //console.log(res.data.title);
+        title_of_temperature_Array = res.data.titles;
         imgSrc_of_temperature_Array = res.data.imgSrc;
-        text_of_temperature_Array = res.data.text;
+        text_of_temperature_Array = res.data.texts;
         title_of_temperature.value = title_of_temperature_Array[0];
         imgSrc_of_temperature.value = `${prefix}${imgSrc_of_temperature_Array[0]}`;
         text_of_temperature.value = text_of_temperature_Array[0];
       });
 
-  axios.get('/GB/predictionResult/rain?year='+selectedYear.value+'&month='+selectedMonth.value+'&day='+selectedDay.value+'&hour='+selectedHour.value)
+  axios.get('http://www.tjensoprediction.com:8080/imgs/WEA_TP/getImgsPath?year='+selectedYear.value+'&month='+selectedMonth.value+'&day='+selectedDay.value+'&hour='+selectedHour.value)
+  //axios.get("http://www.tjensoprediction.com:8080/imgs/WEA_TP/getImgsPath?year=2019&month=1&day=1&hour=0")
       .then(res => {
         index_rain = 0;
-        console.log(res.data.imgSrc);
-        title_of_rain_Array = res.data.title;
+        //console.log(res.data.imgSrc);
+        title_of_rain_Array = res.data.titles;
         imgSrc_of_rain_Array = res.data.imgSrc;
-        text_of_rain_Array = res.data.text;
+        text_of_rain_Array = res.data.texts;
         title_of_rain.value = title_of_rain_Array[0];
         imgSrc_of_rain.value = `${prefix}${imgSrc_of_rain_Array[0]}`;
         text_of_rain.value = text_of_rain_Array[0];
       });
-  axios.get('/GB/predictionResult/wind?year='+selectedYear.value+'&month='+selectedMonth.value+'&day='+selectedDay.value+'&hour='+selectedHour.value)
+  axios.get('http://www.tjensoprediction.com:8080/imgs/WEA_U10/getImgsPath?year='+selectedYear.value+'&month='+selectedMonth.value+'&day='+selectedDay.value+'&hour='+selectedHour.value)
     .then(res => {
-      index_wind = 0;
-      console.log(res.data.title);
-      title_of_wind_Array = res.data.title;
-      imgSrc_of_wind_Array = res.data.imgSrc;
-      text_of_wind_Array = res.data.text;
-      title_of_wind.value = title_of_wind_Array[0];
-      imgSrc_of_wind.value = `${prefix}${imgSrc_of_wind_Array[0]}`;
-      text_of_wind.value = text_of_wind_Array[0];
+        index_wind = 0;
+        console.log(res.data.imgSrc);
+        title_of_wind_Array = res.data.titles;
+        imgSrc_of_wind_Array = res.data.imgSrc;
+        text_of_wind_Array = res.data.texts;
+        title_of_wind.value = title_of_wind_Array[0];
+        imgSrc_of_wind.value = `${prefix}${imgSrc_of_wind_Array[0]}`;
+        text_of_wind.value = text_of_wind_Array[0];
     });
-  axios.get('/GB/predictionResult/wind2?year='+selectedYear.value+'&month='+selectedMonth.value+'&day='+selectedDay.value+'&hour='+selectedHour.value)
+  axios.get('http://www.tjensoprediction.com:8080/imgs/WEA_MSLP/getImgsPath?year='+selectedYear.value+'&month='+selectedMonth.value+'&day='+selectedDay.value+'&hour='+selectedHour.value)
       .then(res => {
         index_wind2 = 0;
         console.log(res.data.imgSrc);
-        title_of_wind2_Array = res.data.title;
+        title_of_wind2_Array = res.data.titles;
         imgSrc_of_wind2_Array = res.data.imgSrc;
-        text_of_wind2_Array = res.data.text;
+        text_of_wind2_Array = res.data.texts;
         title_of_wind2.value = title_of_wind2_Array[0];
         imgSrc_of_wind2.value = `${prefix}${imgSrc_of_wind2_Array[0]}`;
         text_of_wind2.value = text_of_wind2_Array[0];
@@ -311,7 +349,7 @@ text_of_wind2.value=text_of_wind2_Array[index_wind2];
     <div class="datePickerContainer">
       <!-- 已控制时间选择范围 -->
       <div class="datetime-picker">
-        <span class="demonstration">提示：选择2023年2月至4月整时的时间</span>
+        <span class="demonstration">提示：请选择整时的时间</span>
         <div class="block">
           <el-date-picker
               v-model="selectedDateTime"
@@ -360,7 +398,7 @@ text_of_wind2.value=text_of_wind2_Array[index_wind2];
           </div>
         </el-tab-pane>
         <el-tab-pane label="风场预测">
-          <div class="whole_container">
+           <div class="whole_container">
             <p class="picture_title">
               {{ title_of_wind }}
             </p>
@@ -372,20 +410,20 @@ text_of_wind2.value=text_of_wind2_Array[index_wind2];
             </p>
             <el-button type="primary" class="arrow-left" :icon="ArrowLeft" @click="change_time_wind('left')"></el-button>
             <el-button type="primary" class="arrow-right" :icon="ArrowRight" @click="change_time_wind('right')"></el-button>
-          </div>
-          <div class="whole_container2">
-            <p class="picture_title2">
-              {{ title_of_wind2 }}
-            </p>
-            <div class="pic_container">
-              <img class="picture" :src="imgSrc_of_wind2" alt="">
-            </div>
-            <p class="picture_text">
-              {{ text_of_wind2 }}
-            </p>
-            <el-button type="primary" class="arrow-left" :icon="ArrowLeft" @click="change_time_wind2('left')"></el-button>
-            <el-button type="primary" class="arrow-right" :icon="ArrowRight" @click="change_time_wind2('right')"></el-button>
-          </div>
+           </div>                
+<!--          <div class="whole_container2">-->
+<!--            <p class="picture_title2">-->
+<!--              {{ title_of_wind2 }}-->
+<!--            </p>-->
+<!--            <div class="pic_container">-->
+<!--              <img class="picture" :src="imgSrc_of_wind2" alt="">-->
+<!--            </div>-->
+<!--            <p class="picture_text">-->
+<!--              {{ text_of_wind2 }}-->
+<!--            </p>-->
+<!--            <el-button type="primary" class="arrow-left" :icon="ArrowLeft" @click="change_time_wind2('left')"></el-button>-->
+<!--            <el-button type="primary" class="arrow-right" :icon="ArrowRight" @click="change_time_wind2('right')"></el-button>-->
+<!--          </div>-->
         </el-tab-pane>
       </el-tabs>
     </div>
