@@ -6,6 +6,14 @@ import {ArrowLeft, ArrowRight} from "@element-plus/icons-vue";
 import VChart from "vue-echarts";
 
 //时间选择器范围框定--start
+const start_time = ref(null);
+const end_time = ref(null);
+/* 赋初值————默认为气温预测 */
+axios.get('http://www.tjensoprediction.com:8080/imgs/WEA_T2M/getInitData')
+.then(res =>{
+  start_time.value = new Date(res.data.earliestDate);
+  end_time.value = new Date(res.data.latestDate);
+});
 
 const disabledMinute = () => {
   const allowedMinute = [0];
@@ -34,11 +42,34 @@ const disabledSecond = () => {
 };
 
 const limitedDateRange = (time) => {
-  const year = new Date(time).getFullYear();
-  const month = new Date(time).getMonth();
-  return year !== 2023 || month < 1 || month > 3; // Months are 0-based
+  return time.getTime() < start_time.value || time.getTime() > end_time.value;
 };
 
+function handleClick(tab, event) {
+  console.log(tab.props.label);
+  if(tab.props.label == '气温预测'){
+    axios.get('http://www.tjensoprediction.com:8080/imgs/WEA_T2M/getInitData')
+    .then(res =>{
+      start_time.value = new Date(res.data.earliestDate);
+      end_time.value = new Date(res.data.latestDate);
+    });
+  }
+  else if(tab.props.label == '降水预测'){ 
+    axios.get('http://www.tjensoprediction.com:8080/imgs/WEA_TP/getInitData')
+    .then(res =>{
+      start_time.value = new Date(res.data.earliestDate);
+      end_time.value = new Date(res.data.latestDate);
+      //end_time.value = new Date('2019-3-3');    //此行可以证明限制范围有根据选项卡改动
+    });
+  }
+  else{     //风场预测
+    axios.get('http://www.tjensoprediction.com:8080/imgs/WEA_U10/getInitData')
+    .then(res =>{
+      start_time.value = new Date(res.data.earliestDate);
+      end_time.value = new Date(res.data.latestDate);
+    });
+  }
+}
 //时间选择器范围框定--end
 
 const selectedDateTime = ref(null);
@@ -101,18 +132,12 @@ text_of_wind.value = '';
 title_of_wind2.value = '';
 text_of_wind2.value = '';
 
-//强行定义时间，需要根据时间的接口调整
-selectedYear.value=2019;
-selectedMonth.value=1;
-selectedDay.value=1;
-selectedHour.value=0;
-
 /* 赋初值 */
 axios.get('http://www.tjensoprediction.com:8080/imgs/WEA_T2M/getImgsPath?year='+selectedYear.value+'&month='+selectedMonth.value+'&day='+selectedDay.value+'&hour='+selectedHour.value)
 //axios.get("http://www.tjensoprediction.com:8080/imgs/WEA_T2M/getImgsPath?year=2019&month=1&day=1&hour=0")
     .then(res => {
       index_tempe = 0;
-      console.log(res.data.titles);
+      //console.log(res.data.titles);
       title_of_temperature_Array = res.data.titles;
       imgSrc_of_temperature_Array = res.data.imgSrc;
       text_of_temperature_Array = res.data.texts;
@@ -124,8 +149,8 @@ axios.get('http://www.tjensoprediction.com:8080/imgs/WEA_TP/getImgsPath?year='+s
 //axios.get("http://www.tjensoprediction.com:8080/imgs/WEA_TP/getImgsPath?year=2019&month=1&day=1&hour=0")
       .then(res => {
       index_rain = 0;
-      console.log(res.data.titles);
-      console.log(res.data.texts);
+      //console.log(res.data.titles);
+      //console.log(res.data.texts);
       title_of_rain_Array = res.data.titles;
       imgSrc_of_rain_Array = res.data.imgSrc;
       text_of_rain_Array = res.data.texts;
@@ -168,18 +193,11 @@ const handleDateTimeChange = () => {
     selectedHour.value = selectedDate.getHours(); // 获取小时值并存储到 selectedHour
   }
 
-  //强行定义时间，需要根据时间的接口调整
-  selectedYear.value=2019;
-  selectedMonth.value=1;
-  selectedDay.value=1;
-  selectedHour.value=0;
-
-
   axios.get('http://www.tjensoprediction.com:8080/imgs/WEA_T2M/getImgsPath?year='+selectedYear.value+'&month='+selectedMonth.value+'&day='+selectedDay.value+'&hour='+selectedHour.value)
   //axios.get("http://www.tjensoprediction.com:8080/imgs/WEA_T2M/getImgsPath?year=2019&month=1&day=1&hour=0")
       .then(res => {
         index_tempe = 0;
-        console.log(res.data.title);
+        //console.log(res.data.title);
         title_of_temperature_Array = res.data.titles;
         imgSrc_of_temperature_Array = res.data.imgSrc;
         text_of_temperature_Array = res.data.texts;
@@ -192,7 +210,7 @@ const handleDateTimeChange = () => {
   //axios.get("http://www.tjensoprediction.com:8080/imgs/WEA_TP/getImgsPath?year=2019&month=1&day=1&hour=0")
       .then(res => {
         index_rain = 0;
-        console.log(res.data.imgSrc);
+        //console.log(res.data.imgSrc);
         title_of_rain_Array = res.data.titles;
         imgSrc_of_rain_Array = res.data.imgSrc;
         text_of_rain_Array = res.data.texts;
@@ -328,7 +346,7 @@ function change_time_rain(flag) {
     <div class="datePickerContainer">
       <!-- 已控制时间选择范围 -->
       <div class="datetime-picker">
-        <span class="demonstration">提示：选择2023年2月至4月整时的时间</span>
+        <span class="demonstration">提示：请选择整时的时间</span>
         <div class="block">
           <el-date-picker
               v-model="selectedDateTime"
