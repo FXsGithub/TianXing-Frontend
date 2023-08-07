@@ -289,72 +289,108 @@ axios.get('http://www.tjensoprediction.com:8080/seaice/error?year=2023&month=1')
 axios.get('http://www.tjensoprediction.com:8080/seaice/errorBox?year=2022')
     .then(response => {
       console.log(response.data);
-      option3.value={
-  title: {
+      const data0 = response.data["withoutDA_withoutBC"];
+      const data1 = response.data["withoutDA_withBC_RMSE"];
+      const data2 = response.data["withDA_withoutBC_RMSE"];
+      const data3 = response.data["MITgcm(with DA)withBC_RMSE"];
+  option3.value={
+    title: {
     text: chartTitle3.value,
     left: 'center' //标题水平居中
   },
-  tooltip: {},
-  xAxis: {
-    type: 'category',
-    name: 'Lead time',
-    data: ['1day', '2day', '3day', '4day','5day','6day','7day']
-  },
-  yAxis: {
-    type: 'value',
-    name: 'RMSE(%)',
-    data: [0, 5, 10, 15, 20]
-  },
-  legend: { //图例
-    data: ['withoutDA_withoutBC', 'withoutDA_withBC_RMSE','withDA_withoutBC_RMSE','MITgcm(with DA)withBC_RMSE'],
-    orient: 'horizontal',
-    left: 'center',
-    bottom: '5',
-  },
-  series: [
-    {
-      name: 'withoutDA_withoutBC',
-      type: 'candlestick',
-      data: response.data["withoutDA_withoutBC"],
-      itemStyle: {
-							color0: 'blue',
-              opacity:0.5
-						},
-     
-      
+
+    dataset: [
+      {
+        source: data0
+      },
+      {
+        source: data1
+      },
+      {
+        source: data2
+      },
+      {
+        source: data3
+      },
+      {
+        fromDatasetIndex: 0,
+        transform: { type: 'boxplot' }
+      },
+      {
+        fromDatasetIndex: 1,
+        transform: { type: 'boxplot' }
+      },
+      {
+        fromDatasetIndex: 2,
+        transform: { type: 'boxplot' }
+      },
+      {
+        fromDatasetIndex: 3,
+        transform: { type: 'boxplot' }
+      }
+    ],
+    legend: {
+      top: '10%'
     },
-    {
-      name: 'withoutDA_withBC_RMSE',
-      type: 'candlestick',
-      data: response.data["withoutDA_withBC_RMSE"],
-      itemStyle: {
-							color0: 'yellow',
-              opacity:1
-						},
-      
+    tooltip: {
+      trigger: 'item',
+      axisPointer: {
+        type: 'shadow'
+      }
     },
-    {
-      name: 'withDA_withoutBC_RMSE',
-      type: 'candlestick',
-      data: response.data["withDA_withoutBC_RMSE"],
-      itemStyle: {
-							color0: 'red',
-              opacity:0.4
-						},
-      
+    grid: {
+      left: '10%',
+      top: '20%',
+      right: '10%',
+      bottom: '15%'
     },
-    {
-      name: 'MITgcm(with DA)withBC_RMSE',
-      type: 'candlestick',
-      data: response.data["MITgcm(with DA)withBC_RMSE"],
-      itemStyle: {
-							color0: 'green',
-              
-						},
-      
-      
-    }
-  ]
+    xAxis: {
+      type: 'category',
+      name: 'Lead time',
+      axisLabel: {
+         formatter: function(value) {
+             return (parseInt(value) + 1) + 'day';
+         },
+      align: 'center'
+      },
+      boundaryGap: true,
+      nameGap: 30,
+      splitArea: {
+        show: true
+      },
+      splitLine: {
+        show: false
+      }
+    },
+    yAxis: {
+      type: 'value',
+      name: 'RMSE(%)',
+      splitArea: {
+        show: false
+      }
+    },
+    series: [
+      {
+        name: 'withDA_withoutBC_RMSE',
+        type: 'boxplot',
+        datasetIndex: 4
+      },
+      {
+        name: 'withoutDA_withoutBC',
+        type: 'boxplot',
+        datasetIndex: 5
+      },
+      {
+        name: 'withoutDA_withBC_RMSE',
+        type: 'boxplot',
+        datasetIndex: 6
+      },
+      {
+        name: 'MITgcm(with DA)withBC_RMSE',
+        type: 'boxplot',
+        datasetIndex: 7
+      }
+    ]
 
 }
 
