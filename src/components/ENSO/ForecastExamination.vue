@@ -6,11 +6,27 @@ import VChart from 'vue-echarts';
 import {nextTick} from "vue";
 import { configProviderContextKey } from "element-plus";
 /* 时间选择器 -- begin */
-const currentDate = new Date();
-const year = currentDate.getFullYear() - 1 + '';
+const currentDate = new Date('2023-1');   //  赋初值
+const year = currentDate.getFullYear() + '';
 const month = currentDate.getMonth() < 10 ? '0' + (currentDate.getMonth() + 1 + '') : currentDate.getMonth() + 1 + ''
-const start_year = ref(year);
-const start_month = ref(month);
+const start_year = ref(year);     //选择的年
+const start_month = ref(month);   //选择的月
+
+const start_time = ref(null);     //可选时间范围
+const end_time = ref(null);
+/*
+此处调接口获取时间范围
+axios.get('http://www.tjensoprediction.com:8080/imgs/WEA_T2M/getInitData')
+.then(res =>{
+  start_time.value = new Date(res.data.earliestDate);
+  end_time.value = new Date(res.data.latestDate);
+});
+*/
+start_time.value = new Date('2023-1');      //暂时写死范围
+end_time.value = new Date('2024-1');
+const limitedDateRange = (time) => {
+  return time.getTime() < start_time.value || time.getTime() > end_time.value;
+};
 /* 时间选择器 -- end */
 
 var chart2_option; //存储从后端返回的chart2的option
@@ -117,9 +133,23 @@ import {
       ENSO预测结果检验
     </h1>
     <div class="datePickerContainer">
-      <el-date-picker @change="update_charts()" v-model="start_year" type="year" format="YYYY" value-format="YYYY" :clearable="false" style="width: 80px; height: 25px"/>
+      <el-date-picker @change="update_charts()" 
+      v-model="start_year" 
+      type="year" 
+      format="YYYY" 
+      value-format="YYYY" 
+      :clearable="false" 
+      :disabledDate="limitedDateRange"
+      style="width: 80px; height: 25px"/>
       <div class="text">年</div>
-      <el-date-picker @change="update_charts()" v-model="start_month" type="month" format="MM" value-format="MM" :clearable="false" style="width: 60px; height: 25px"/>
+      <el-date-picker @change="update_charts()" 
+      v-model="start_month" 
+      type="month" 
+      format="MM" 
+      value-format="MM" 
+      :clearable="false" 
+      :disabledDate="limitedDateRange"
+      style="width: 60px; height: 25px"/>
       <div class="text">月</div>
     </div>
 
