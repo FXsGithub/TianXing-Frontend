@@ -32,8 +32,8 @@ selectedMonth.value = month;
 
 
 const chartTitle = ref('')
-//chartTitle.value = `${selectedYear.value}年${selectedMonth.value}月~${Number(selectedYear.value) + 1 + ''}年${selectedMonth.value}月 预测结果误差折线图`
-chartTitle.value = `2023年1月预测结果误差折线图`
+chartTitle.value = `${selectedYear.value}年${selectedMonth.value}月 预测结果误差折线图`
+//chartTitle.value = `2023年1月预测结果误差折线图`
 
 
 const chartTitle2 = ref('')
@@ -67,8 +67,8 @@ chartX.value = [`${selectedYear.value}/${selectedMonth.value}/1`,`${selectedYear
 
 
 function updateChartTitle() {
-  //chartTitle.value = `${selectedYear.value}年${selectedMonth.value}月~${Number(selectedYear.value) + 1 + ''}年${selectedMonth.value}月 预测结果误差折线图`;
-  // chartTitle2.value = `${selectedYear.value}年${selectedMonth.value}月~${Number(selectedYear.value) + 1 + ''}年${selectedMonth.value}月 预测结果误差折线图`;
+  chartTitle.value = `${selectedYear.value}年${selectedMonth.value}月 预测结果误差折线图`;
+  chartTitle2.value = `${selectedYear.value}年${selectedMonth.value}月~${Number(selectedYear.value) + 1 + ''}年${selectedMonth.value}月 预测结果误差折线图`;
   chartTitle3.value = `2022年SIC回报结果误差箱型图`;
   chartTitle4.value = `SIE预测误差分析`;
   chartX.value = [`${selectedYear.value}/${selectedMonth.value}/1`,`${selectedYear.value}/${selectedMonth.value}/2`,`${selectedYear.value}/${selectedMonth.value}/3`,
@@ -119,6 +119,7 @@ function updateChartTitle() {
 
 
 axios.get('http://www.tjensoprediction.com:8080/seaice/error?year=2023&month=1')
+// axios.get('http://www.tjensoprediction.com:8080/seaice/error?year='+Number(selectedYear.value)+'&month='+Number(selectedMonth.value))
     .then(response => {
       console.log(response.data);
   option1.value={
@@ -205,8 +206,8 @@ axios.get('http://www.tjensoprediction.com:8080/seaice/error?year=2023&month=1')
 //   ]
 // }
 
-
 axios.get('http://www.tjensoprediction.com:8080/seaice/error?year=2023&month=1')
+// axios.get('http://www.tjensoprediction.com:8080/seaice/error?year='+Number(selectedYear.value)+'&month='+Number(selectedMonth.value))
     .then(response => {
       console.log(response.data);
       option2.value={
@@ -286,7 +287,7 @@ axios.get('http://www.tjensoprediction.com:8080/seaice/error?year=2023&month=1')
 // }
 
 
-axios.get('http://www.tjensoprediction.com:8080/seaice/errorBox?year=2022')
+axios.get('http://www.tjensoprediction.com:8080/seaice/errorBox?year='+Number(selectedYear.value)+'&month='+Number(selectedMonth.value))
     .then(response => {
       console.log(response.data);
       const data0 = response.data["withoutDA_withoutBC"];
