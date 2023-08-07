@@ -1527,8 +1527,6 @@ Mock.mock(/GB\/ForecastResult\/heat4\?year=[0-9]*&month=[0-9]*/, 'get', {
         return {
             description: '可以提前三个月预测到NAO的发生',
             observations: generateData(),
-            eccc: generateData(),
-            ecmwf: generateData(),
             naomcr: generateData(),
         };
 

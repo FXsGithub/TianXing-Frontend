@@ -50,7 +50,7 @@ NAOIOption.value = {
     type: 'value',
   },
   legend: { //图例
-    data: ['观测值', 'ECCC', 'ECMWF', 'NAO-MCR'],
+    data: ['观测值', 'NAO-MCR'],
     orient: 'horizontal',
     left: 'center',
     bottom: '5',
@@ -58,16 +58,6 @@ NAOIOption.value = {
   series: [
     {
       name: '观测值',
-      type: 'line',
-      data: []
-    },
-    {
-      name: 'ECCC',
-      type: 'line',
-      data: []
-    },
-    {
-      name: 'ECMWF',
       type: 'line',
       data: []
     },
@@ -125,7 +115,7 @@ const updateNAOIChart = async () => {
           type: 'value',
         },
         legend: { //图例
-          data: ['观测值', 'ECCC', 'ECMWF', 'NAO-MCR'],
+          data: ['观测值', 'NAO-MCR'],
           orient: 'horizontal',
           left: 'center',
           bottom: '5',
@@ -135,16 +125,6 @@ const updateNAOIChart = async () => {
             name: '观测值',
             type: 'line',
             data: response.data.observations,
-          },
-          {
-            name: 'ECCC',
-            type: 'line',
-            data: response.data.eccc,
-          },
-          {
-            name: 'ECMWF',
-            type: 'line',
-            data: response.data.ecmwf,
           },
           {
             name: 'NAO-MCR',
