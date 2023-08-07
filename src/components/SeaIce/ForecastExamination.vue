@@ -305,6 +305,12 @@ axios.get('http://www.tjensoprediction.com:8080/seaice/errorBox?year=2022')
     name: 'RMSE(%)',
     data: [0, 5, 10, 15, 20]
   },
+  legend: { //图例
+    data: ['withoutDA_withoutBC', 'withoutDA_withBC_RMSE','withDA_withoutBC_RMSE','MITgcm(with DA)withBC_RMSE'],
+    orient: 'horizontal',
+    left: 'center',
+    bottom: '5',
+  },
   series: [
     {
       name: 'withoutDA_withoutBC',
@@ -323,7 +329,7 @@ axios.get('http://www.tjensoprediction.com:8080/seaice/errorBox?year=2022')
       data: response.data["withoutDA_withBC_RMSE"],
       itemStyle: {
 							color0: 'yellow',
-              opacity:0.4
+              opacity:1
 						},
       
     },
