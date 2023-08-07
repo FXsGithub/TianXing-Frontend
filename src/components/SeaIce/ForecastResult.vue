@@ -5,9 +5,10 @@ import { reactive } from "vue";
 import {ref} from "vue";
 import * as echarts from 'echarts';
 import {nextTick} from "vue";
-//import { configProviderContextKey } from "element-plus";
 import axios from 'axios';
 import VChart from 'vue-echarts';
+
+const availableList = ref([])
 
 const selectedSIE = ref(true)
 const selectedSIC = ref(false)
@@ -20,19 +21,17 @@ const selectedYear = ref('');
 const selectedMonth = ref('');
 const selectedDay = ref('');
 
-selectedYear.value = year;
-selectedMonth.value = month;
+selectedYear.value = '2023';
+selectedMonth.value = '01';
 selectedDay.value = currentDate;
 
 const SIEChartTitle = ref('')
 const SICChartTitle = ref('')
-SIEChartTitle.value = `${selectedYear.value}年${selectedMonth.value}月~${Number(selectedYear.value) + 1 + ''}年${selectedMonth.value}月 SIE指数预测结果`
+SIEChartTitle.value = updateSIEChartTitle();
 SICChartTitle.value = `${selectedDay.value.getFullYear()}年${selectedDay.value.getMonth()}月${selectedDay.value.getDay()}日 海冰SIC预测结果`;
 
-const months = {'01': '一月', '02': '二月', '03': '三月', '04': '四月', '05': '五月', '06': '六月', '07': '七月', '08': '八月', '09': '九月', '10': '十月', '11': '十一月', '12': '十二月'}
-
 const SIEOption = ref({})
-const SICOption = ref({})
+
 const SIEDescription = ref('')
 const SICDescription = ref('')
 
@@ -45,12 +44,12 @@ SIEOption.value = {
   xAxis: {
     type: 'category',
     name: '时间',
-    data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月']
+    data: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月']
   },
   yAxis: {
     type: 'value',
   },
-  legend: { //图例
+  legend: {
     data: ['prediction', 'mean', 'upper', 'lower'],
     orient: 'horizontal',
     left: 'center',
@@ -91,65 +90,22 @@ function selectChart(tab) {
     selectedSIC.value = true;
     updateSICChart();
   }
-  //console.log(selectedSIE);
-  //console.log(selectedSIC);
 }
 
 // 请求SIE数据
 const updateSIEChart = async () => {
-  SIEChartTitle.value = `${selectedYear.value}年${selectedMonth.value}月~${Number(selectedYear.value) + 1 + ''}年${selectedMonth.value}月 SIE指数预测结果`;
+  updateSIEChartTitle();
 
   const params = {
-    year: selectedYear.value,
-    month: selectedMonth.value
+    year: Number(selectedYear.value),
+    month: Number(selectedMonth.value)
   };
 
+//  axios.get('http://www.tjensoprediction.com:8080/seaice/predictionResult/SIE', { params })
   axios.get('/seaice/predictionResult/SIE', { params })
     .then(response => {
       //console.log(response.data);
-      SIEOption.value = {
-        title: {
-          text: SIEChartTitle.value,
-          left: 'center' //标题水平居中
-        },
-        tooltip: {},
-        xAxis: {
-          type: 'category',
-          name: '时间',
-          data: monthArray()
-        },
-        yAxis: {
-          type: 'value',
-        },
-        legend: { //图例
-          data: ['prediction', 'mean', 'upper', 'lower'],
-          orient: 'horizontal',
-          left: 'center',
-          bottom: '5',
-        },
-        series: [
-          {
-            name: 'prediction',
-            type: 'line',
-            data: response.data.prediction,
-          },
-          {
-            name: 'mean',
-            type: 'line',
-            data: response.data.mean,
-          },
-          {
-            name: 'upper',
-            type: 'line',
-            data: response.data.upper,
-          },
-          {
-            name: 'lower',
-            type: 'line',
-            data: response.data.lower
-          },
-        ]
-      }
+      SIEOption.value = response.data.option;
       SIEDescription.value = response.data.description;
     })
     .catch(error => {
@@ -157,15 +113,52 @@ const updateSIEChart = async () => {
     });
 }
 
+function updateSIEChartTitle() {
+  let year1 = selectedYear.value;
+  let month1 = selectedMonth.value;
+  let year2 = ''
+  let month2 = ''
+
+  if(Number(month1) == 1) {
+    month2 = '12';
+    year2 = year1;
+  }
+  else {
+    month2 = Number(month1) - 1 + '';
+    year2 = Number(year1) + 1 + '';
+  }
+  if(month2.length == 1) {
+    month2 = '0' + month2;
+  }
+  SIEChartTitle.value = year1 + '年' + month1 + '月~' + year2 + '年' + month2 + '月 海冰预测结果';
+}
+
+function handleYearChange() {
+  for (let i = 0; i < availableList.value.length; i++) {
+    if (selectedYear.value == availableList.value[i].year && selectedMonth.value == availableList.value[i].month) {
+      updateSIEChart();
+      return;
+    }
+  }
+  for (let i = 0; i < availableList.value.length; i++) {
+    if (selectedYear.value == availableList.value[i].year) {
+      selectedMonth.value = availableList.value[i].month < 10 ? '0' + (availableList.value[i].month + '') : availableList.value[i].month + ''
+      updateSIEChart();
+      return;
+    }
+  }
+}
+
 // 请求SIC数据
 const updateSICChart = async () => {
   SICChartTitle.value = `${selectedDay.value.getFullYear()}年${selectedDay.value.getMonth() + 1}月${selectedDay.value.getDate()}日 海冰SIC预测结果`;
   const params = {
     year: selectedDay.value.getFullYear(),
-    month: selectedDay.value.getMonth() < 10 ? '0' + (selectedDay.value.getMonth() + 1 + '') : selectedDay.value.getMonth() + 1 + '',
-    day: selectedDay.value.getDate() < 10 ? '0' + (selectedDay.value.getDate() + '') : selectedDay.value.getDate() + ''
+    month: selectedDay.value.getMonth() + 1,
+    day: selectedDay.value.getDate()
   };
   //console.log(params.year + '-' + params.month + '-' + params.day)
+//  axios.get('http://www.tjensoprediction.com:8080/seaice/predictionResult/SIC', { params })
   axios.get('/seaice/predictionResult/SIC', { params })
     .then(response => {
       //此处应该得到一张图片
@@ -176,14 +169,45 @@ const updateSICChart = async () => {
     });
 }
 
-function monthArray() {
-  const index = Object.keys(months).indexOf(selectedMonth.value);
-  const keys = Object.keys(months);
-  return keys.slice(index).map(key => months[key]).concat(keys.slice(0, index).map(key => months[key]));
+// 初始化可请求的年月
+const initAvailableList = () => {
+  const params = {
+    year: 2023,
+    month: 1
+  };
+  
+  axios.get('/seaice/predictionResult/SIE', { params })
+    .then(response => {
+      availableList.value = response.data.availableList
+    })
+    .catch(error => {
+      console.error(error);
+    });
+}
+
+function disabledYear(date) {
+  const year = date.getFullYear();
+  for (let i = 0; i < availableList.value.length; i++) {
+    if (year == availableList.value[i].year) {
+      return false;
+    }
+  }
+  return true;
+}
+
+function disabledMonth(date) {
+  const month = date.getMonth() + 1;
+  for (let i = 0; i < availableList.value.length; i++) {
+    if (selectedYear.value == availableList.value[i].year && month == availableList.value[i].month) {
+      return false;
+    }
+  }
+  return true;
 }
 
 onMounted(
   () => {
+    initAvailableList();
     nextTick(() => {
       updateSIEChart();
     })
@@ -194,15 +218,15 @@ onMounted(
 <template>
   <div class="pageContent">
     <h1 v-show="selectedSIE" class="title">
-      {{ selectedYear }}年{{ selectedMonth }}月~{{ Number(selectedYear) + 1 + '' }}年{{ selectedMonth }}月 海冰预测结果
+      {{ SIEChartTitle }}
     </h1>
     <h1 v-show="selectedSIC" class="title">
       {{ selectedDay.getFullYear() }}年{{ selectedDay.getMonth() + 1 }}月 海冰预测结果
     </h1>
     <div class="datePickerContainer" v-show="selectedSIE">
-      <el-date-picker @change="updateSIEChart" v-model="selectedYear" type="year" format="YYYY" value-format="YYYY" :clearable="false" style="width: 80px; height: 25px"/>
+      <el-date-picker @change="handleYearChange" v-model="selectedYear" type="year" format="YYYY" value-format="YYYY" :clearable="false" style="width: 80px; height: 25px" :disabled-date="disabledYear" />
       <div class="text">年</div>
-      <el-date-picker @change="updateSIEChart" v-model="selectedMonth" type="month" format="MM" value-format="MM" :clearable="false" style="width: 60px; height: 25px"/>
+      <el-date-picker @change="updateSIEChart" v-model="selectedMonth" type="month" format="MM" value-format="MM" :clearable="false" style="width: 60px; height: 25px" :disabled-date="disabledMonth" />
       <div class="text">月</div>
     </div>
     <div class="datePickerContainer" v-show="selectedSIC">
@@ -216,7 +240,7 @@ onMounted(
         </div>
       </el-tab-pane>
       <el-tab-pane label="SIC模态">
-        <h3 style="text-align: center; margin-top: 0px">{{ SICChartTitle }}</h3>
+        <h3 style="text-align: center; margin-top: 0px; font-size: 18px">{{ SICChartTitle }}</h3>
         <div class="imageContainer">
           <img
             src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png"

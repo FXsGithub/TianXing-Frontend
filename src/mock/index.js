@@ -1,7 +1,7 @@
 import Mock from 'mockjs'
 
 // 是否使用mock.js模拟数据
-let useMock = false
+let useMock = true
 if (useMock) {
 
     Mock.mock('/ice/prediction?year=2023', 'get', {
@@ -1482,18 +1482,137 @@ Mock.mock(/GB\/ForecastResult\/heat4\?year=[0-9]*&month=[0-9]*/, 'get', {
         text:'此处的12副图分别为从2022年2月~2023年1月起报的预测结果、官方记录结果及二者绝对差值图（柱状）。'
     })
 
-    Mock.mock(/\/seaice\/predictionResult\/SIE\?year=\d{4}&month=\d{2}/, 'get', function (options) {
+    Mock.mock(/\/seaice\/predictionResult\/SIE\?year=\d{4}&month=\d{1,2}/, 'get', function (options) {
         const url = options.url;
         const params = new URLSearchParams(url.substring(url.indexOf('?')));
         const year = params.get('year');
         const month = params.get('month');
 
         return {
-            description: 'SIE Mock描述',
-            prediction: generateData(),
-            mean: generateData(),
-            upper: generateData(),
-            lower: generateData(),
+            "availableList": [
+                {
+                    "year": 2023,
+                    "month": 1
+                },
+                {
+                    "year": 2024,
+                    "month": 2
+                }
+            ],
+            "description": "2023年9月SIE极小值预测为4.4133，相较于2022年观测偏低，2023年海冰范围预计将比2022年整体偏少。",
+            "option": {
+                "yAxis": {
+                    "type": "value"
+                },
+                "xAxis": {
+                    "data": [
+                        "一月",
+                        "二月",
+                        "三月",
+                        "四月",
+                        "五月",
+                        "六月",
+                        "七月",
+                        "八月",
+                        "九月",
+                        "十月",
+                        "十一月",
+                        "十二月"
+                    ],
+                    "name": "时间",
+                    "type": "category"
+                },
+                "legend": {
+                    "data": [
+                        "prediction",
+                        "mean",
+                        "upper",
+                        "lower"
+                    ],
+                    "orient": "horizontal",
+                    "left": "center",
+                    "bottom": "5"
+                },
+                "series": [
+                    {
+                        "data": [
+                            13.616701126098633,
+                            14.498695373535156,
+                            14.706720352172852,
+                            13.947604179382324,
+                            12.45638656616211,
+                            10.70493507385254,
+                            8.137545585632324,
+                            5.661144256591797,
+                            4.875626087188721,
+                            7.019153118133545,
+                            9.681649208068848,
+                            11.843036651611328
+                        ],
+                        "name": "prediction",
+                        "type": "line"
+                    },
+                    {
+                        "data": [
+                            13.417181968688965,
+                            14.331096649169922,
+                            14.539737701416016,
+                            13.789073944091797,
+                            12.34227180480957,
+                            10.566046714782717,
+                            7.872669219970703,
+                            5.395510196685791,
+                            4.566888809204102,
+                            6.4302802085876465,
+                            9.293512344360352,
+                            11.744112014770508
+                        ],
+                        "name": "mean",
+                        "type": "line"
+                    },
+                    {
+                        "data": [
+                            13.616701126098633,
+                            14.498695373535156,
+                            14.706720352172852,
+                            14.027923583984377,
+                            12.67048454284668,
+                            11.125555992126465,
+                            8.629323959350586,
+                            6.200892925262451,
+                            5.310474872589111,
+                            7.136165618896484,
+                            9.95911979675293,
+                            12.141965866088867
+                        ],
+                        "name": "upper",
+                        "type": "line"
+                    },
+                    {
+                        "data": [
+                            13.217662811279297,
+                            14.163497924804688,
+                            14.37275505065918,
+                            13.55022430419922,
+                            12.014058113098145,
+                            10.006537437438965,
+                            7.11601448059082,
+                            4.590127468109131,
+                            3.8233025074005127,
+                            5.724394798278809,
+                            8.62790584564209,
+                            11.346259117126465
+                        ],
+                        "name": "lower",
+                        "type": "line"
+                    }
+                ],
+                "tooltip": {},
+                "title": {
+                    "left": "center",
+                    "text": "2023年1月~2024年1月SIE指数预测结果"
+                }
+            }
         };
 
         function generateData() {

@@ -5,7 +5,6 @@ import { reactive } from "vue";
 import {ref} from "vue";
 import * as echarts from 'echarts';
 import {nextTick} from "vue";
-//import { configProviderContextKey } from "element-plus";
 import axios from 'axios';
 import VChart from 'vue-echarts';
 
@@ -14,22 +13,18 @@ const selectedSLP = ref(false)
 
 const currentDate = new Date();
 const year = currentDate.getFullYear() - 1 + '';
-const month = currentDate.getMonth() < 10 ? '0' + (currentDate.getMonth() + 1 + '') : currentDate.getMonth() + 1 + ''
+const month = currentDate.getMonth() + 1 < 10 ? '0' + (currentDate.getMonth() + 1 + '') : currentDate.getMonth() + 1 + ''
 
 const selectedYear = ref('');
 const selectedMonth = ref('');
-const selectedDay = ref('');
 
 selectedYear.value = year;
 selectedMonth.value = month;
-selectedDay.value = currentDate;
 
 const NAOIChartTitle = ref('')
 const SLPChartTitle = ref('')
-NAOIChartTitle.value = `${selectedYear.value}年${selectedMonth.value}月~${Number(selectedYear.value) + 1 + ''}年${selectedMonth.value}月 NAOI指数预测结果`
-SLPChartTitle.value = `${selectedDay.value.getFullYear()}年${selectedDay.value.getMonth()}月${selectedDay.value.getDay()}日 北大西洋SLP预测结果`;
-
-const months = {'01': '一月', '02': '二月', '03': '三月', '04': '四月', '05': '五月', '06': '六月', '07': '七月', '08': '八月', '09': '九月', '10': '十月', '11': '十一月', '12': '十二月'}
+NAOIChartTitle.value = updateNAOIChartTitle();
+SLPChartTitle.value = selectedYear + '年' + selectedMonth + '月 北大西洋SLP预测结果';
 
 const NAOIOption = ref({})
 const NAOIDescription = ref('')
@@ -44,12 +39,12 @@ NAOIOption.value = {
   xAxis: {
     type: 'category',
     name: '时间',
-    data: ['1月', '2月', '3月', '4月', '5月', '6月']
+    data: ['一月', '二月', '三月', '四月', '五月', '六月']
   },
   yAxis: {
     type: 'value',
   },
-  legend: { //图例
+  legend: {
     data: ['观测值', 'NAO-MCR'],
     orient: 'horizontal',
     left: 'center',
@@ -84,7 +79,7 @@ function selectChart(tab) {
 
 // 请求NAOI数据
 const updateNAOIChart = async () => {
-  NAOIChartTitle.value = `${selectedYear.value}年${selectedMonth.value}月~${Number(selectedYear.value) + 1 + ''}年${selectedMonth.value}月 NAOI指数预测结果`;
+  updateNAOIChartTitle();
 
   const params = {
     year: selectedYear.value,
@@ -94,50 +89,32 @@ const updateNAOIChart = async () => {
   axios.get('/nao/predictionResult/NAOI', { params })
     .then(response => {
       //console.log(response.data);
-      NAOIOption.value = {
-        title: {
-          text: NAOIChartTitle.value,
-          left: 'center' //标题水平居中
-        },
-        tooltip: {},
-        xAxis: {
-          type: 'category',
-          name: '时间',
-          data: monthArray()
-        },
-        yAxis: {
-          name: "冬季NAOI",
-          nameLocation: "center",
-          nameTextStyle: {
-            fontSize: 16,
-            padding: [0, 0, 15, 0],
-          },
-          type: 'value',
-        },
-        legend: { //图例
-          data: ['观测值', 'NAO-MCR'],
-          orient: 'horizontal',
-          left: 'center',
-          bottom: '5',
-        },
-        series: [
-          {
-            name: '观测值',
-            type: 'line',
-            data: response.data.observations,
-          },
-          {
-            name: 'NAO-MCR',
-            type: 'line',
-            data: response.data.naomcr
-          },
-        ]
-      }
+      NAOIOption.value = response.data.option;
       NAOIDescription.value = response.data.description;
     })
     .catch(error => {
       console.error(error);
     });
+}
+
+function updateNAOIChartTitle() {
+  let year1 = selectedYear.value;
+  let month1 = selectedMonth.value;
+  let year2 = ''
+  let month2 = ''
+
+  if(Number(month1) + 5 > 12) {
+    month2 = Number(month1) - 7 + '';
+    year2 = Number(year1) + 1 + '';
+  }
+  else {
+    month2 = Number(month1) + 5 + '';
+    year2 = year1;
+  }
+  if(month2.length == 1) {
+    month2 = '0' + month2;
+  }
+  NAOIChartTitle.value = year1 + '年' + month1 + '月~' + year2 + '年' + month2 + '月 NAO预测结果';
 }
 
 // 请求SLP数据
@@ -156,12 +133,6 @@ const updateSLPChart = async () => {
     .catch(error => {
       console.error(error);
     });
-}
-
-function monthArray() {
-  const index = Object.keys(months).indexOf(selectedMonth.value);
-  const keys = Object.keys(months);
-  return keys.slice(index).map(key => months[key]).concat(keys.slice(0, index).map(key => months[key])).slice(0, 6);
 }
 
 function updateCharts() {
@@ -185,7 +156,7 @@ onMounted(
 <template>
   <div class="pageContent">
     <h1 v-show="selectedNAOI" class="title">
-      {{ selectedYear }}年{{ selectedMonth }}月~{{ Number(selectedYear) + 1 + '' }}年{{ selectedMonth }}月 NAO预测结果
+      {{ NAOIChartTitle }}
     </h1>
     <h1 v-show="selectedSLP" class="title">
       {{ selectedYear }}年{{ selectedMonth }}月 北大西洋SLP预测结果
@@ -255,7 +226,7 @@ onMounted(
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 400px; /* 可根据需要调整容器高度 */
+    height: 400px;
   }
 
   .image {
