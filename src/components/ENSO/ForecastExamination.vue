@@ -23,10 +23,30 @@ axios.get('http://www.tjensoprediction.com:8080/imgs/WEA_T2M/getInitData')
 });
 */
 start_time.value = new Date('2023-1');      //暂时写死范围
-end_time.value = new Date('2024-1');
+end_time.value = new Date('2023-6');
 const limitedDateRange = (time) => {
   return time.getTime() < start_time.value || time.getTime() > end_time.value;
 };
+/* 根据选择页更新限制范围 */
+function handleClick(tab, event) {
+  console.log(tab.props.label);
+  if(tab.props.label == '逐月比对'){
+    start_time.value = new Date('2023-1');      //暂时写死范围
+    end_time.value = new Date('2023-6');
+  }
+  else if(tab.props.label == '预报误差'){ 
+    start_time.value = new Date('2023-1');      //暂时写死范围
+    end_time.value = new Date('2023-6');
+  }
+  else if(tab.props.label == '误差分析'){
+    start_time.value = new Date('2023-2');      //暂时写死范围
+    end_time.value = new Date('2023-2');
+  }
+  else{        //相关系数
+    start_time.value = new Date('2023-2');      //暂时写死范围
+    end_time.value = new Date('2023-4');
+  }
+}
 /* 时间选择器 -- end */
 
 var chart2_option; //存储从后端返回的chart2的option
@@ -46,38 +66,37 @@ let Chart4_Description = reactive({single:true, text:'此处为不同起报月�
 
 /* 赋初值 */
 //逐月对比
-axios.get('/enso/predictionExamination/monthlyComparison?year='+Number(start_year.value)+'&month='+Number(start_month.value))
+axios.get('http://www.tjensoprediction.com:8080/enso/predictionExamination/monthlyComparison?year='+Number(start_year.value)+'&month='+Number(start_month.value))
     .then(res => {
-      chart1.value = res.data.option
+      chart1.value = res.data.option;
       Chart1_Description.text = res.data.text
     });
 //预报误差
-axios.get('/enso/predictionExamination/error?year='+Number(start_year.value)+'&month='+Number(start_month.value))
+axios.get('http://www.tjensoprediction.com:8080/enso/predictionExamination/error?year='+Number(start_year.value)+'&month='+Number(start_month.value))
     .then(res => {
       chart2_option=res.data.option;
       chart2.value = chart2_option[0];
-      Chart2_Description.text = res.data.text
     });
 //误差分析
-axios.get('/enso/predictionExamination/errorBox?year='+Number(start_year.value)+'&month='+Number(start_month.value))
+axios.get('http://www.tjensoprediction.com:8080/enso/predictionExamination/errorBox?year='+Number(start_year.value)+'&month='+Number(start_month.value))
     .then(res => {
       chart3.value = res.data.option
       Chart3_Description.text = res.data.text
     });
 //相关系数
-axios.get('/enso/predictionExamination/errorCorr?year='+Number(start_year.value)+'&month='+Number(start_month.value))
+axios.get('http://www.tjensoprediction.com:8080/enso/predictionExamination/errorCorr?year='+Number(start_year.value)+'&month='+Number(start_month.value))
     .then(res => {
       chart4.value = res.data.option
       Chart4_Description.text = res.data.text
     });
 /* 图表更新 */
 function update_charts() {
-  axios.get('/enso/predictionExamination/monthlyComparison?year='+Number(start_year.value)+'&month='+Number(start_month.value))
+  axios.get('http://www.tjensoprediction.com:8080/enso/predictionExamination/monthlyComparison?year='+Number(start_year.value)+'&month='+Number(start_month.value))
       .then(res => {
         chart1.value = res.data.option
         Chart1_Description.text = res.data.text
       });
-  axios.get('/enso/predictionExamination/error?year='+Number(start_year.value)+'&month='+Number(start_month.value))
+  axios.get('http://www.tjensoprediction.com:8080/enso/predictionExamination/error?year='+Number(start_year.value)+'&month='+Number(start_month.value))
       .then(res => {
         chart2_option=[]; //先置空
         index_month=0; //设置索引月为0
@@ -85,12 +104,12 @@ function update_charts() {
         chart2.value = chart2_option[0];
         Chart2_Description.text = res.data.text
       });
-  axios.get('/enso/predictionExamination/errorBox?year='+Number(start_year.value)+'&month='+Number(start_month.value))
+  axios.get('http://www.tjensoprediction.com:8080/enso/predictionExamination/errorBox?year='+Number(start_year.value)+'&month='+Number(start_month.value))
       .then(res => {
         chart3.value = res.data.option
         Chart3_Description.text = res.data.text
       });
-  axios.get('/enso/predictionExamination/errorCorr?year='+Number(start_year.value)+'&month='+Number(start_month.value))
+  axios.get('http://www.tjensoprediction.com:8080/enso/predictionExamination/errorCorr?year='+Number(start_year.value)+'&month='+Number(start_month.value))
       .then(res => {
         chart4.value =res.data.option
         Chart4_Description.text = res.data.text 
@@ -153,7 +172,7 @@ import {
       <div class="text">月</div>
     </div>
 
-    <el-tabs type="border-card">
+    <el-tabs type="border-card" @tab-click="handleClick">
       <el-tab-pane label="逐月比对">
         <v-chart class="chart" :option="chart1" autoresize></v-chart>
         <p class="text_of_graph">{{ Chart1_Description.text }}</p>
