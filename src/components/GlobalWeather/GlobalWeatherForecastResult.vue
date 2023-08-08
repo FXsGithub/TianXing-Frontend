@@ -436,19 +436,19 @@ defineExpose({
             <el-button ref="buttonLeftWind" type="primary" class="arrow-left" :icon="ArrowLeft" @click="change_time_wind('left')"></el-button>
             <el-button ref="buttonRightWind" type="primary" class="arrow-right" :icon="ArrowRight" @click="change_time_wind('right')"></el-button>
            </div>                
-<!--          <div class="whole_container2">-->
-<!--            <p class="picture_title2">-->
-<!--              {{ title_of_wind2 }}-->
-<!--            </p>-->
-<!--            <div class="pic_container">-->
-<!--              <img class="picture" :src="imgSrc_of_wind2" alt="">-->
-<!--            </div>-->
-<!--            <p class="picture_text">-->
-<!--              {{ text_of_wind2 }}-->
-<!--            </p>-->
-<!--            <el-button type="primary" class="arrow-left" :icon="ArrowLeft" @click="change_time_wind2('left')"></el-button>-->
-<!--            <el-button type="primary" class="arrow-right" :icon="ArrowRight" @click="change_time_wind2('right')"></el-button>-->
-<!--          </div>-->
+          <div class="whole_container">
+            <p class="picture_title">
+              {{ title_of_wind2 }}
+            </p>
+            <div class="pic_container">
+              <img class="picture" :src="imgSrc_of_wind2" alt="">
+            </div>
+            <p class="picture_text">
+              {{ text_of_wind2 }}
+            </p>
+            <el-button ref="buttonLeftWind2" type="primary" class="arrow-left" :icon="ArrowLeft" @click="change_time_wind2('left')"></el-button>
+            <el-button ref="buttonRightWind2" type="primary" class="arrow-right" :icon="ArrowRight" @click="change_time_wind2('right')"></el-button>
+          </div>
         </el-tab-pane>
       </el-tabs>
     </div>
