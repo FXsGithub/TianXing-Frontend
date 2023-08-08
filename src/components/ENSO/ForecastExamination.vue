@@ -76,6 +76,7 @@ axios.get('http://www.tjensoprediction.com:8080/enso/predictionExamination/error
     .then(res => {
       chart2_option=res.data.option;
       chart2.value = chart2_option[0];
+      Chart2_Description.text = res.data.text
     });
 //误差分析
 axios.get('http://www.tjensoprediction.com:8080/enso/predictionExamination/errorBox?year='+Number(start_year.value)+'&month='+Number(start_month.value))
