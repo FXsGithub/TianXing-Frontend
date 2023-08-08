@@ -287,16 +287,22 @@ onMounted(
       <el-tab-pane label="模态预测">
         <h3 style="text-align: center; margin-top: 0px">{{ SLPChartTitle }}</h3>
         <h4 style="text-align: center; margin-top: 0px; font-size: 16px">({{ imgIndex + 1 }}/{{ imgSrc.length }})</h4>
-        <div class="imageContainer">
-          <img
-            v-if="imgSrc.length"
-            :src="'http://www.tjensoprediction.com' + imgSrc[imgIndex]"
-            class="image"
-            alt=""
-          />
-        </div>
-        <el-button ref="buttonLeft" type="primary" class="arrowLeft" :icon="ArrowLeft" @click="changeIndex('left')" />
-        <el-button ref="buttonRight" type="primary" class="arrowRight" :icon="ArrowRight" @click="changeIndex('right')" />
+        <el-row>
+          <el-col :span="3">
+            <el-button ref="buttonLeft" type="primary" class="arrowLeft" :icon="ArrowLeft" @click="changeIndex('left')" />
+          </el-col>
+          <el-col :span="18">
+            <img
+              v-if="imgSrc.length"
+              :src="'http://www.tjensoprediction.com' + imgSrc[imgIndex]"
+              class="image"
+              alt=""
+            />
+          </el-col>
+          <el-col :span="3">
+            <el-button ref="buttonRight" type="primary" class="arrowRight" :icon="ArrowRight" @click="changeIndex('right')" />
+          </el-col>
+        </el-row>
         <!-- <div class="description">
           {{ SLPDescription }}
         </div> -->
@@ -335,11 +341,10 @@ onMounted(
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 400px;
   }
 
   .image {
-    height: 100%;
+    width: 100%;
   }
 
   .el-button.arrowLeft {
