@@ -37,40 +37,7 @@ const SLPChartTitle = ref('')
 NAOIChartTitle.value = updateNAOIChartTitle();
 SLPChartTitle.value = updateSLPChartTitle();
 
-const NAOIOption = ref({
-  title: {
-    text: NAOIChartTitle.value,
-    left: 'center'
-  },
-  tooltip: {},
-  xAxis: {
-    type: 'category',
-    name: '时间',
-    data: ['一月', '二月', '三月', '四月', '五月', '六月']
-  },
-  yAxis: {
-    type: 'value',
-  },
-  legend: {
-    data: ['观测值', 'NAO-MCR'],
-    orient: 'horizontal',
-    left: 'center',
-    bottom: '5',
-  },
-  series: [
-    {
-      name: '观测值',
-      type: 'line',
-      data: []
-    },
-    {
-      name: 'NAO-MCR',
-      type: 'line',
-      data: []
-    },
-  ]
-})
-
+const NAOIOption = ref({})
 const NAOIDescription = ref('')
 //const SLPDescription = ref('')
 
