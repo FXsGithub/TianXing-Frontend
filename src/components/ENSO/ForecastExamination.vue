@@ -6,7 +6,7 @@ import VChart from 'vue-echarts';
 import {nextTick} from "vue";
 import { configProviderContextKey } from "element-plus";
 /* 时间选择器 -- begin */
-const currentDate = new Date('2023-1');   //  赋初值
+const currentDate = new Date('2023-2');   //  赋初值
 const year = currentDate.getFullYear() + '';
 const month = currentDate.getMonth() < 10 ? '0' + (currentDate.getMonth() + 1 + '') : currentDate.getMonth() + 1 + ''
 const start_year = ref(year);     //选择的年
