@@ -18,12 +18,12 @@ const end_time = ref(null);
 此处调接口获取时间范围
 axios.get('http://www.tjensoprediction.com:8080/imgs/WEA_T2M/getInitData')
 .then(res =>{
-  start_time.value = new Date(res.data.earliestDate);
-  end_time.value = new Date(res.data.latestDate);
+  start_time.value = new Date(res.data.start);
+  end_time.value = new Date(res.data.end);
 });
 */
-start_time.value = new Date('2023-1');      //暂时写死范围
-end_time.value = new Date('2023-6');
+start_time.value = new Date('2023-2');      //暂时写死范围
+end_time.value = new Date('2023-4');
 const limitedDateRange = (time) => {
   return time.getTime() < start_time.value || time.getTime() > end_time.value;
 };
@@ -31,12 +31,12 @@ const limitedDateRange = (time) => {
 function handleClick(tab, event) {
   console.log(tab.props.label);
   if(tab.props.label == '逐月比对'){
-    start_time.value = new Date('2023-1');      //暂时写死范围
-    end_time.value = new Date('2023-6');
+    start_time.value = new Date('2023-2');      //暂时写死范围
+    end_time.value = new Date('2023-4');
   }
   else if(tab.props.label == '预报误差'){ 
-    start_time.value = new Date('2023-1');      //暂时写死范围
-    end_time.value = new Date('2023-6');
+    start_time.value = new Date('2023-2');      //暂时写死范围
+    end_time.value = new Date('2023-4');
   }
   else if(tab.props.label == '误差分析'){
     start_time.value = new Date('2023-2');      //暂时写死范围
