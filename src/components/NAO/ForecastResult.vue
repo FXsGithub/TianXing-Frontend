@@ -103,11 +103,12 @@ const updateNAOIChart = async () => {
     .then(response => {
       NAOIOption.value = response.data.option;
       NAOIDescription.value = response.data.description;
+      NAOILoading.value = false;
     })
     .catch(error => {
       console.error(error);
+      NAOILoading.value = false;
     });
-    NAOILoading.value = false;
 }
 
 // 请求SLP数据
