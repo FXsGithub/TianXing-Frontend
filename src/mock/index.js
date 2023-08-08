@@ -1,7 +1,7 @@
 import Mock from 'mockjs'
 
 // 是否使用mock.js模拟数据
-let useMock = true
+let useMock = false
 if (useMock) {
 
     Mock.mock('/ice/prediction?year=2023', 'get', {

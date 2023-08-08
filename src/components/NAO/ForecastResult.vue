@@ -83,10 +83,11 @@ const updateNAOIChart = async () => {
 
   const params = {
     year: selectedYear.value,
-    month: selectedMonth.value
+    month: Number(selectedMonth.value)
   };
 
-  axios.get('/nao/predictionResult/NAOI', { params })
+  axios.get('http://www.tjensoprediction.com:8080/nao/predictionResult/nao', { params })
+  //axios.get('/nao/predictionResult/nao', { params })
     .then(response => {
       //console.log(response.data);
       NAOIOption.value = response.data.option;
