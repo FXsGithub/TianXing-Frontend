@@ -1,7 +1,7 @@
 <script setup>
 
 import axios from "axios";
-import {ref} from "vue";
+import {ref, defineExpose} from "vue";
 import {ArrowLeft, ArrowRight} from "@element-plus/icons-vue";
 import VChart from "vue-echarts";
 
@@ -172,7 +172,7 @@ axios.get('http://www.tjensoprediction.com:8080/imgs/WEA_U10/getImgsPath?year='+
     });
 axios.get('http://www.tjensoprediction.com:8080/imgs/WEA_MSLP/getImgsPath?year='+selectedYear.value+'&month='+selectedMonth.value+'&day='+selectedDay.value+'&hour='+selectedHour.value)
     .then(res => {
-      ndex_wind2 = 0;
+      index_wind2 = 0;
       console.log(res.data.titles);
       console.log(res.data.texts);
       title_of_wind2_Array = res.data.titles;
@@ -245,6 +245,15 @@ const handleDateTimeChange = () => {
       });
 }
 
+/* 使el-button点击后能正常失焦 Start (by wyf)*/
+const buttonLeftTemp = ref(null);
+const buttonRightTemp = ref(null);
+const buttonLeftRain = ref(null);
+const buttonRightRain = ref(null);
+const buttonLeftWind = ref(null);
+const buttonRightWind = ref(null);
+const buttonLeftWind2 = ref(null);
+const buttonRightWind2 = ref(null);
 
 /* 左右切换 -- begin */
 function change_time_tempe(flag) {
@@ -256,6 +265,7 @@ function change_time_tempe(flag) {
     else{
       index_tempe=19;
     }
+    buttonLeftTemp.value.$el.blur();
   }
   else if(flag==="right"){
     if(index_tempe<19){
@@ -264,6 +274,7 @@ function change_time_tempe(flag) {
     else{
       index_tempe=0;
     }
+    buttonRightTemp.value.$el.blur();
   }
   title_of_temperature.value=title_of_temperature_Array[index_tempe];
   imgSrc_of_temperature.value=`${prefix}${imgSrc_of_temperature_Array[index_tempe]}`;
@@ -278,6 +289,7 @@ function change_time_rain(flag) {
     else{
       index_rain=19;
     }
+    buttonLeftRain.value.$el.blur();
   }
   else if(flag==="right"){
     if(index_rain<19){
@@ -286,6 +298,7 @@ function change_time_rain(flag) {
     else{
       index_rain=0;
     }
+    buttonRightRain.value.$el.blur();
   }
   title_of_rain.value=title_of_rain_Array[index_rain];
   imgSrc_of_rain.value=`${prefix}${imgSrc_of_rain_Array[index_rain]}`;
@@ -301,6 +314,7 @@ if(flag==="left"){
   else{
     index_wind=19;
   }
+  buttonLeftWind.value.$el.blur();
 }
 else if(flag==="right"){
   if(index_wind<19){
@@ -309,6 +323,7 @@ else if(flag==="right"){
   else{
     index_wind=0;
   }
+  buttonRightWind.value.$el.blur();
 }
 title_of_wind.value=title_of_wind_Array[index_wind];
 imgSrc_of_wind.value=`${prefix}${imgSrc_of_wind_Array[index_wind]}`;
@@ -324,6 +339,7 @@ if(flag==="left"){
   else{
     index_wind2=19;
   }
+  buttonLeftWind2.value.$el.blur();
 }
 else if(flag==="right"){
   if(index_wind2<19){
@@ -332,12 +348,21 @@ else if(flag==="right"){
   else{
     index_wind2=0;
   }
+  buttonRightWind2.value.$el.blur();
 }
 title_of_wind2.value=title_of_wind2_Array[index_wind2];
 imgSrc_of_wind2.value=`${prefix}${imgSrc_of_wind2_Array[index_wind2]}`;
 text_of_wind2.value=text_of_wind2_Array[index_wind2];
 }
 /* 左右切换 -- end */
+
+defineExpose({
+  change_time_tempe,
+  change_time_rain,
+  change_time_wind,
+  change_time_wind2
+});
+/* 使el-button点击后能正常失焦 End */
 </script>
 
 <template>
@@ -377,8 +402,8 @@ text_of_wind2.value=text_of_wind2_Array[index_wind2];
             <p class="picture_text">
               {{ text_of_temperature }}
             </p>
-            <el-button type="primary" class="arrow-left" :icon="ArrowLeft" @click="change_time_tempe('left')"></el-button>
-            <el-button type="primary" class="arrow-right" :icon="ArrowRight" @click="change_time_tempe('right')"></el-button>
+            <el-button ref="buttonLeftTemp" type="primary" class="arrow-left" :icon="ArrowLeft" @click="change_time_tempe('left')"></el-button>
+            <el-button ref="buttonRightTemp" type="primary" class="arrow-right" :icon="ArrowRight" @click="change_time_tempe('right')"></el-button>
           </div>
 
         </el-tab-pane>
@@ -393,8 +418,8 @@ text_of_wind2.value=text_of_wind2_Array[index_wind2];
             <p class="picture_text">
               {{ text_of_rain }}
             </p>
-            <el-button type="primary" class="arrow-left" :icon="ArrowLeft" @click="change_time_rain('left')"></el-button>
-            <el-button type="primary" class="arrow-right" :icon="ArrowRight" @click="change_time_rain('right')"></el-button>
+            <el-button ref="buttonLeftRain" type="primary" class="arrow-left" :icon="ArrowLeft" @click="change_time_rain('left')"></el-button>
+            <el-button ref="buttonRightRain" type="primary" class="arrow-right" :icon="ArrowRight" @click="change_time_rain('right')"></el-button>
           </div>
         </el-tab-pane>
         <el-tab-pane label="风场预测">
@@ -408,22 +433,22 @@ text_of_wind2.value=text_of_wind2_Array[index_wind2];
             <p class="picture_text">
               {{ text_of_wind }}
             </p>
-            <el-button type="primary" class="arrow-left" :icon="ArrowLeft" @click="change_time_wind('left')"></el-button>
-            <el-button type="primary" class="arrow-right" :icon="ArrowRight" @click="change_time_wind('right')"></el-button>
+            <el-button ref="buttonLeftWind" type="primary" class="arrow-left" :icon="ArrowLeft" @click="change_time_wind('left')"></el-button>
+            <el-button ref="buttonRightWind" type="primary" class="arrow-right" :icon="ArrowRight" @click="change_time_wind('right')"></el-button>
            </div>                
-<!--          <div class="whole_container2">-->
-<!--            <p class="picture_title2">-->
-<!--              {{ title_of_wind2 }}-->
-<!--            </p>-->
-<!--            <div class="pic_container">-->
-<!--              <img class="picture" :src="imgSrc_of_wind2" alt="">-->
-<!--            </div>-->
-<!--            <p class="picture_text">-->
-<!--              {{ text_of_wind2 }}-->
-<!--            </p>-->
-<!--            <el-button type="primary" class="arrow-left" :icon="ArrowLeft" @click="change_time_wind2('left')"></el-button>-->
-<!--            <el-button type="primary" class="arrow-right" :icon="ArrowRight" @click="change_time_wind2('right')"></el-button>-->
-<!--          </div>-->
+          <div class="whole_container">
+            <p class="picture_title">
+              {{ title_of_wind2 }}
+            </p>
+            <div class="pic_container">
+              <img class="picture" :src="imgSrc_of_wind2" alt="">
+            </div>
+            <p class="picture_text">
+              {{ text_of_wind2 }}
+            </p>
+            <el-button ref="buttonLeftWind2" type="primary" class="arrow-left" :icon="ArrowLeft" @click="change_time_wind2('left')"></el-button>
+            <el-button ref="buttonRightWind2" type="primary" class="arrow-right" :icon="ArrowRight" @click="change_time_wind2('right')"></el-button>
+          </div>
         </el-tab-pane>
       </el-tabs>
     </div>

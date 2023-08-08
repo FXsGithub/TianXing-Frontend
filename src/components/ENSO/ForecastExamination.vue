@@ -1,5 +1,5 @@
 <script setup>
-import {ref, onMounted, reactive, watch} from "vue";
+import {ref, onMounted, reactive, watch, defineExpose} from "vue";
 import * as echarts from "echarts";
 import axios  from "axios";
 import VChart from 'vue-echarts';
@@ -18,12 +18,12 @@ const end_time = ref(null);
 此处调接口获取时间范围
 axios.get('http://www.tjensoprediction.com:8080/imgs/WEA_T2M/getInitData')
 .then(res =>{
-  start_time.value = new Date(res.data.earliestDate);
-  end_time.value = new Date(res.data.latestDate);
+  start_time.value = new Date(res.data.start);
+  end_time.value = new Date(res.data.end);
 });
 */
-start_time.value = new Date('2023-1');      //暂时写死范围
-end_time.value = new Date('2023-6');
+start_time.value = new Date('2023-2');      //暂时写死范围
+end_time.value = new Date('2023-4');
 const limitedDateRange = (time) => {
   return time.getTime() < start_time.value || time.getTime() > end_time.value;
 };
@@ -31,12 +31,12 @@ const limitedDateRange = (time) => {
 function handleClick(tab, event) {
   console.log(tab.props.label);
   if(tab.props.label == '逐月比对'){
-    start_time.value = new Date('2023-1');      //暂时写死范围
-    end_time.value = new Date('2023-6');
+    start_time.value = new Date('2023-2');      //暂时写死范围
+    end_time.value = new Date('2023-4');
   }
   else if(tab.props.label == '预报误差'){ 
-    start_time.value = new Date('2023-1');      //暂时写死范围
-    end_time.value = new Date('2023-6');
+    start_time.value = new Date('2023-2');      //暂时写死范围
+    end_time.value = new Date('2023-4');
   }
   else if(tab.props.label == '误差分析'){
     start_time.value = new Date('2023-2');      //暂时写死范围
@@ -76,6 +76,7 @@ axios.get('http://www.tjensoprediction.com:8080/enso/predictionExamination/error
     .then(res => {
       chart2_option=res.data.option;
       chart2.value = chart2_option[0];
+      Chart2_Description.text = res.data.text
     });
 //误差分析
 axios.get('http://www.tjensoprediction.com:8080/enso/predictionExamination/errorBox?year='+Number(start_year.value)+'&month='+Number(start_month.value))
@@ -119,6 +120,11 @@ function update_charts() {
         Chart4_Description.text = res.data.text 
       });
 }
+
+/* 使el-button点击后能正常失焦 Start (by wyf)*/
+const buttonLeft = ref(null);
+const buttonRight = ref(null);
+
 /* chart2左右切换 -- begin */
 function change_Month(flag) {
 
@@ -129,6 +135,7 @@ function change_Month(flag) {
     else{
       index_month=11;
     }
+    buttonLeft.value.$el.blur();
   }
   else if(flag==="right"){
     if(index_month<11){
@@ -137,12 +144,17 @@ function change_Month(flag) {
     else{
       index_month=0;
     }
+    buttonRight.value.$el.blur();
   }
 
   chart2.value=chart2_option[index_month];
 }
 /* chart2左右切换 -- end */
 
+defineExpose({
+  change_Month
+});
+/* 使el-button点击后能正常失焦 End */
 
 import {
   ArrowLeft,
@@ -184,8 +196,8 @@ import {
       <el-tab-pane label="预报误差">
         <div class="chart-container">
           <v-chart class="chart" :option="chart2" autoresize></v-chart>
-          <el-button type="primary" class="arrow-left" :icon="ArrowLeft" @click="change_Month('left')"></el-button>
-          <el-button type="primary" class="arrow-right" :icon="ArrowRight" @click="change_Month('right')"></el-button>
+          <el-button ref="buttonLeft" type="primary" class="arrow-left" :icon="ArrowLeft" @click="change_Month('left')"></el-button>
+          <el-button ref="buttonRight" type="primary" class="arrow-right" :icon="ArrowRight" @click="change_Month('right')"></el-button>
         </div>
         <p class="text_of_graph">{{ Chart2_Description.text }}</p>
       </el-tab-pane>

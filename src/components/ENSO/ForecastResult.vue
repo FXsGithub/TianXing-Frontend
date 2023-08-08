@@ -217,18 +217,6 @@ imgSrc_of_heat.value = `${prefix}${imgSrc_of_heat_Array[index_heat]}`;
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
         </el-tabs>
       </div>
     </template>

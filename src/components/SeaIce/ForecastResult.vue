@@ -10,7 +10,6 @@ import VChart from 'vue-echarts';
 import {ArrowLeft, ArrowRight} from '@element-plus/icons-vue'
 import { defineExpose } from 'vue';
 
-
 const SIEAvailableList = ref([])
 const SICAvailableList = ref({
   yearList: [],
@@ -21,15 +20,13 @@ const SICAvailableList = ref({
 const selectedSIE = ref(true)
 const selectedSIC = ref(false)
 
-const currentDate = new Date();
-
 const selectedYear = ref('');
 const selectedMonth = ref('');
 const selectedDay = ref('');
 
 selectedYear.value = '2023';
 selectedMonth.value = '01';
-selectedDay.value = currentDate;
+selectedDay.value = new Date();
 
 const SIEChartTitle = ref('')
 const SICChartTitle = ref('')
@@ -103,16 +100,12 @@ function selectChart(tab) {
 // 请求SIE数据
 const updateSIEChart = async () => {
   updateSIEChartTitle();
-
   const params = {
     year: Number(selectedYear.value),
     month: Number(selectedMonth.value)
   };
-
   axios.get('http://www.tjensoprediction.com:8080/seaice/predictionResult/SIE', { params })
-//  axios.get('/seaice/predictionResult/SIE', { params })
     .then(response => {
-      //console.log(response.data);
       SIEOption.value = response.data.option;
       SIEDescription.value = response.data.description;
     })
@@ -126,7 +119,6 @@ function updateSIEChartTitle() {
   let month1 = selectedMonth.value;
   let year2 = ''
   let month2 = ''
-
   if(Number(month1) == 1) {
     month2 = '12';
     year2 = year1;
@@ -138,6 +130,7 @@ function updateSIEChartTitle() {
   SIEChartTitle.value = year1 + '年' + month1 + '月~' + year2 + '年' + month2 + '月 海冰预测结果';
 }
 
+// 选择的年份改变时，判断之前选择的月份在新的年份中是否可用，不可用则改为最早的可用月份
 function handleYearChange() {
   for (let i = 0; i < SIEAvailableList.value.length; i++) {
     if (selectedYear.value == SIEAvailableList.value[i].year && selectedMonth.value == SIEAvailableList.value[i].month) {
@@ -165,7 +158,7 @@ const updateSICChart = async () => {
   axios.get('http://www.tjensoprediction.com:8080/seaice/predictionResult/SIC', { params })
     .then(response => {
       imgSrc.value = response.data;
-      imgIndex = 0;
+      imgIndex.value = 0;
     })
     .catch(error => {
       console.error(error);
@@ -178,7 +171,6 @@ const initSIEAvailableList = () => {
     year: 2023,
     month: 1
   };
-  
   axios.get('http://www.tjensoprediction.com:8080/seaice/predictionResult/SIE', { params })
     .then(response => {
       SIEAvailableList.value = response.data.availableList
@@ -194,14 +186,12 @@ const initSICAvailableList = () => {
     year: 2023,
     month: 1
   };
-  
   axios.get('http://www.tjensoprediction.com:8080/seaice/initial/SICprediction', { params })
     .then(response => {
       SICAvailableList.value.yearList = response.data.yearList;
       SICAvailableList.value.monthList = response.data.monthList;
       SICAvailableList.value.dateList = response.data.dateList;
       imgSrc.value = response.data.sicInitial;
-      
       let newestYear = 0;
       let newestMonth = 0;
       let newestDate = 0;
@@ -302,7 +292,6 @@ onMounted(
     })
   }
 )
-
 </script>
 
 <template>
@@ -334,6 +323,7 @@ onMounted(
         <h4 style="text-align: center; margin-top: 0px; font-size: 16px">({{ imgIndex + 1 }}/{{ imgSrc.length }})</h4>
         <div class="imageContainer">
           <img
+            v-if="imgSrc.length"
             :src="'http://www.tjensoprediction.com' + imgSrc[imgIndex]"
             class="image"
             alt=""
@@ -352,12 +342,6 @@ onMounted(
   }
   .SIEChart {
     height: 500px;
-  }
-
-  .SICChart {
-    margin: 0 auto;
-    height: 480px;
-    width: 500px
   }
 
   .description {
@@ -381,7 +365,7 @@ onMounted(
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 500px; /* 可根据需要调整容器高度 */
+    height: 500px;
   }
 
   .image {

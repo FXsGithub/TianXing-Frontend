@@ -1,114 +1,157 @@
 <script setup>
 
-import {onMounted} from "vue";
-import { reactive } from "vue";
-import {ref} from "vue";
-import * as echarts from 'echarts';
-import {nextTick} from "vue";
+import { ref, onMounted, defineExpose } from "vue";
 import axios from 'axios';
 import VChart from 'vue-echarts';
+import { ArrowLeft, ArrowRight } from '@element-plus/icons-vue'
 
 const selectedNAOI = ref(true)
 const selectedSLP = ref(false)
 
 const currentDate = new Date();
-const year = currentDate.getFullYear() - 1 + '';
-const month = currentDate.getMonth() + 1 < 10 ? '0' + (currentDate.getMonth() + 1 + '') : currentDate.getMonth() + 1 + ''
+const year = currentDate.getFullYear() + '';
+const month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
 
-const selectedYear = ref('');
-const selectedMonth = ref('');
+const NAOISelectedYear = ref('');
+const NAOISelectedMonth = ref('');
+const SLPSelectedYear = ref('');
+const SLPSelectedMonth = ref('');
 
 let NAOIStartYear = 0;
 let NAOIStartMonth = 0;
 let NAOIEndYear = 0;
 let NAOIEndMonth = 0;
 
-selectedYear.value = year;
-selectedMonth.value = month;
+let SLPStartYear = 0;
+let SLPStartMonth = 0;
+let SLPEndYear = 0;
+let SLPEndMonth = 0;
+
+NAOISelectedYear.value = year;
+NAOISelectedMonth.value = month;
+SLPSelectedYear.value = year;
+SLPSelectedMonth.value = month;
 
 const NAOIChartTitle = ref('')
 const SLPChartTitle = ref('')
 NAOIChartTitle.value = updateNAOIChartTitle();
-SLPChartTitle.value = selectedYear + '年' + selectedMonth + '月 北大西洋SLP预测结果';
+SLPChartTitle.value = updateSLPChartTitle();
 
 const NAOIOption = ref({})
 const NAOIDescription = ref('')
-const SLPDescription = ref('')
+//const SLPDescription = ref('')
 
-NAOIOption.value = {
-  title: {
-    text: NAOIChartTitle.value,
-    left: 'center'
-  },
-  tooltip: {},
-  xAxis: {
-    type: 'category',
-    name: '时间',
-    data: ['一月', '二月', '三月', '四月', '五月', '六月']
-  },
-  yAxis: {
-    type: 'value',
-  },
-  legend: {
-    data: ['观测值', 'NAO-MCR'],
-    orient: 'horizontal',
-    left: 'center',
-    bottom: '5',
-  },
-  series: [
-    {
-      name: '观测值',
-      type: 'line',
-      data: []
-    },
-    {
-      name: 'NAO-MCR',
-      type: 'line',
-      data: []
-    },
-  ]
-}
+const imgSrc = ref([]);
+const imgIndex = ref(0);
+
+const NAOILoading = ref(false);
+const SLPLoading = ref(false);
 
 function selectChart(tab) {
   if(tab.index == 0) {
     selectedNAOI.value = true;
     selectedSLP.value = false;
-    updateNAOIChart();
   }
   else {
     selectedNAOI.value = false;
     selectedSLP.value = true;
-    updateSLPChart();
   }
 }
 
 // 请求NAOI数据
 const updateNAOIChart = async () => {
+  NAOILoading.value = true;
   updateNAOIChartTitle();
-
   const params = {
-    year: Number(selectedYear.value),
-    month: Number(selectedMonth.value)
+    year: Number(NAOISelectedYear.value),
+    month: Number(NAOISelectedMonth.value)
   };
-
   axios.get('http://www.tjensoprediction.com:8080/nao/predictionResult/nao', { params })
-  //axios.get('/nao/predictionResult/nao', { params })
     .then(response => {
-      //console.log(response.data);
       NAOIOption.value = response.data.option;
       NAOIDescription.value = response.data.description;
+      NAOILoading.value = false;
     })
     .catch(error => {
       console.error(error);
+      NAOILoading.value = false;
+    });
+}
+
+// 请求SLP数据
+const updateSLPChart = async () => {
+  SLPLoading.value = true;
+  updateSLPChartTitle();
+  const params = {
+    year: Number(SLPSelectedYear.value),
+    month: Number(SLPSelectedMonth.value)
+  };
+  axios.get('http://www.tjensoprediction.com:8080//nao/findGridData/nao', { params })
+    .then(response => {
+      imgSrc.value = response.data;
+      // SLPDescription.value = response.data.description; // 接口未提供描述
+      imgIndex.value = 0;
+      loadImg(imgSrc.value);
+      SLPLoading.value = false;
+    })
+    .catch(error => {
+      console.error(error);
+      SLPLoading.value = false;
+    });
+}
+
+// 初始化NAOI图表
+const initNAOIChart = () => {
+  updateNAOIChartTitle();
+  NAOILoading.value = true;
+  axios.get('http://www.tjensoprediction.com:8080/nao/initialize/naoPrediction')
+    .then(response => {
+      NAOIStartYear = response.data.start_year;
+      NAOIStartMonth = response.data.start_month;
+      NAOIEndYear = response.data.end_year;
+      NAOIEndMonth = response.data.end_month;
+      NAOISelectedYear.value = NAOIEndYear;
+      NAOISelectedMonth.value = NAOIEndMonth.toString().padStart(2, '0');
+      NAOIOption.value = response.data.option;
+      NAOIDescription.value = response.data.description;
+      updateNAOIChartTitle();
+      NAOILoading.value = false;
+    })
+    .catch(error => {
+      console.error(error);
+      NAOILoading.value = false;
+    });
+}
+
+// 初始化SLP图表
+const initSLPChart = () => {
+  updateSLPChartTitle();
+  SLPLoading.value = true;
+  axios.get('http://www.tjensoprediction.com:8080/nao/initialize/naoGrid')
+    .then(response => {
+      SLPStartYear = response.data.start_year;
+      SLPStartMonth = response.data.start_month;
+      SLPEndYear = response.data.end_year;
+      SLPEndMonth = response.data.end_month;
+      SLPSelectedYear.value = SLPEndYear;
+      SLPSelectedMonth.value = SLPEndMonth.toString().padStart(2, '0');
+      imgSrc.value = response.data.data;
+      // SLPDescription.value = response.data.description; // 接口未提供描述
+      updateSLPChartTitle();
+      loadImg(imgSrc.value);
+      SLPLoading.value = false;
+    })
+    .catch(error => {
+      console.error(error);
+      SLPLoading.value = false;
     });
 }
 
 function updateNAOIChartTitle() {
-  let year1 = selectedYear.value;
-  let month1 = selectedMonth.value;
-  let year2 = ''
-  let month2 = ''
-
+  let year1 = NAOISelectedYear.value;
+  let month1 = NAOISelectedMonth.value;
+  let year2 = '';
+  let month2 = '';
   if(Number(month1) > 7) {
     month2 = Number(month1) - 7 + '';
     year2 = Number(year1) + 1 + '';
@@ -123,75 +166,91 @@ function updateNAOIChartTitle() {
   NAOIChartTitle.value = year1 + '年' + month1 + '月~' + year2 + '年' + month2 + '月 NAO预测结果';
 }
 
-// 请求SLP数据
-const updateSLPChart = async () => {
-  SLPChartTitle.value = `${selectedYear.value}年${selectedMonth.value}月 北大西洋SLP预测结果`;
-  const params = {
-    year: selectedYear.value,
-    month: selectedMonth.value
-  };
-  //console.log(params.year + '-' + params.month + '-' + params.day)
-  axios.get('http://www.tjensoprediction.com:8080/nao/predictionResult/SLP', { params })
-    .then(response => {
-      //此处应该得到一张图片
-      SLPDescription.value = response.data.description;
-    })
-    .catch(error => {
-      console.error(error);
-    });
+function updateSLPChartTitle() {
+  SLPChartTitle.value = SLPSelectedYear.value + '年' + SLPSelectedMonth.value + '月 北大西洋SLP预测结果';
 }
 
-function updateCharts() {
-  if(selectedNAOI.value == true) {
-    updateNAOIChart();
-  }
-  else {
-    updateSLPChart();
-  }
-}
-
-// 初始化NAOI图表
-const initNAOIChart = () => {
-  axios.get('http://www.tjensoprediction.com:8080/nao/initialize/naoPrediction')
-    .then(response => {
-      console.log(response.data)
-      NAOIStartYear = response.data.start_year;
-      NAOIStartMonth = response.data.start_month;
-      NAOIEndYear = response.data.end_year;
-      NAOIEndMonth = response.data.end_month;
-
-      selectedYear.value = NAOIEndYear;
-      selectedMonth.value = NAOIEndMonth.toString().padStart(2, '0');
-
-      NAOIOption.value = response.data.option;
-      NAOIDescription.value = response.data.description;
-    })
-    .catch(error => {
-      console.error(error);
-    });
-}
-
-function disabledYear(date) {
-  const year = date.getFullYear();
+function NAOIDisabledYear(day) {
+  const year = day.getFullYear();
   if(year < NAOIStartYear || year > NAOIEndYear)
     return true;
   else
     return false;
 }
 
-function disabledMonth(date) {
-  const month = date.getMonth() + 1;
-  if(selectedYear.value == NAOIStartYear && month < NAOIStartMonth)
+function NAOIDisabledMonth(day) {
+  const month = day.getMonth() + 1;
+  if(NAOISelectedYear.value == NAOIStartYear && month < NAOIStartMonth)
     return true;
-  else if(selectedYear.value == NAOIEndYear && month > NAOIEndMonth)
+  else if(NAOISelectedYear.value == NAOIEndYear && month > NAOIEndMonth)
     return true;
   else
     return false;
 }
 
+function SLPDisabledYear(day) {
+  const year = day.getFullYear();
+  if(year < SLPStartYear || year > SLPEndYear)
+    return true;
+  else
+    return false;
+}
+
+function SLPDisabledMonth(day) {
+  const month = day.getMonth() + 1;
+  if(SLPSelectedYear.value == SLPStartYear && month < SLPStartMonth)
+    return true;
+  else if(SLPSelectedYear.value == SLPEndYear && month > SLPEndMonth)
+    return true;
+  else
+    return false;
+}
+
+/* 使el-button点击后能正常失焦 Start */
+const buttonLeft = ref(null);
+const buttonRight = ref(null);
+
+const changeIndex = (direction) => {
+  if(direction == 'left') { // 点击了左按钮
+    if(imgIndex.value == 0)
+      imgIndex.value = imgSrc.value.length - 1;
+    else
+      imgIndex.value--;
+    buttonLeft.value.$el.blur(); // 使左按钮失焦
+  }
+  else { // 点击了右按钮
+    if(imgIndex.value == imgSrc.value.length - 1)
+      imgIndex.value = 0;
+    else
+      imgIndex.value++;
+    buttonRight.value.$el.blur(); // 使右按钮失焦
+  }
+};
+
+defineExpose({
+  changeIndex
+});
+/* 使el-button点击后能正常失焦 End */
+
+// 图片预加载
+const loadImg = (imgList) => {
+  for (let i = 0; i < imgList.length; i++) {
+    let img = new Image();
+    let currentSrc = '';
+    img.src = 'http://www.tjensoprediction.com' + imgList[i];
+    img.onload = function () {
+      console.log('加载完毕', this.currentSrc);
+    }
+    img.onerror = function () {
+      console.log('加载错误', this.currentSrc);
+    }
+  }
+}
+
 onMounted(
   () => {
     initNAOIChart();
+    initSLPChart();
   }
 )
 </script>
@@ -202,33 +261,48 @@ onMounted(
       {{ NAOIChartTitle }}
     </h1>
     <h1 v-show="selectedSLP" class="title">
-      {{ selectedYear }}年{{ selectedMonth }}月 北大西洋SLP预测结果
+      {{ SLPSelectedYear }}年{{ SLPSelectedMonth }}月 北大西洋SLP预测结果
     </h1>
     <div class="datePickerContainer">
-      <el-date-picker @change="updateCharts" v-model="selectedYear" type="year" format="YYYY" value-format="YYYY" :clearable="false" style="width: 80px; height: 25px" :disabled-date="disabledYear" />
+      <el-date-picker @change="updateNAOIChart" v-if="selectedNAOI" v-model="NAOISelectedYear" type="year" format="YYYY" value-format="YYYY" :clearable="false" style="width: 80px; height: 25px" :disabled-date="NAOIDisabledYear" />
+      <el-date-picker @change="updateSLPChart" v-if="selectedSLP" v-model="SLPSelectedYear" type="year" format="YYYY" value-format="YYYY" :clearable="false" style="width: 80px; height: 25px" :disabled-date="SLPDisabledYear" />
       <div class="text">年</div>
-      <el-date-picker @change="updateCharts" v-model="selectedMonth" type="month" format="MM" value-format="MM" :clearable="false" style="width: 60px; height: 25px" :disabled-date="disabledMonth" />
+      <el-date-picker @change="updateNAOIChart" v-if="selectedNAOI" v-model="NAOISelectedMonth" type="month" format="MM" value-format="MM" :clearable="false" style="width: 60px; height: 25px" :disabled-date="NAOIDisabledMonth" />
+      <el-date-picker @change="updateSLPChart" v-if="selectedSLP" v-model="SLPSelectedMonth" type="month" format="MM" value-format="MM" :clearable="false" style="width: 60px; height: 25px" :disabled-date="SLPDisabledMonth" />
       <div class="text">月</div>
     </div>
     <el-tabs type="border-card" @tab-click="selectChart" :stretch="true">
-      <el-tab-pane label="指数预测">
+      <el-tab-pane label="指数预测" v-loading="NAOILoading && selectedNAOI">
         <v-chart class="NAOIChart" :option="NAOIOption" autoresize />
         <div class="description">
           {{ NAOIDescription }}
         </div>
       </el-tab-pane>
-      <el-tab-pane label="模态预测">
-        <h3 style="text-align: center; margin-top: 0px">{{ SLPChartTitle }}</h3>
-        <div class="imageContainer">
-          <img
-            src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png"
-            class="image"
-          />
-        </div>
-        <p style="text-align: center">图片接口尚未完成</p>
-        <div class="description">
+      <el-tab-pane label="模态预测" v-loading="SLPLoading && selectedSLP" style="min-height: 350px">
+        <h3 v-show="!SLPLoading" style="text-align: center; margin-top: 0px; margin-bottom: 15px">{{ SLPChartTitle }}</h3>
+        <h4 v-show="!SLPLoading" style="text-align: center; margin-top: 0px; margin-bottom: 15px; font-size: 16px">({{ imgIndex + 1 }}/{{ imgSrc.length }})</h4>
+        <el-row v-show="!SLPLoading">
+          <el-col :span="2">
+            <el-button ref="buttonLeft" type="primary" class="arrowLeft" :icon="ArrowLeft" @click="changeIndex('left')" />
+          </el-col>
+          <el-col :span="20">
+            <div class="imgContainer">
+              <img
+                v-if="imgSrc.length"
+                :src="'http://www.tjensoprediction.com' + imgSrc[imgIndex]"
+                class="image"
+                alt=""
+              />
+            </div>
+          </el-col>
+          <el-col :span="2">
+            <el-button ref="buttonRight" type="primary" class="arrowRight" :icon="ArrowRight" @click="changeIndex('right')" />
+          </el-col>
+        </el-row>
+        <!-- <div class="description">
           {{ SLPDescription }}
-        </div>
+        </div> -->
+        <!-- 接口未提供描述 -->
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -240,12 +314,6 @@ onMounted(
   }
   .NAOIChart {
     height: 500px;
-  }
-
-  .SLPChart {
-    margin: 0 auto;
-    height: 480px;
-    width: 500px
   }
 
   .description {
@@ -265,14 +333,42 @@ onMounted(
     margin-right: 10px;
   }
 
-  .imageContainer {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 400px;
+  .imgContainer {
+    overflow: hidden;
+  }
+  .image {
+    width: 100%;
+    margin-top: -7.5%;
+    transform: translateX(-3%);
   }
 
-  .image {
-    height: 100%;
+  .el-button.arrowLeft {
+    z-index: 1;
+    position: absolute;
+    top: 50%;
+    left: 4%;
+    width: 5%;
+    height: 30%;
+    min-width: 40px;
+    min-height: 80px;
+    max-width: 50px;
+    max-height: 115px;
+    transform: translateY(-65%);
+    font-size: 20px;
+  }
+
+  .el-button.arrowRight {
+    z-index: 1;
+    position: absolute;
+    top: 50%;
+    right: 4%;
+    width: 5%;
+    height: 30%;
+    min-width: 40px;
+    min-height: 80px;
+    max-width: 50px;
+    max-height: 115px;
+    transform: translateY(-65%);
+    font-size: 20px;
   }
 </style>
