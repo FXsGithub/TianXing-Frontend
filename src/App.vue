@@ -53,10 +53,10 @@ const handleSelect = (key: string, keyPath: string[]) => {
                 >
                   <el-divider content-position="left">关于我们</el-divider>
 
-                  <el-menu-item index="Demo">
-                    <el-icon><House /></el-icon>
-                    Demo页
-                  </el-menu-item>
+<!--                  <el-menu-item index="Demo">-->
+<!--                    <el-icon><House /></el-icon>-->
+<!--                    Demo页-->
+<!--                  </el-menu-item>-->
 
                   <el-menu-item index="">
                     <el-icon><House /></el-icon>

@@ -10,7 +10,7 @@
     </div>
 
     <div class="img_1">
-      <img src="../../assets/home_image.png" alt="">
+      <img style="height: 350px" src="../../assets/home_image.png" alt="">
     </div>
     <div class="text">
       <p>
