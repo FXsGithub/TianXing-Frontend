@@ -18,6 +18,11 @@ const month = currentDate.getMonth() + 1 < 10 ? '0' + (currentDate.getMonth() + 
 const selectedYear = ref('');
 const selectedMonth = ref('');
 
+let NAOIStartYear = 0;
+let NAOIStartMonth = 0;
+let NAOIEndYear = 0;
+let NAOIEndMonth = 0;
+
 selectedYear.value = year;
 selectedMonth.value = month;
 
@@ -82,7 +87,7 @@ const updateNAOIChart = async () => {
   updateNAOIChartTitle();
 
   const params = {
-    year: selectedYear.value,
+    year: Number(selectedYear.value),
     month: Number(selectedMonth.value)
   };
 
@@ -104,7 +109,7 @@ function updateNAOIChartTitle() {
   let year2 = ''
   let month2 = ''
 
-  if(Number(month1) + 5 > 12) {
+  if(Number(month1) > 7) {
     month2 = Number(month1) - 7 + '';
     year2 = Number(year1) + 1 + '';
   }
@@ -126,7 +131,7 @@ const updateSLPChart = async () => {
     month: selectedMonth.value
   };
   //console.log(params.year + '-' + params.month + '-' + params.day)
-  axios.get('/nao/predictionResult/SLP', { params })
+  axios.get('http://www.tjensoprediction.com:8080/nao/predictionResult/SLP', { params })
     .then(response => {
       //此处应该得到一张图片
       SLPDescription.value = response.data.description;
@@ -145,11 +150,48 @@ function updateCharts() {
   }
 }
 
+// 初始化NAOI图表
+const initNAOIChart = () => {
+  axios.get('http://www.tjensoprediction.com:8080/nao/initialize/naoPrediction')
+    .then(response => {
+      console.log(response.data)
+      NAOIStartYear = response.data.start_year;
+      NAOIStartMonth = response.data.start_month;
+      NAOIEndYear = response.data.end_year;
+      NAOIEndMonth = response.data.end_month;
+
+      selectedYear.value = NAOIEndYear;
+      selectedMonth.value = NAOIEndMonth.toString().padStart(2, '0');
+
+      NAOIOption.value = response.data.option;
+      NAOIDescription.value = response.data.description;
+    })
+    .catch(error => {
+      console.error(error);
+    });
+}
+
+function disabledYear(date) {
+  const year = date.getFullYear();
+  if(year < NAOIStartYear || year > NAOIEndYear)
+    return true;
+  else
+    return false;
+}
+
+function disabledMonth(date) {
+  const month = date.getMonth() + 1;
+  if(selectedYear.value == NAOIStartYear && month < NAOIStartMonth)
+    return true;
+  else if(selectedYear.value == NAOIEndYear && month > NAOIEndMonth)
+    return true;
+  else
+    return false;
+}
+
 onMounted(
   () => {
-    nextTick(() => {
-      updateNAOIChart();
-    })
+    initNAOIChart();
   }
 )
 </script>
@@ -163,9 +205,9 @@ onMounted(
       {{ selectedYear }}年{{ selectedMonth }}月 北大西洋SLP预测结果
     </h1>
     <div class="datePickerContainer">
-      <el-date-picker @change="updateCharts" v-model="selectedYear" type="year" format="YYYY" value-format="YYYY" :clearable="false" style="width: 80px; height: 25px"/>
+      <el-date-picker @change="updateCharts" v-model="selectedYear" type="year" format="YYYY" value-format="YYYY" :clearable="false" style="width: 80px; height: 25px" :disabled-date="disabledYear" />
       <div class="text">年</div>
-      <el-date-picker @change="updateCharts" v-model="selectedMonth" type="month" format="MM" value-format="MM" :clearable="false" style="width: 60px; height: 25px"/>
+      <el-date-picker @change="updateCharts" v-model="selectedMonth" type="month" format="MM" value-format="MM" :clearable="false" style="width: 60px; height: 25px" :disabled-date="disabledMonth" />
       <div class="text">月</div>
     </div>
     <el-tabs type="border-card" @tab-click="selectChart" :stretch="true">

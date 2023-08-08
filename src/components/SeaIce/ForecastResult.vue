@@ -7,15 +7,21 @@ import * as echarts from 'echarts';
 import {nextTick} from "vue";
 import axios from 'axios';
 import VChart from 'vue-echarts';
+import {ArrowLeft, ArrowRight} from '@element-plus/icons-vue'
+import { defineExpose } from 'vue';
 
-const availableList = ref([])
+
+const SIEAvailableList = ref([])
+const SICAvailableList = ref({
+  yearList: [],
+  monthList: [],
+  dateList: []
+})
 
 const selectedSIE = ref(true)
 const selectedSIC = ref(false)
 
 const currentDate = new Date();
-const year = currentDate.getFullYear() - 1 + '';
-const month = currentDate.getMonth() < 10 ? '0' + (currentDate.getMonth() + 1 + '') : currentDate.getMonth() + 1 + ''
 
 const selectedYear = ref('');
 const selectedMonth = ref('');
@@ -33,7 +39,9 @@ SICChartTitle.value = `${selectedDay.value.getFullYear()}年${selectedDay.value.
 const SIEOption = ref({})
 
 const SIEDescription = ref('')
-const SICDescription = ref('')
+
+const imgSrc = ref([]);
+const imgIndex = ref(0);
 
 SIEOption.value = {
   title: {
@@ -101,8 +109,8 @@ const updateSIEChart = async () => {
     month: Number(selectedMonth.value)
   };
 
-//  axios.get('http://www.tjensoprediction.com:8080/seaice/predictionResult/SIE', { params })
-  axios.get('/seaice/predictionResult/SIE', { params })
+  axios.get('http://www.tjensoprediction.com:8080/seaice/predictionResult/SIE', { params })
+//  axios.get('/seaice/predictionResult/SIE', { params })
     .then(response => {
       //console.log(response.data);
       SIEOption.value = response.data.option;
@@ -124,25 +132,22 @@ function updateSIEChartTitle() {
     year2 = year1;
   }
   else {
-    month2 = Number(month1) - 1 + '';
+    month2 = (Number(month1) - 1).toString().padStart(2, '0');
     year2 = Number(year1) + 1 + '';
-  }
-  if(month2.length == 1) {
-    month2 = '0' + month2;
   }
   SIEChartTitle.value = year1 + '年' + month1 + '月~' + year2 + '年' + month2 + '月 海冰预测结果';
 }
 
 function handleYearChange() {
-  for (let i = 0; i < availableList.value.length; i++) {
-    if (selectedYear.value == availableList.value[i].year && selectedMonth.value == availableList.value[i].month) {
+  for (let i = 0; i < SIEAvailableList.value.length; i++) {
+    if (selectedYear.value == SIEAvailableList.value[i].year && selectedMonth.value == SIEAvailableList.value[i].month) {
       updateSIEChart();
       return;
     }
   }
-  for (let i = 0; i < availableList.value.length; i++) {
-    if (selectedYear.value == availableList.value[i].year) {
-      selectedMonth.value = availableList.value[i].month < 10 ? '0' + (availableList.value[i].month + '') : availableList.value[i].month + ''
+  for (let i = 0; i < SIEAvailableList.value.length; i++) {
+    if (selectedYear.value == SIEAvailableList.value[i].year) {
+      selectedMonth.value = SIEAvailableList.value[i].month < 10 ? '0' + (SIEAvailableList.value[i].month + '') : SIEAvailableList.value[i].month + ''
       updateSIEChart();
       return;
     }
@@ -157,62 +162,147 @@ const updateSICChart = async () => {
     month: selectedDay.value.getMonth() + 1,
     day: selectedDay.value.getDate()
   };
-  //console.log(params.year + '-' + params.month + '-' + params.day)
-//  axios.get('http://www.tjensoprediction.com:8080/seaice/predictionResult/SIC', { params })
-  axios.get('/seaice/predictionResult/SIC', { params })
+  axios.get('http://www.tjensoprediction.com:8080/seaice/predictionResult/SIC', { params })
     .then(response => {
-      //此处应该得到一张图片
-      SICDescription.value = response.data.description;
+      imgSrc.value = response.data;
+      imgIndex = 0;
     })
     .catch(error => {
       console.error(error);
     });
 }
 
-// 初始化可请求的年月
-const initAvailableList = () => {
+// 初始化SIE可请求的年月
+const initSIEAvailableList = () => {
   const params = {
     year: 2023,
     month: 1
   };
   
-  axios.get('/seaice/predictionResult/SIE', { params })
+  axios.get('http://www.tjensoprediction.com:8080/seaice/predictionResult/SIE', { params })
     .then(response => {
-      availableList.value = response.data.availableList
+      SIEAvailableList.value = response.data.availableList
     })
     .catch(error => {
       console.error(error);
     });
 }
 
-function disabledYear(date) {
-  const year = date.getFullYear();
-  for (let i = 0; i < availableList.value.length; i++) {
-    if (year == availableList.value[i].year) {
+// 初始化SIC可请求的年月
+const initSICAvailableList = () => {
+  const params = {
+    year: 2023,
+    month: 1
+  };
+  
+  axios.get('http://www.tjensoprediction.com:8080/seaice/initial/SICprediction', { params })
+    .then(response => {
+      SICAvailableList.value.yearList = response.data.yearList;
+      SICAvailableList.value.monthList = response.data.monthList;
+      SICAvailableList.value.dateList = response.data.dateList;
+      imgSrc.value = response.data.sicInitial;
+      
+      let newestYear = 0;
+      let newestMonth = 0;
+      let newestDate = 0;
+      for(let i = 0; i < SICAvailableList.value.yearList.length; i++) {
+        SICAvailableList.value.yearList[i] = Number(SICAvailableList.value.yearList[i]);
+        if(newestYear < SICAvailableList.value.yearList[i]) {
+          newestYear = SICAvailableList.value.yearList[i];
+        }
+      }
+      for(let i = 0; i < SICAvailableList.value.monthList.length; i++) {
+        SICAvailableList.value.monthList[i] = Number(SICAvailableList.value.monthList[i]);
+        if(newestMonth < SICAvailableList.value.monthList[i]) {
+          newestMonth = SICAvailableList.value.monthList[i];
+        }
+      }
+      for(let i = 0; i < SICAvailableList.value.dateList.length; i++) {
+        SICAvailableList.value.dateList[i] = Number(SICAvailableList.value.dateList[i]);
+        if(newestDate < SICAvailableList.value.dateList[i]) {
+          newestDate = SICAvailableList.value.dateList[i];
+        }
+      }
+      selectedDay.value = new Date(newestYear, newestMonth - 1, newestDate);
+      imgIndex.value = 0;
+    })
+    .catch(error => {
+      console.error(error);
+    });
+}
+
+function disabledYear(day) {
+  const year = day.getFullYear();
+  for (let i = 0; i < SIEAvailableList.value.length; i++) {
+    if (year == SIEAvailableList.value[i].year) {
       return false;
     }
   }
   return true;
 }
 
-function disabledMonth(date) {
-  const month = date.getMonth() + 1;
-  for (let i = 0; i < availableList.value.length; i++) {
-    if (selectedYear.value == availableList.value[i].year && month == availableList.value[i].month) {
+function disabledMonth(day) {
+  const month = day.getMonth() + 1;
+  for (let i = 0; i < SIEAvailableList.value.length; i++) {
+    if (selectedYear.value == SIEAvailableList.value[i].year && month == SIEAvailableList.value[i].month) {
       return false;
     }
   }
   return true;
 }
+
+function disabledDate(day) {
+  const year = day.getFullYear();
+  const month = day.getMonth() + 1;
+  const date = day.getDate();
+  for (let i = 0; i < SICAvailableList.value.yearList.length; i++) {
+    for (let j = 0; j < SICAvailableList.value.monthList.length; j++) {
+      for (let k = 0; k < SICAvailableList.value.dateList.length; k++) {
+        if (year == SICAvailableList.value.yearList[i] && month == SICAvailableList.value.monthList[j] && date == SICAvailableList.value.dateList[k]) {
+          return false;
+        }
+      }
+    }
+  }
+  return true;
+}
+
+/* 使el-button点击后能正常失焦 Start */
+const buttonLeft = ref(null);
+const buttonRight = ref(null);
+
+const changeIndex = (direction) => {
+  if(direction == 'left') { // 点击了左按钮
+    if(imgIndex.value == 0)
+      imgIndex.value = imgSrc.value.length - 1;
+    else
+      imgIndex.value--;
+    buttonLeft.value.$el.blur(); // 使左按钮失焦
+  }
+  else { // 点击了右按钮
+    if(imgIndex.value == imgSrc.value.length - 1)
+      imgIndex.value = 0;
+    else
+      imgIndex.value++;
+    buttonRight.value.$el.blur(); // 使右按钮失焦
+  }
+};
+
+defineExpose({
+  changeIndex
+});
+/* 使el-button点击后能正常失焦 End */
 
 onMounted(
   () => {
-    initAvailableList();
+    initSIEAvailableList();
+    initSICAvailableList();
     nextTick(() => {
       updateSIEChart();
     })
   }
 )
+
 </script>
 
 <template>
@@ -230,7 +320,7 @@ onMounted(
       <div class="text">月</div>
     </div>
     <div class="datePickerContainer" v-show="selectedSIC">
-      <el-date-picker @change="updateSICChart" v-model="selectedDay" :clearable="false" style="width: 115px; height: 25px"/>
+      <el-date-picker @change="updateSICChart" v-model="selectedDay" :clearable="false" style="width: 115px; height: 25px" :disabled-date="disabledDate" />
     </div>
     <el-tabs type="border-card" @tab-click="selectChart" :stretch="true">
       <el-tab-pane label="SIE指数">
@@ -241,16 +331,16 @@ onMounted(
       </el-tab-pane>
       <el-tab-pane label="SIC模态">
         <h3 style="text-align: center; margin-top: 0px; font-size: 18px">{{ SICChartTitle }}</h3>
+        <h4 style="text-align: center; margin-top: 0px; font-size: 16px">({{ imgIndex + 1 }}/{{ imgSrc.length }})</h4>
         <div class="imageContainer">
           <img
-            src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png"
+            :src="'http://www.tjensoprediction.com' + imgSrc[imgIndex]"
             class="image"
+            alt=""
           />
         </div>
-        <p style="text-align: center">图片接口尚未完成</p>
-        <div class="description">
-          {{ SICDescription }}
-        </div>
+        <el-button ref="buttonLeft" type="primary" class="arrowLeft" :icon="ArrowLeft" @click="changeIndex('left')" />
+        <el-button ref="buttonRight" type="primary" class="arrowRight" :icon="ArrowRight" @click="changeIndex('right')" />
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -291,10 +381,27 @@ onMounted(
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 400px; /* 可根据需要调整容器高度 */
+    height: 500px; /* 可根据需要调整容器高度 */
   }
 
   .image {
     height: 100%;
+  }
+  .el-button.arrowLeft {
+    position: absolute;
+    top: 50%;
+    left: 10%;
+    width: 40px;
+    height: 80px;
+    transform: translateY(-50%);
+  }
+
+  .el-button.arrowRight {
+    position: absolute;
+    top: 50%;
+    right: 10%;
+    width: 40px;
+    height: 80px;
+    transform: translateY(-50%);
   }
 </style>
