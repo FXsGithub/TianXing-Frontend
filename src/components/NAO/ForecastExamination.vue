@@ -1,7 +1,7 @@
 <script setup>
 
 import axios from "axios";
-import {ref} from "vue";
+import {ref, defineExpose} from "vue";
 import {ArrowLeft, ArrowRight} from "@element-plus/icons-vue";
 import VChart from "vue-echarts";
 
@@ -94,6 +94,10 @@ axios.get('http://www.tjensoprediction.com:8080/nao/predictionExamination/naoi')
       option7.value = res.data;
   });
 
+/* 使el-button点击后能正常失焦 Start (by wyf)*/
+const buttonLeft = ref(null);
+const buttonRight = ref(null);
+
 function change_time_nao(flag) {
 
 if(flag==="left"){
@@ -103,6 +107,7 @@ if(flag==="left"){
   else{
     index_nao=5;
   }
+  buttonLeft.value.$el.blur();
 }
 else if(flag==="right"){
   if(index_nao<5){
@@ -111,13 +116,17 @@ else if(flag==="right"){
   else{
     index_nao=0;
   }
+  buttonRight.value.$el.blur();
 }
 title_of_nao.value=title_of_nao_Array[index_nao];
 imgSrc_of_nao.value=`${prefix}${imgSrc_of_nao_Array[index_nao]}`;
 //text_of_temperature.value=text_of_temperature_Array[index_tempe];
 }
 
-
+defineExpose({
+  change_time_nao
+});
+/* 使el-button点击后能正常失焦 End */
 
 </script>
 
@@ -150,8 +159,8 @@ imgSrc_of_nao.value=`${prefix}${imgSrc_of_nao_Array[index_nao]}`;
             <!-- <p class="picture_text">
               {{ text_of_temperature }}
             </p> -->
-            <el-button type="primary" class="arrow-left" :icon="ArrowLeft" @click="change_time_nao('left')"></el-button>
-            <el-button type="primary" class="arrow-right" :icon="ArrowRight" @click="change_time_nao('right')"></el-button>
+            <el-button ref="buttonLeft" type="primary" class="arrow-left" :icon="ArrowLeft" @click="change_time_nao('left')"></el-button>
+            <el-button ref="buttonRight" type="primary" class="arrow-right" :icon="ArrowRight" @click="change_time_nao('right')"></el-button>
             <div class="description">
             {{ text_of_option1 }}
             </div>  

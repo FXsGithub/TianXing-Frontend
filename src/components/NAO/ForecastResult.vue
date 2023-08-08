@@ -1,11 +1,9 @@
 <script setup>
 
-import {onMounted} from "vue";
-import {ref} from "vue";
+import { ref, onMounted, defineExpose } from "vue";
 import axios from 'axios';
 import VChart from 'vue-echarts';
-import {ArrowLeft, ArrowRight} from '@element-plus/icons-vue'
-import { defineExpose } from 'vue';
+import { ArrowLeft, ArrowRight } from '@element-plus/icons-vue'
 
 const selectedNAOI = ref(true)
 const selectedSLP = ref(false)

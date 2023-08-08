@@ -1,5 +1,5 @@
 <script setup>
-import {ref, onMounted, reactive, watch} from "vue";
+import {ref, onMounted, reactive, watch, defineExpose} from "vue";
 import * as echarts from "echarts";
 import axios  from "axios";
 import VChart from 'vue-echarts';
@@ -116,6 +116,11 @@ function update_charts() {
         Chart4_Description.text = res.data.text 
       });
 }
+
+/* 使el-button点击后能正常失焦 Start (by wyf)*/
+const buttonLeft = ref(null);
+const buttonRight = ref(null);
+
 /* chart2左右切换 -- begin */
 function change_Month(flag) {
 
@@ -126,6 +131,7 @@ function change_Month(flag) {
     else{
       index_month=11;
     }
+    buttonLeft.value.$el.blur();
   }
   else if(flag==="right"){
     if(index_month<11){
@@ -134,12 +140,17 @@ function change_Month(flag) {
     else{
       index_month=0;
     }
+    buttonRight.value.$el.blur();
   }
 
   chart2.value=chart2_option[index_month];
 }
 /* chart2左右切换 -- end */
 
+defineExpose({
+  change_Month
+});
+/* 使el-button点击后能正常失焦 End */
 
 import {
   ArrowLeft,
@@ -181,8 +192,8 @@ import {
       <el-tab-pane label="预报误差">
         <div class="chart-container">
           <v-chart class="chart" :option="chart2" autoresize></v-chart>
-          <el-button type="primary" class="arrow-left" :icon="ArrowLeft" @click="change_Month('left')"></el-button>
-          <el-button type="primary" class="arrow-right" :icon="ArrowRight" @click="change_Month('right')"></el-button>
+          <el-button ref="buttonLeft" type="primary" class="arrow-left" :icon="ArrowLeft" @click="change_Month('left')"></el-button>
+          <el-button ref="buttonRight" type="primary" class="arrow-right" :icon="ArrowRight" @click="change_Month('right')"></el-button>
         </div>
         <p class="text_of_graph">{{ Chart2_Description.text }}</p>
       </el-tab-pane>

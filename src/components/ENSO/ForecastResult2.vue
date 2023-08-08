@@ -4,6 +4,8 @@
   import {ref} from "vue";
   import {ArrowLeft, ArrowRight} from "@element-plus/icons-vue";
   import VChart from "vue-echarts";
+  import { defineExpose } from "vue";
+
   
   //时间选择器范围框定--start
   
@@ -81,7 +83,7 @@
   if(selectedMonth.value==2)
   {
 
- axios.get('/GB/ForecastResult/heat2?year='+selectedYear.value+'&month='+selectedMonth.value+'&day='+selectedDay.value+'&hour='+selectedHour.value)
+  axios.get('/GB/ForecastResult/heat2?year='+selectedYear.value+'&month='+selectedMonth.value+'&day='+selectedDay.value+'&hour='+selectedHour.value)
       .then(res => {
         index_img = 0;
         imgSrc_of_heat_Array = res.data.imgSrc;
@@ -94,7 +96,7 @@
     else if(selectedMonth.value==3)
   {
  
- axios.get('/GB/ForecastResult/heat3?year='+selectedYear.value+'&month='+selectedMonth.value+'&day='+selectedDay.value+'&hour='+selectedHour.value)
+  axios.get('/GB/ForecastResult/heat3?year='+selectedYear.value+'&month='+selectedMonth.value+'&day='+selectedDay.value+'&hour='+selectedHour.value)
       .then(res => {
         index_img = 0;
         imgSrc_of_heat_Array = res.data.imgSrc;
@@ -107,7 +109,7 @@
     else if(selectedMonth.value==4)
   {
 
- axios.get('/GB/ForecastResult/heat4?year='+selectedYear.value+'&month='+selectedMonth.value+'&day='+selectedDay.value+'&hour='+selectedHour.value)
+  axios.get('/GB/ForecastResult/heat4?year='+selectedYear.value+'&month='+selectedMonth.value+'&day='+selectedDay.value+'&hour='+selectedHour.value)
       .then(res => {
         index_img = 0;
         imgSrc_of_heat_Array = res.data.imgSrc;
@@ -121,81 +123,87 @@
 
   }
    
-    
-  
-  
-  
-  /* 左右切换 -- begin */
-  function change_time_heat(flag) {
-  
-    if(flag==="left"){
-      if(index_img>0){
-        index_img--;
-      }
-      else{
-        index_img=17;
-      }
+
+/* 使el-button点击后能正常失焦 Start (by wyf)*/
+const buttonLeft = ref(null);
+const buttonRight = ref(null);
+
+/* 左右切换 -- begin */
+function change_time_heat(flag) {
+  if (flag === "left") {
+    if (index_img > 0) {
+      index_img--;
     }
-    else if(flag==="right"){
-      if(index_img<17){
-        index_img++;
-      }
-      else{
-        index_img=0;
-      }
+    else {
+      index_img = 17;
     }
-    title_of_heat.value=title_of_heat_Array[index_img];
-    imgSrc_of_heat.value=`${prefix}${imgSrc_of_heat_Array[index_img]}`;
-    text_of_heat.value=text_of_heat_Array[index_img];
+    buttonLeft.value.$el.blur();
   }
- 
-  /* 左右切换 -- end */
-  </script>
+  else if (flag === "right") {
+    if (index_img < 17) {
+      index_img++;
+    }
+    else {
+      index_img = 0;
+    }
+    buttonRight.value.$el.blur();
+  }
+  title_of_heat.value = title_of_heat_Array[index_img];
+  imgSrc_of_heat.value = `${prefix}${imgSrc_of_heat_Array[index_img]}`;
+  text_of_heat.value = text_of_heat_Array[index_img];
+}
+/* 左右切换 -- end */
+
+defineExpose({
+  change_time_heat
+});
+/* 使el-button点击后能正常失焦 End */
+</script>
     
-    <template>
-      <div class="pageContent">
-        <h1 class="title">
-          ENSO预测结果
-        </h1>
-        <p></p>
-        <div class="datePickerContainer">
-          <el-date-picker @change="handleDateTimeChange" v-model="start_year" type="year" format="YYYY" value-format="YYYY" :clearable="false" :disabledDate="limitedDateRange" style="width: 80px; height: 25px"/>
-          <div class="text">年</div>
-          <el-date-picker @change="handleDateTimeChange" v-model="start_month" type="month" format="MM" value-format="MM" :clearable="false"  :disabledDate="limitedDateRange" style="width: 60px; height: 25px"/>
-          <div class="text">月</div>
-        </div>
-    
-        <el-tabs type="border-card">
-          <el-tab-pane label="模态预测">
+<template>
+  <div class="pageContent">
+    <h1 class="title">
+      ENSO预测结果
+    </h1>
+    <p></p>
+    <div class="datePickerContainer">
+      <el-date-picker @change="handleDateTimeChange" v-model="start_year" type="year" format="YYYY" value-format="YYYY" :clearable="false" :disabledDate="limitedDateRange" style="width: 80px; height: 25px"/>
+      <div class="text">年</div>
+      <el-date-picker @change="handleDateTimeChange" v-model="start_month" type="month" format="MM" value-format="MM" :clearable="false"  :disabledDate="limitedDateRange" style="width: 60px; height: 25px"/>
+      <div class="text">月</div>
+    </div>
+
+    <el-tabs type="border-card">
+      <el-tab-pane label="模态预测">
+        
+          <div class="block text-center">
+            <p class="picture_title">
+              {{ title_of_heat }}
+            </p>
             
-              <div class="block text-center">
-                <p class="picture_title">
-                  {{ title_of_heat }}
-                </p>
-                
-                <div class="chart2-container">
-                <img class="picture" :src="imgSrc_of_heat" alt=""  style="margin: 0 auto;">
-                <p class="picture_text">
-                  {{ text_of_heat }}
-                </p>
-                <el-button type="primary" class="arrow-left" :icon="ArrowLeft" @click="change_time_heat('left')" />
-                <el-button type="primary" class="arrow-right" :icon="ArrowRight" @click="change_time_heat('right')" />
-              </div>
-            </div>
-           
-          </el-tab-pane>
-        </el-tabs>
-      </div>
-    </template>
+            <div class="chart2-container">
+            <img class="picture" :src="imgSrc_of_heat" alt=""  style="margin: 0 auto;">
+            <p class="picture_text">
+              {{ text_of_heat }}
+            </p>
+            <el-button ref="buttonLeft" type="primary" class="arrow-left" :icon="ArrowLeft" @click="change_time_heat('left')" />
+            <el-button ref="buttonRight" type="primary" class="arrow-right" :icon="ArrowRight" @click="change_time_heat('right')" />
+          </div>
+        </div>
+        
+      </el-tab-pane>
+    </el-tabs>
+  </div>
+</template>
     
     
-    <style scoped lang="scss">
- /*时间选择器样式*/
- .datePickerContainer {
-    display: flex;
-    justify-content: flex-end;
-    margin-bottom: 20px;
-  }
+<style scoped lang="scss">
+/*时间选择器样式*/
+.datePickerContainer {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 20px;
+}
   
 
 
@@ -259,4 +267,4 @@
   width: auto;
   
 }
-    </style>
+</style>
