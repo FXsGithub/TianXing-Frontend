@@ -1,10 +1,7 @@
 <script setup>
 
 import {onMounted} from "vue";
-import { reactive } from "vue";
 import {ref} from "vue";
-import * as echarts from 'echarts';
-import {nextTick} from "vue";
 import axios from 'axios';
 import VChart from 'vue-echarts';
 import {ArrowLeft, ArrowRight} from '@element-plus/icons-vue'
@@ -34,20 +31,15 @@ let SLPEndMonth = 0;
 
 NAOISelectedYear.value = year;
 NAOISelectedMonth.value = month;
+SLPSelectedYear.value = year;
+SLPSelectedMonth.value = month;
 
 const NAOIChartTitle = ref('')
 const SLPChartTitle = ref('')
 NAOIChartTitle.value = updateNAOIChartTitle();
-SLPChartTitle.value = SLPSelectedYear + '年' + SLPSelectedMonth + '月 北大西洋SLP预测结果';
+SLPChartTitle.value = updateSLPChartTitle();
 
-const NAOIOption = ref({})
-const NAOIDescription = ref('')
-//const SLPDescription = ref('')
-
-const imgSrc = ref([]);
-const imgIndex = ref(0);
-
-NAOIOption.value = {
+const NAOIOption = ref({
   title: {
     text: NAOIChartTitle.value,
     left: 'center'
@@ -79,18 +71,22 @@ NAOIOption.value = {
       data: []
     },
   ]
-}
+})
+
+const NAOIDescription = ref('')
+//const SLPDescription = ref('')
+
+const imgSrc = ref([]);
+const imgIndex = ref(0);
 
 function selectChart(tab) {
   if(tab.index == 0) {
     selectedNAOI.value = true;
     selectedSLP.value = false;
-    //updateNAOIChart();
   }
   else {
     selectedNAOI.value = false;
     selectedSLP.value = true;
-    //updateSLPChart();
   }
 }
 
@@ -102,7 +98,6 @@ const updateNAOIChart = async () => {
     month: Number(NAOISelectedMonth.value)
   };
   axios.get('http://www.tjensoprediction.com:8080/nao/predictionResult/nao', { params })
-  //axios.get('/nao/predictionResult/nao', { params })
     .then(response => {
       NAOIOption.value = response.data.option;
       NAOIDescription.value = response.data.description;
@@ -171,8 +166,8 @@ const initSLPChart = () => {
 function updateNAOIChartTitle() {
   let year1 = NAOISelectedYear.value;
   let month1 = NAOISelectedMonth.value;
-  let year2 = ''
-  let month2 = ''
+  let year2 = '';
+  let month2 = '';
   if(Number(month1) > 7) {
     month2 = Number(month1) - 7 + '';
     year2 = Number(year1) + 1 + '';
@@ -288,10 +283,10 @@ onMounted(
         <h3 style="text-align: center; margin-top: 0px">{{ SLPChartTitle }}</h3>
         <h4 style="text-align: center; margin-top: 0px; font-size: 16px">({{ imgIndex + 1 }}/{{ imgSrc.length }})</h4>
         <el-row>
-          <el-col :span="3">
+          <el-col :span="2">
             <el-button ref="buttonLeft" type="primary" class="arrowLeft" :icon="ArrowLeft" @click="changeIndex('left')" />
           </el-col>
-          <el-col :span="18">
+          <el-col :span="20">
             <img
               v-if="imgSrc.length"
               :src="'http://www.tjensoprediction.com' + imgSrc[imgIndex]"
@@ -299,7 +294,7 @@ onMounted(
               alt=""
             />
           </el-col>
-          <el-col :span="3">
+          <el-col :span="2">
             <el-button ref="buttonRight" type="primary" class="arrowRight" :icon="ArrowRight" @click="changeIndex('right')" />
           </el-col>
         </el-row>
@@ -337,12 +332,6 @@ onMounted(
     margin-right: 10px;
   }
 
-  .imageContainer {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
   .image {
     width: 100%;
   }
@@ -350,7 +339,7 @@ onMounted(
   .el-button.arrowLeft {
     position: absolute;
     top: 50%;
-    left: 3%;
+    left: 2%;
     width: 40px;
     height: 80px;
     transform: translateY(-50%);
@@ -359,7 +348,7 @@ onMounted(
   .el-button.arrowRight {
     position: absolute;
     top: 50%;
-    right: 3%;
+    right: 2%;
     width: 40px;
     height: 80px;
     transform: translateY(-50%);
