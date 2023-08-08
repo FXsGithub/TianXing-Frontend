@@ -1,15 +1,16 @@
 <script setup>
 
-import { ref} from "vue";
-import VChart from 'vue-echarts'
-import axios from 'axios';
+import axios from "axios";
+import {ref} from "vue";
+import {ArrowLeft, ArrowRight} from "@element-plus/icons-vue";
+import VChart from "vue-echarts";
 
 const currentDate = new Date();
 const year = currentDate.getFullYear() - 1 + '';
 const month = currentDate.getMonth() < 10 ? '0' + (currentDate.getMonth() + 1 + '') : currentDate.getMonth() + 1 + ''
 
 
-const text_of_option1 = ref('预测误差主要来自于对中纬度和冰岛附近低压的高估，能够预测出NAO的典型两级模态 ，模拟误差随着预测时长逐渐增加。')//表示前六个图底下的文字描述
+const text_of_option1 = ref('      预测误差主要来自于对中纬度和冰岛附近低压的高估，能够预测出NAO的典型两级模态 ，模拟误差随着预测时长逐渐增加。')//表示前六个图底下的文字描述
 
 const text_of_option7 = ref('对于为期1个月的NAOI预测，不如高分辨率模式ECMWF ，但与低分辨率模式ECCC相当。由于只接受月平均数作为输入，忽略了决定短时尺度可预测性的天气现象和初始条件。在超过两个月的提前期的预测技巧远远超过了失去预测能力的数值模式，将NAO的有效预测时间从1个月扩展到了6个月。')
 
@@ -19,10 +20,12 @@ const selectedMonth = ref('');
 selectedYear.value = year;
 selectedMonth.value = month;
 
-
-
-
-
+var index_nao=0; //切换气温预测时修改这个索引
+var imgSrc_of_nao_Array;
+var title_of_nao_Array;
+const imgSrc_of_nao = ref({})
+const title_of_nao = ref({})
+const prefix="https://www.tjensoprediction.com"
 
 const option1 = ref({})
 const option2 = ref({})
@@ -46,52 +49,27 @@ const title_of_option4 = ref({})
 const title_of_option5 = ref({})
 const title_of_option6 = ref({})
 
-
-
-
-
-
-
-
-const params1 = {
-    year: selectedYear.value,
-    month: Number(selectedMonth.value) - 1
-  };
-  
-  const params2 = {
-    year: selectedYear.value,
-    month: Number(selectedMonth.value) - 2
-  }; 
-
-  const params3 = {
-    year: selectedYear.value,
-    month: Number(selectedMonth.value) - 3
-  }; 
-
-  const params4 = {
-    year: selectedYear.value,
-    month: Number(selectedMonth.value) - 4
-  }; 
-
-  const params5 = {
-    year: selectedYear.value,
-    month: Number(selectedMonth.value) - 5
-  }; 
-
-  const params6 = {
-    year: selectedYear.value,
-    month: Number(selectedMonth.value) - 6
-  }; 
-
  
 
-axios.get('http://www.tjensoprediction.com:8080/imgs/WEA_MSLP/getImgsPath?year='+Number(selectedYear.value)+'&month='+Number(selectedMonth.value))
-    .then(res => {
-      console.log(res.data.imgSrc);
-      // title_of_option1.value='提前1个月预测';
-      list = res.data.imgSrc;
-      text_of_option1.value = res.data.text;
-  });
+// axios.get('http://www.tjensoprediction.com:8080/nao/findGridData/nao?year='+Number(selectedYear.value)+'&month='+Number(selectedMonth.value))
+//     .then(res => {
+//       console.log(res.data.imgSrc);
+//       // title_of_option1.value='提前1个月预测';
+//       list = res.data.imgSrc;
+//       //text_of_option1.value = res.data.text;
+//   });
+  //axios.get('http://www.tjensoprediction.com:8080/nao/findGridData/nao?year='+Number(selectedYear.value)+'&month='+Number(selectedMonth.value))
+  axios.get("http://www.tjensoprediction.com:8080/nao/findGridData/nao?year=2015&month=6")
+      .then(res => {
+        index_nao = 0;
+        console.log(res.data);
+        title_of_nao_Array = ["提前1个月预测","提前2个月预测","提前3个月预测","提前4个月预测","提前5个月预测","提前6个月预测"];
+        imgSrc_of_nao_Array = res.data;
+        //text_of_nao_Array = res.data.texts;
+        title_of_nao.value = title_of_nao_Array[0];
+        imgSrc_of_nao.value = `${prefix}${imgSrc_of_nao_Array[0]}`;
+        //text_of_nao.value = text_of_nao_Array[0];
+      });
 axios.get('http://www.tjensoprediction.com:8080/nao/predictionExamination/naoi')
     .then(res => {
       console.log(res.data);
@@ -99,225 +77,29 @@ axios.get('http://www.tjensoprediction.com:8080/nao/predictionExamination/naoi')
       // list = res.data.imgSrc;
       option7.value = res.data;
   });
-// axios.get('/nao/predictionExamination/error?year='+Number(selectedYear.value)+'&month='+Number(selectedMonth.value))
-//     .then(res => {
-//       console.log(res.data.imgSrc);
-//       title_of_option2.value='提前2个月预测';
-//       imgSrc_of_option2.value = res.data.imgSrc;
-//       text_of_option1.value = res.data.text;
-//     });
-// axios.get('/nao/predictionExamination/error?year='+Number(selectedYear.value)+'&month='+Number(selectedMonth.value))
-//     .then(res => {
-//       console.log(res.data.imgSrc);
-//       title_of_option3.value='提前3个月预测';
-//       imgSrc_of_option3.value = res.data.imgSrc;
-//       text_of_option1.value = res.data.text;
-//     });
-// axios.get('/nao/predictionExamination/error?year='+Number(selectedYear.value)+'&month='+Number(selectedMonth.value))
-//     .then(res => {
-//       console.log(res.data.imgSrc);
-//       title_of_option4.value='提前4个月预测';
-//       imgSrc_of_option4.value = res.data.imgSrc;
-//       text_of_option1.value = res.data.text;
-//     });
-// axios.get('/nao/predictionExamination/error?year='+Number(selectedYear.value)+'&month='+Number(selectedMonth.value))
-//     .then(res => {
-//       console.log(res.data.imgSrc);
-//       title_of_option5.value='提前5个月预测';
-//       imgSrc_of_option5.value = res.data.imgSrc;
-//       text_of_option1.value = res.data.text;
-//     });
-// axios.get('/nao/predictionExamination/error?year='+Number(selectedYear.value)+'&month='+Number(selectedMonth.value))
-//     .then(res => {
-//       console.log(res.data.imgSrc);
-//       title_of_option6.value='提前6个月预测';
-//       imgSrc_of_option6.value = res.data.imgSrc;
-//       text_of_option1.value = res.data.text;
-//     });
 
+function change_time_nao(flag) {
 
-// option1.value={
-//   title: {
-//     // text: chartTitle.value,
-//     text: '提前1个月预测',
-//     left: 'center' //标题水平居中
-//   },
-//   tooltip: {
-//           position: 'top'
-//         },
-//         animation: false,
-       
-//         xAxis: {
-//           type: 'category',
-//           data: [1.0,2.0,3.0,4.0,5.0,6.0,7.0,8.0,9.0,10.0,11.0,12.0,13.0]
-//         },
-//         yAxis: {
-//           type: 'category',
-//           data: [1.0,2.0,3.0,4.0,5.0,6.0,7.0,8.0,9.0,10.0,11.0,12.0,13.0,14.0,15.0,16.0,17.0,18.0,19.0,20.0,21.0,22.0,23.0,24.0,25.0,26.0,27.0]
-//         },
-//         visualMap: {
-//           min: -2.5,
-//           max: 2.5,
-//           calculable: true,
-//           orient: 'horizontal',
-//           left: '2000px',
-//           bottom: '15%',
-//           inRange: {
-//             color: ['blue', '#ffffff', 'red'] // 配置颜色范围
-//           }
-//         },
-//         series: [{
-//           name: 'try',
-//           type: 'heatmap',
-//           // data: heatMapData1,
-//           data: [],
-//           label: {
-//             show: false
-//           },
-//           itemStyle: {
-//             emphasis: {
-//               shadowBlur: 10,
-//               shadowColor: 'rgba(0, 0, 0, 0.5)'
-//             }
-//           }
-//         }]
-          
-  
-
-// }
-
-
-// axios.get(`http://localhost:8888/nao/predictionExamination/error?year=${year}&month=${month}`, { params1 })
-//     .then(response => {
-//       //console.log(response.data);
-//       const data = response.data;
-
-//       let heatMapData = [];
-//       for (let i = 0; i < data["data"].length; i++) {
-//         for (let j = 0; j < data["data"][i].length; j++) {
-//           heatMapData.push([i, j, data["data"][i][j]]);
-//         }
-//       }
-
-//       option1.value={
-//   title: {
-//     // text: chartTitle.value,
-//     text: '提前1个月预测',
-//     left: 'center' //标题水平居中
-//   },
-//   tooltip: {
-//           position: 'top'
-//         },
-//         animation: false,
-       
-//         xAxis: {
-//           type: 'category',
-//           data: [1.0,2.0,3.0,4.0,5.0,6.0,7.0,8.0,9.0,10.0,11.0,12.0,13.0]
-//         },
-//         yAxis: {
-//           type: 'category',
-//           data: [1.0,2.0,3.0,4.0,5.0,6.0,7.0,8.0,9.0,10.0,11.0,12.0,13.0,14.0,15.0,16.0,17.0,18.0,19.0,20.0,21.0,22.0,23.0,24.0,25.0,26.0,27.0]
-//         },
-//         visualMap: {
-//           min: -2.5,
-//           max: 2.5,
-//           calculable: true,
-//           orient: 'horizontal',
-//           left: '2000px',
-//           bottom: '15%',
-//           inRange: {
-//             color: ['blue', '#ffffff', 'red'] // 配置颜色范围
-//           }
-//         },
-//         series: [{
-//           name: 'try',
-//           type: 'heatmap',
-//           data: heatMapData,
-          
-//           label: {
-//             show: false
-//           },
-//           itemStyle: {
-//             emphasis: {
-//               shadowBlur: 10,
-//               shadowColor: 'rgba(0, 0, 0, 0.5)'
-//             }
-//           }
-//         }]
-          
-  
-
-// }
-//     })
-//     .catch(error => {
-//       console.error(error);
-//     });
-
-
-
-
-
-
-
-
-
-
-// option7.value={
-//   title: {
-//     text: '月度NAOI预测技巧',
-//     left: 'center' //标题水平居中
-//   },
-//   tooltip: {},
-//   xAxis: {
-//     type: 'category',
-//     name: '预测提前期（月）',
-//     axisLine: {
-//           lineStyle: {
-//             color: 'black'
-//           },
-//           onZero: false  // 坐标轴与负刻度对齐
-//         },
-//     data:['1','2','3','4','5','6']
-//   },
-//   yAxis: {
-//     type: 'value',
-//     name: '相关系数技巧',
-//     min: -0.2,
-//     data: [-0.2, 0.0, 0.2, 0.4, 0.6 ,0.8]
-//   },
-//   legend: { //图例
-//     data: ['95% significance','ECMWF','ECCC','NAO-MCR'],
-//     orient: 'horizontal',
-//     left: 'center',
-//     bottom: '5',
-//   },
-//   series: [
-//     {
-//       name: '95% significance',
-//       type: 'line',
-//       lineStyle: {
-//             type: "dashed", // 将线条类型改为虚线
-//           },
-//       data: [0.35, 0.35, 0.35, 0.35, 0.35, 0.35]
-//     },
-//     {
-//       name: 'ECMWF',
-//       type: 'line',
-//       data: [0.8, 1.0, 0.5, -0.1, -0.12, 0.3]
-//     } ,
-//     {
-//       name: 'ECCC',
-//       type: 'line',
-//       data: [0.6, 0.8, 0.75, 0.9, 0.1, 0.0]
-//     } ,
-//     {
-//       name: 'NAO-MCR',
-//       type: 'line',
-//       data: [0.7, 0.43, 0.45, 0.4, 0.35, 0.45]
-//     }      
-
-//   ]
-// }
+if(flag==="left"){
+  if(index_nao>0){
+    index_nao--;
+  }
+  else{
+    index_nao=5;
+  }
+}
+else if(flag==="right"){
+  if(index_nao<5){
+    index_nao++;
+  }
+  else{
+    index_nao=0;
+  }
+}
+title_of_nao.value=title_of_nao_Array[index_nao];
+imgSrc_of_nao.value=`${prefix}${imgSrc_of_nao_Array[index_nao]}`;
+//text_of_temperature.value=text_of_temperature_Array[index_tempe];
+}
 
 
 
@@ -339,13 +121,33 @@ axios.get('http://www.tjensoprediction.com:8080/nao/predictionExamination/naoi')
         <h2 class="title">
           {{ selectedYear }}年{{ selectedMonth }}月 预测结果分布误差图
         </h2>
-        <div v-for="i in list">
+        <!-- <div v-for="i in list">
           <img :src="i">          
-        </div>
-       
-        <div class="description">
+        </div> -->
+        <div class="whole_container">
+            <p class="picture_title">
+              {{ title_of_nao }}
+            </p>
+            <div class="pic_container">
+              <img class="picture" :src="imgSrc_of_nao" alt="">
+            </div>
+            <!-- <p class="picture_text">
+              {{ text_of_temperature }}
+            </p> -->
+            <el-button type="primary" class="arrow-left" :icon="ArrowLeft" @click="change_time_nao('left')"></el-button>
+            <el-button type="primary" class="arrow-right" :icon="ArrowRight" @click="change_time_nao('right')"></el-button>
+            <div class="description">
+            {{ text_of_option1 }}
+            </div>  
+          </div>
+        <!-- <div class="pic_container">
+              <img class="picture" :src="imgSrc_of_nao" alt="">
+       </div>
+            <el-button type="primary" class="arrow-left" :icon="ArrowLeft" @click="change_time_nao('left')"></el-button>
+            <el-button type="primary" class="arrow-right" :icon="ArrowRight" @click="change_time_nao('right')"></el-button>       -->
+        <!-- <div class="description">
           {{ text_of_option1 }}
-        </div>
+        </div> -->
       </el-tab-pane>
       <el-tab-pane label="模态预测">
         <h2 class="title">
@@ -354,7 +156,7 @@ axios.get('http://www.tjensoprediction.com:8080/nao/predictionExamination/naoi')
         <div class="chart">
           <v-chart :option="option7" autoresize></v-chart>
         </div>   
-        <div class="description">
+        <div class="description1">
           {{ text_of_option7 }}
         </div>
       </el-tab-pane>
@@ -372,7 +174,14 @@ axios.get('http://www.tjensoprediction.com:8080/nao/predictionExamination/naoi')
   }
 
   .description {
+    text-align: center;
     font-size: 16px;
+    margin-left: 10px;
+  }
+  .description1 {
+    // text-align: center;
+    font-size: 16px;
+    margin-left: 10px;
   }
 
   .datePickerContainer {
@@ -385,4 +194,41 @@ axios.get('http://www.tjensoprediction.com:8080/nao/predictionExamination/naoi')
     margin-left: 5px;
     margin-right: 10px;
   }
+  .picture_title {
+   text-align: center;
+   font-size: 14px;
+}
+
+  .picture {
+  max-width: 90%;
+  display: block; /* 将元素设置为块级元素 */
+  margin-left: 10px;
+   margin-top: -50px;
+  // margin-bottom: -160px;
+}
+.whole_container {
+  position: relative;
+}
+.pic_container{
+  overflow: hidden;
+}
+/* 设置左箭头按钮的样式 */
+.el-button.arrow-left {
+  position: absolute;
+  top: 50%; /* 将箭头按钮的顶部与父容器的中间对齐 */
+  left: 0; /* 将箭头按钮的左侧与父容器的左侧对齐 */
+  width: 40px; /* 设置按钮宽度 */
+  height: 80px; /* 设置按钮高度 */
+  transform: translateY(-50%); /* 垂直居中箭头按钮 */
+}
+
+/* 设置右箭头按钮的样式 */
+.el-button.arrow-right {
+  position: absolute;
+  top: 50%; /* 将箭头按钮的顶部与父容器的中间对齐 */
+  right: 0; /* 将箭头按钮的右侧与父容器的右侧对齐 */
+  width: 40px; /* 设置按钮宽度 */
+  height: 80px; /* 设置按钮高度 */
+  transform: translateY(-50%); /* 垂直居中箭头按钮 */
+}
 </style>
