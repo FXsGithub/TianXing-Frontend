@@ -77,6 +77,9 @@ const NAOIDescription = ref('')
 const imgSrc = ref([]);
 const imgIndex = ref(0);
 
+const NAOILoading = ref(false);
+const SLPLoading = ref(false);
+
 function selectChart(tab) {
   if(tab.index == 0) {
     selectedNAOI.value = true;
@@ -90,6 +93,7 @@ function selectChart(tab) {
 
 // 请求NAOI数据
 const updateNAOIChart = async () => {
+  NAOILoading.value = true;
   updateNAOIChartTitle();
   const params = {
     year: Number(NAOISelectedYear.value),
@@ -99,14 +103,17 @@ const updateNAOIChart = async () => {
     .then(response => {
       NAOIOption.value = response.data.option;
       NAOIDescription.value = response.data.description;
+      NAOILoading.value = false;
     })
     .catch(error => {
       console.error(error);
+      NAOILoading.value = false;
     });
 }
 
 // 请求SLP数据
 const updateSLPChart = async () => {
+  SLPLoading.value = true;
   updateSLPChartTitle();
   const params = {
     year: Number(SLPSelectedYear.value),
@@ -117,14 +124,19 @@ const updateSLPChart = async () => {
       imgSrc.value = response.data;
       // SLPDescription.value = response.data.description; // 接口未提供描述
       imgIndex.value = 0;
+      loadImg(imgSrc.value);
+      SLPLoading.value = false;
     })
     .catch(error => {
       console.error(error);
+      SLPLoading.value = false;
     });
 }
 
 // 初始化NAOI图表
 const initNAOIChart = () => {
+  updateNAOIChartTitle();
+  NAOILoading.value = true;
   axios.get('http://www.tjensoprediction.com:8080/nao/initialize/naoPrediction')
     .then(response => {
       NAOIStartYear = response.data.start_year;
@@ -136,14 +148,18 @@ const initNAOIChart = () => {
       NAOIOption.value = response.data.option;
       NAOIDescription.value = response.data.description;
       updateNAOIChartTitle();
+      NAOILoading.value = false;
     })
     .catch(error => {
       console.error(error);
+      NAOILoading.value = false;
     });
 }
 
 // 初始化SLP图表
 const initSLPChart = () => {
+  updateSLPChartTitle();
+  SLPLoading.value = true;
   axios.get('http://www.tjensoprediction.com:8080/nao/initialize/naoGrid')
     .then(response => {
       SLPStartYear = response.data.start_year;
@@ -155,9 +171,12 @@ const initSLPChart = () => {
       imgSrc.value = response.data.data;
       // SLPDescription.value = response.data.description; // 接口未提供描述
       updateSLPChartTitle();
+      loadImg(imgSrc.value);
+      SLPLoading.value = false;
     })
     .catch(error => {
       console.error(error);
+      SLPLoading.value = false;
     });
 }
 
@@ -246,6 +265,21 @@ defineExpose({
 });
 /* 使el-button点击后能正常失焦 End */
 
+// 图片预加载
+const loadImg = (imgList) => {
+  for (let i = 0; i < imgList.length; i++) {
+    let img = new Image();
+    let currentSrc = '';
+    img.src = 'http://www.tjensoprediction.com' + imgList[i];
+    img.onload = function () {
+      console.log('加载完毕', this.currentSrc);
+    }
+    img.onerror = function () {
+      console.log('加载错误', this.currentSrc);
+    }
+  }
+}
+
 onMounted(
   () => {
     initNAOIChart();
@@ -271,26 +305,28 @@ onMounted(
       <div class="text">月</div>
     </div>
     <el-tabs type="border-card" @tab-click="selectChart" :stretch="true">
-      <el-tab-pane label="指数预测">
+      <el-tab-pane label="指数预测" v-loading="NAOILoading && selectedNAOI">
         <v-chart class="NAOIChart" :option="NAOIOption" autoresize />
         <div class="description">
           {{ NAOIDescription }}
         </div>
       </el-tab-pane>
-      <el-tab-pane label="模态预测">
-        <h3 style="text-align: center; margin-top: 0px">{{ SLPChartTitle }}</h3>
-        <h4 style="text-align: center; margin-top: 0px; font-size: 16px">({{ imgIndex + 1 }}/{{ imgSrc.length }})</h4>
-        <el-row>
+      <el-tab-pane label="模态预测" v-loading="SLPLoading && selectedSLP" style="min-height: 350px">
+        <h3 v-show="!SLPLoading" style="text-align: center; margin-top: 0px; margin-bottom: 15px">{{ SLPChartTitle }}</h3>
+        <h4 v-show="!SLPLoading" style="text-align: center; margin-top: 0px; margin-bottom: 15px; font-size: 16px">({{ imgIndex + 1 }}/{{ imgSrc.length }})</h4>
+        <el-row v-show="!SLPLoading">
           <el-col :span="2">
             <el-button ref="buttonLeft" type="primary" class="arrowLeft" :icon="ArrowLeft" @click="changeIndex('left')" />
           </el-col>
           <el-col :span="20">
-            <img
-              v-if="imgSrc.length"
-              :src="'http://www.tjensoprediction.com' + imgSrc[imgIndex]"
-              class="image"
-              alt=""
-            />
+            <div class="imgContainer">
+              <img
+                v-if="imgSrc.length"
+                :src="'http://www.tjensoprediction.com' + imgSrc[imgIndex]"
+                class="image"
+                alt=""
+              />
+            </div>
           </el-col>
           <el-col :span="2">
             <el-button ref="buttonRight" type="primary" class="arrowRight" :icon="ArrowRight" @click="changeIndex('right')" />
@@ -330,25 +366,42 @@ onMounted(
     margin-right: 10px;
   }
 
+  .imgContainer {
+    overflow: hidden;
+  }
   .image {
     width: 100%;
+    margin-top: -7.5%;
+    transform: translateX(-3%);
   }
 
   .el-button.arrowLeft {
+    z-index: 1;
     position: absolute;
     top: 50%;
-    left: 2%;
-    width: 40px;
-    height: 80px;
-    transform: translateY(-50%);
+    left: 4%;
+    width: 5%;
+    height: 30%;
+    min-width: 40px;
+    min-height: 80px;
+    max-width: 50px;
+    max-height: 115px;
+    transform: translateY(-65%);
+    font-size: 20px;
   }
 
   .el-button.arrowRight {
+    z-index: 1;
     position: absolute;
     top: 50%;
-    right: 2%;
-    width: 40px;
-    height: 80px;
-    transform: translateY(-50%);
+    right: 4%;
+    width: 5%;
+    height: 30%;
+    min-width: 40px;
+    min-height: 80px;
+    max-width: 50px;
+    max-height: 115px;
+    transform: translateY(-65%);
+    font-size: 20px;
   }
 </style>
