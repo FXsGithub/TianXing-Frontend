@@ -7,7 +7,7 @@ import ENSOForecastExamination from "../components/ENSO/ForecastExamination.vue"
 import ENSOForecastResult from "../components/ENSO/ForecastResult.vue";
 import SeaIceForecastExamination from "../components/SeaIce/ForecastExamination.vue";
 import SeaIceForecastResult from "../components/SeaIce/ForecastResult.vue";
-import ENSOForecastResult2 from "../components/ENSO/ForecastResult2.vue";
+
 import NAOForecastExamination from "../components/NAO/ForecastExamination.vue";
 import NAOForecastResult from "../components/NAO/ForecastResult.vue";
 
@@ -53,11 +53,7 @@ const routes = [
         name: 'ENSOForecastResult',
         component: ENSOForecastResult
     },
-    {
-        path: '/ENSOForecastResult2',
-        name: 'ENSOForecastResult2',
-        component: ENSOForecastResult2
-    },
+
     
     {
         path: '/SeaIceForecastExamination',

@@ -90,6 +90,10 @@ axios.get('http://www.tjensoprediction.com:8080/enso/predictionExamination/error
       chart4.value = res.data.option
       Chart4_Description.text = res.data.text
     });
+
+
+
+    
 /* 图表更新 */
 function update_charts() {
   axios.get('http://www.tjensoprediction.com:8080/enso/predictionExamination/monthlyComparison?year='+Number(start_year.value)+'&month='+Number(start_month.value))
