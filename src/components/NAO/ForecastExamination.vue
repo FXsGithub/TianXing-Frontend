@@ -10,15 +10,24 @@ const year = currentDate.getFullYear() - 1 + '';
 const month = currentDate.getMonth() < 10 ? '0' + (currentDate.getMonth() + 1 + '') : currentDate.getMonth() + 1 + ''
 
 
-const text_of_option1 = ref('      预测误差主要来自于对中纬度和冰岛附近低压的高估，能够预测出NAO的典型两级模态 ，模拟误差随着预测时长逐渐增加。')//表示前六个图底下的文字描述
+const text_of_option1 = ref('预测误差主要来自于对中纬度和冰岛附近低压的高估，能够预测出NAO的典型两级模态 ，模拟误差随着预测时长逐渐增加。')//表示前六个图底下的文字描述
 
 const text_of_option7 = ref('对于为期1个月的NAOI预测，不如高分辨率模式ECMWF ，但与低分辨率模式ECCC相当。由于只接受月平均数作为输入，忽略了决定短时尺度可预测性的天气现象和初始条件。在超过两个月的提前期的预测技巧远远超过了失去预测能力的数值模式，将NAO的有效预测时间从1个月扩展到了6个月。')
 
-const selectedYear = ref('');
-const selectedMonth = ref('');
+//const selectedYear = ref('');
+//const selectedMonth = ref('');
 
-selectedYear.value = year;
-selectedMonth.value = month;
+const selectedDateTime = ref(null);
+const selectedYear = ref(null); // 新变量，用于存储选定的年份
+const selectedMonth = ref(null); // 新变量，用于存储选定的月份
+
+const date = new Date(2019,0,1,0,0,0);
+selectedDateTime.value = date;
+selectedYear.value = date.getFullYear();
+selectedMonth.value = date.getMonth() + 1;
+
+//selectedYear.value = year;
+//selectedMonth.value = month;
 
 var index_nao=0; //切换气温预测时修改这个索引
 var imgSrc_of_nao_Array;
@@ -49,7 +58,14 @@ const title_of_option4 = ref({})
 const title_of_option5 = ref({})
 const title_of_option6 = ref({})
 
- 
+ // 当日期时间选择发生变化时被调用
+ console.log(selectedDateTime.value); // 输出当前选择的日期和时间
+
+if (selectedDateTime.value) {
+  const selectedDate = new Date(selectedDateTime.value);
+  selectedYear.value = selectedDate.getFullYear(); // 获取年份值并存储到 selectedYear
+  selectedMonth.value = selectedDate.getMonth() + 1; // 获取月份值并存储到 selectedMonth
+}
 
 // axios.get('http://www.tjensoprediction.com:8080/nao/findGridData/nao?year='+Number(selectedYear.value)+'&month='+Number(selectedMonth.value))
 //     .then(res => {
@@ -58,8 +74,8 @@ const title_of_option6 = ref({})
 //       list = res.data.imgSrc;
 //       //text_of_option1.value = res.data.text;
 //   });
-  //axios.get('http://www.tjensoprediction.com:8080/nao/findGridData/nao?year='+Number(selectedYear.value)+'&month='+Number(selectedMonth.value))
-  axios.get("http://www.tjensoprediction.com:8080/nao/findGridData/nao?year=2015&month=6")
+  axios.get('http://www.tjensoprediction.com:8080/nao/findGridData/nao?year='+Number(selectedYear.value)+'&month='+Number(selectedMonth.value))
+  //axios.get("http://www.tjensoprediction.com:8080/nao/findGridData/nao?year=2018&month=6")
       .then(res => {
         index_nao = 0;
         console.log(res.data);
