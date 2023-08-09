@@ -2,16 +2,13 @@
   //start_year       selectedDateTime
 //currentDate         date
 
-  import {ref, onMounted, reactive, watch} from "vue";
+import { ref, onMounted, reactive, watch, defineExpose } from "vue";
 import * as echarts from "echarts";
 import axios  from "axios";
 import VChart from 'vue-echarts';
-import {nextTick} from "vue";
+import { nextTick } from "vue";
 import { configProviderContextKey } from "element-plus";
-import {
-  ArrowLeft,
-  ArrowRight,
-} from '@element-plus/icons-vue'
+import { ArrowLeft, ArrowRight } from '@element-plus/icons-vue'
 
 
 const prefix="https://www.tjensoprediction.com"
@@ -138,33 +135,40 @@ function update_charts() {
 
     }
 
+/* 使el-button点击后能正常失焦 Start (by wyf)*/
+const buttonLeft = ref(null);
+const buttonRight = ref(null);
 
   /* 左右切换 -- begin */
-    function change_time_heat(flag) {
+function change_time_heat(flag) {
 
-if(flag==="left"){
-  if(index_heat>0){
-    index_heat--;
+  if (flag === "left") {
+    if (index_heat > 0) {
+      index_heat--;
+    }
+    else {
+      index_heat = 17;
+    }
+    buttonLeft.value.$el.blur();
   }
-  else{
-    index_heat=17;
+  else if (flag === "right") {
+    if (index_heat < 17) {
+      index_heat++;
+    }
+    else {
+      index_heat = 0;
+    }
+    buttonRight.value.$el.blur();
   }
+  imgSrc_of_heat.value = `${prefix}${imgSrc_of_heat_Array[index_heat]}`;
 }
-else if(flag==="right"){
-  if(index_heat<17){
-    index_heat++;
-  }
-  else{
-    index_heat=0;
-  }
-}
 
-imgSrc_of_heat.value = `${prefix}${imgSrc_of_heat_Array[index_heat]}`;
+defineExpose({
+  change_time_heat
+});
+/* 使el-button点击后能正常失焦 End */
 
-
-}
-  
-    </script>
+</script>
     
     <template>
       <div class="pageContent">
@@ -209,8 +213,8 @@ imgSrc_of_heat.value = `${prefix}${imgSrc_of_heat_Array[index_heat]}`;
             <div class="pic_container">
               <img class="picture" :src="imgSrc_of_heat" alt="">
             </div>
-            <el-button type="primary" class="arrow-left" :icon="ArrowLeft" @click="change_time_heat('left')"></el-button>
-            <el-button type="primary" class="arrow-right" :icon="ArrowRight" @click="change_time_heat('right')"></el-button>
+            <el-button ref="buttonLeft" type="primary" class="arrow-left" :icon="ArrowLeft" @click="change_time_heat('left')"></el-button>
+            <el-button ref="buttonRight" type="primary" class="arrow-right" :icon="ArrowRight" @click="change_time_heat('right')"></el-button>
           
         </el-tab-pane>
 
