@@ -1,14 +1,31 @@
 <script setup>
 
 import axios from "axios";
-import {ref, defineExpose} from "vue";
+import {ref} from "vue";
 import {ArrowLeft, ArrowRight} from "@element-plus/icons-vue";
 import VChart from "vue-echarts";
 
-const currentDate = new Date();
-const year = currentDate.getFullYear() - 1 + '';
-const month = currentDate.getMonth() < 10 ? '0' + (currentDate.getMonth() + 1 + '') : currentDate.getMonth() + 1 + ''
+// const currentDate = new Date();
+// const year = currentDate.getFullYear() - 1 + '';
+// const month = currentDate.getMonth() < 10 ? '0' + (currentDate.getMonth() + 1 + '') : currentDate.getMonth() + 1 + ''
 
+//时间选择器范围框定--start
+const start_year = ref(null);
+const start_month = ref(null);
+const end_year = ref(null);
+const end_month = ref(null);
+/* 赋初值————默认为气温预测 */
+axios.get('http://www.tjensoprediction.com:8080/nao/initialize/naoCORR')
+.then(res =>{
+  start_year.value = new Date(res.data.start_year);
+  start_month.value = new Date(res.data.start_month);
+  end_year.value = new Date(res.data.end_year);
+  end_month.value = new Date(res.data.end_month);
+});
+
+const limitedDateRange = (time) => {
+  return time.getFullYear() >= start_year.value  && time.getFullYear() <= end_year.value || time.getMonth() >= start_month.value && time.getMonth() <= end_month.value;
+};
 
 const text_of_option1 = ref('预测误差主要来自于对中纬度和冰岛附近低压的高估，能够预测出NAO的典型两级模态 ，模拟误差随着预测时长逐渐增加。')//表示前六个图底下的文字描述
 
@@ -21,10 +38,11 @@ const selectedDateTime = ref(null);
 const selectedYear = ref(null); // 新变量，用于存储选定的年份
 const selectedMonth = ref(null); // 新变量，用于存储选定的月份
 
-const date = new Date(2019,0,1,0,0,0);
+const date = new Date(2021,11,1,0,0,0);
 selectedDateTime.value = date;
 selectedYear.value = date.getFullYear();
 selectedMonth.value = date.getMonth() + 1;
+
 
 //selectedYear.value = year;
 //selectedMonth.value = month;
@@ -58,6 +76,20 @@ const title_of_option4 = ref({})
 const title_of_option5 = ref({})
 const title_of_option6 = ref({})
 
+//赋初值
+// axios.get('http://www.tjensoprediction.com:8080/nao/initialize/naoCORR')
+//   //axios.get("http://www.tjensoprediction.com:8080/nao/findGridData/nao?year=2018&month=6")
+//       .then(res => {
+//         index_nao = 0;
+//         console.log(res.data);
+//         title_of_nao_Array = ["提前1个月预测","提前2个月预测","提前3个月预测","提前4个月预测","提前5个月预测","提前6个月预测"];
+//         imgSrc_of_nao_Array = res.data.data;
+//         //text_of_nao_Array = res.data.texts;
+//         title_of_nao.value = title_of_nao_Array[0];
+//         imgSrc_of_nao.value = `${prefix}${imgSrc_of_nao_Array[0]}`;
+//         //text_of_nao.value = text_of_nao_Array[0];
+//       });
+
  // 当日期时间选择发生变化时被调用
  console.log(selectedDateTime.value); // 输出当前选择的日期和时间
 
@@ -74,12 +106,12 @@ if (selectedDateTime.value) {
 //       list = res.data.imgSrc;
 //       //text_of_option1.value = res.data.text;
 //   });
-  axios.get('http://www.tjensoprediction.com:8080/nao/findGridData/nao?year='+Number(selectedYear.value)+'&month='+Number(selectedMonth.value))
+  axios.get('http://www.tjensoprediction.com:8080/nao/predictionExamination/nao?year='+Number(selectedYear.value)+'&month='+Number(selectedMonth.value))
   //axios.get("http://www.tjensoprediction.com:8080/nao/findGridData/nao?year=2018&month=6")
       .then(res => {
         index_nao = 0;
         console.log(res.data);
-        title_of_nao_Array = ["提前1个月预测","提前2个月预测","提前3个月预测","提前4个月预测","提前5个月预测","提前6个月预测"];
+        title_of_nao_Array = ["提前1个月预测","提前2个月预测","提前3个月预测","提前4个月预测","提前5个月预测","提前6个月预测"];//别删，删了图片就没了
         imgSrc_of_nao_Array = res.data;
         //text_of_nao_Array = res.data.texts;
         title_of_nao.value = title_of_nao_Array[0];
@@ -94,10 +126,6 @@ axios.get('http://www.tjensoprediction.com:8080/nao/predictionExamination/naoi')
       option7.value = res.data;
   });
 
-/* 使el-button点击后能正常失焦 Start (by wyf)*/
-const buttonLeft = ref(null);
-const buttonRight = ref(null);
-
 function change_time_nao(flag) {
 
 if(flag==="left"){
@@ -107,7 +135,6 @@ if(flag==="left"){
   else{
     index_nao=5;
   }
-  buttonLeft.value.$el.blur();
 }
 else if(flag==="right"){
   if(index_nao<5){
@@ -116,17 +143,13 @@ else if(flag==="right"){
   else{
     index_nao=0;
   }
-  buttonRight.value.$el.blur();
 }
 title_of_nao.value=title_of_nao_Array[index_nao];
 imgSrc_of_nao.value=`${prefix}${imgSrc_of_nao_Array[index_nao]}`;
 //text_of_temperature.value=text_of_temperature_Array[index_tempe];
 }
 
-defineExpose({
-  change_time_nao
-});
-/* 使el-button点击后能正常失焦 End */
+
 
 </script>
 
@@ -136,10 +159,17 @@ defineExpose({
       NAO预测结果检验
     </h1>
     <div class="datePickerContainer">
-      <el-date-picker @change="updateChartTitle" v-model="selectedYear" type="year" format="YYYY" value-format="YYYY" :clearable="false" style="width: 80px; height: 25px"/>
+      <!-- <el-date-picker @change="updateChartTitle" v-model="selectedYear" type="year" format="YYYY" value-format="YYYY" :clearable="false" style="width: 80px; height: 25px"/>
       <div class="text">年</div>
       <el-date-picker @change="updateChartTitle" v-model="selectedMonth" type="month" format="MM" value-format="MM" :clearable="false" style="width: 60px; height: 25px"/>
-      <div class="text">月</div>
+      <div class="text">月</div> -->
+      <el-date-picker
+              v-model="selectedDateTime"
+              type="datetime"
+              placeholder="请选择时间"
+              @change="handleDateTimeChange"
+              :disabledDate="limitedDateRange"
+          />
     </div>    
     <el-tabs type="border-card">
       <el-tab-pane label="指数预测">
@@ -150,17 +180,17 @@ defineExpose({
           <img :src="i">          
         </div> -->
         <div class="whole_container">
-            <p class="picture_title">
+            <!-- <p class="picture_title">
               {{ title_of_nao }}
-            </p>
+            </p> -->
             <div class="pic_container">
               <img class="picture" :src="imgSrc_of_nao" alt="">
             </div>
             <!-- <p class="picture_text">
               {{ text_of_temperature }}
             </p> -->
-            <el-button ref="buttonLeft" type="primary" class="arrow-left" :icon="ArrowLeft" @click="change_time_nao('left')"></el-button>
-            <el-button ref="buttonRight" type="primary" class="arrow-right" :icon="ArrowRight" @click="change_time_nao('right')"></el-button>
+            <!-- <el-button type="primary" class="arrow-left" :icon="ArrowLeft" @click="change_time_nao('left')"></el-button>
+            <el-button type="primary" class="arrow-right" :icon="ArrowRight" @click="change_time_nao('right')"></el-button> -->
             <div class="description">
             {{ text_of_option1 }}
             </div>  
@@ -225,10 +255,10 @@ defineExpose({
 }
 
   .picture {
-  max-width: 90%;
+  max-width: 100%;
   display: block; /* 将元素设置为块级元素 */
-  margin-left: 10px;
-   margin-top: -50px;
+  margin-left: 378px;
+   margin-top: 0px;
   // margin-bottom: -160px;
 }
 .whole_container {
