@@ -1,21 +1,9 @@
 <script setup>
 
-import {onMounted} from "vue";
-import { reactive } from "vue";
-import {ref} from "vue";
-import * as echarts from 'echarts';
-import {nextTick} from "vue";
+import { ref, onMounted, defineExpose } from "vue";
 import axios from 'axios';
 import VChart from 'vue-echarts';
-import {ArrowLeft, ArrowRight} from '@element-plus/icons-vue'
-import { defineExpose } from 'vue';
-
-const SIEAvailableList = ref([])
-const SICAvailableList = ref({
-  yearList: [],
-  monthList: [],
-  dateList: []
-})
+import { ArrowLeft, ArrowRight } from '@element-plus/icons-vue'
 
 const selectedSIE = ref(true)
 const selectedSIC = ref(false)
@@ -28,10 +16,15 @@ selectedYear.value = '2023';
 selectedMonth.value = '01';
 selectedDay.value = new Date();
 
+const SIEAvailableList = ref([])
+const SICAvailableList = ref({
+  yearList: [],
+  monthList: [],
+  dateList: []
+})
+
 const SIEChartTitle = ref('')
 const SICChartTitle = ref('')
-SIEChartTitle.value = updateSIEChartTitle();
-SICChartTitle.value = `${selectedDay.value.getFullYear()}年${selectedDay.value.getMonth()}月${selectedDay.value.getDay()}日 海冰SIC预测结果`;
 
 const SIEOption = ref({})
 
@@ -40,65 +33,23 @@ const SIEDescription = ref('')
 const imgSrc = ref([]);
 const imgIndex = ref(0);
 
-SIEOption.value = {
-  title: {
-    text: SIEChartTitle.value,
-    left: 'center'
-  },
-  tooltip: {},
-  xAxis: {
-    type: 'category',
-    name: '时间',
-    data: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月']
-  },
-  yAxis: {
-    type: 'value',
-  },
-  legend: {
-    data: ['prediction', 'mean', 'upper', 'lower'],
-    orient: 'horizontal',
-    left: 'center',
-    bottom: '5',
-  },
-  series: [
-    {
-      name: 'prediction',
-      type: 'line',
-      data: []
-    },
-    {
-      name: 'mean',
-      type: 'line',
-      data: []
-    },
-    {
-      name: 'upper',
-      type: 'line',
-      data: []
-    },
-    {
-      name: 'lower',
-      type: 'line',
-      data: []
-    },
-  ]
-}
+const SIELoading = ref(false);
+const SICLoading = ref(false);
 
 function selectChart(tab) {
   if(tab.index == 0) {
     selectedSIE.value = true;
     selectedSIC.value = false;
-    updateSIEChart();
   }
   else {
     selectedSIE.value = false;
     selectedSIC.value = true;
-    updateSICChart();
   }
 }
 
 // 请求SIE数据
 const updateSIEChart = async () => {
+  SIELoading.value = true;
   updateSIEChartTitle();
   const params = {
     year: Number(selectedYear.value),
@@ -108,48 +59,18 @@ const updateSIEChart = async () => {
     .then(response => {
       SIEOption.value = response.data.option;
       SIEDescription.value = response.data.description;
+      SIELoading.value = false;
     })
     .catch(error => {
       console.error(error);
+      SIELoading.value = false;
     });
-}
-
-function updateSIEChartTitle() {
-  let year1 = selectedYear.value;
-  let month1 = selectedMonth.value;
-  let year2 = ''
-  let month2 = ''
-  if(Number(month1) == 1) {
-    month2 = '12';
-    year2 = year1;
-  }
-  else {
-    month2 = (Number(month1) - 1).toString().padStart(2, '0');
-    year2 = Number(year1) + 1 + '';
-  }
-  SIEChartTitle.value = year1 + '年' + month1 + '月~' + year2 + '年' + month2 + '月 海冰预测结果';
-}
-
-// 选择的年份改变时，判断之前选择的月份在新的年份中是否可用，不可用则改为最早的可用月份
-function handleYearChange() {
-  for (let i = 0; i < SIEAvailableList.value.length; i++) {
-    if (selectedYear.value == SIEAvailableList.value[i].year && selectedMonth.value == SIEAvailableList.value[i].month) {
-      updateSIEChart();
-      return;
-    }
-  }
-  for (let i = 0; i < SIEAvailableList.value.length; i++) {
-    if (selectedYear.value == SIEAvailableList.value[i].year) {
-      selectedMonth.value = SIEAvailableList.value[i].month < 10 ? '0' + (SIEAvailableList.value[i].month + '') : SIEAvailableList.value[i].month + ''
-      updateSIEChart();
-      return;
-    }
-  }
 }
 
 // 请求SIC数据
 const updateSICChart = async () => {
-  SICChartTitle.value = `${selectedDay.value.getFullYear()}年${selectedDay.value.getMonth() + 1}月${selectedDay.value.getDate()}日 海冰SIC预测结果`;
+  SICLoading.value = true;
+  updateSICChartTitle();
   const params = {
     year: selectedDay.value.getFullYear(),
     month: selectedDay.value.getMonth() + 1,
@@ -159,34 +80,41 @@ const updateSICChart = async () => {
     .then(response => {
       imgSrc.value = response.data;
       imgIndex.value = 0;
+      loadImg(imgSrc.value);
+      SICLoading.value = false;
     })
     .catch(error => {
       console.error(error);
+      SICLoading.value = false;
     });
 }
 
 // 初始化SIE可请求的年月
 const initSIEAvailableList = () => {
+  updateSIEChartTitle();
+  SIELoading.value = true;
   const params = {
     year: 2023,
     month: 1
   };
   axios.get('http://www.tjensoprediction.com:8080/seaice/predictionResult/SIE', { params })
     .then(response => {
-      SIEAvailableList.value = response.data.availableList
+      SIEAvailableList.value = response.data.availableList;
+      SIEOption.value = response.data.option;
+      SIEDescription.value = response.data.description;
+      SIELoading.value = false;
     })
     .catch(error => {
       console.error(error);
+      SIELoading.value = false;
     });
 }
 
 // 初始化SIC可请求的年月
 const initSICAvailableList = () => {
-  const params = {
-    year: 2023,
-    month: 1
-  };
-  axios.get('http://www.tjensoprediction.com:8080/seaice/initial/SICprediction', { params })
+  updateSICChartTitle();
+  SICLoading.value = true;
+  axios.get('http://www.tjensoprediction.com:8080/seaice/initial/SICprediction')
     .then(response => {
       SICAvailableList.value.yearList = response.data.yearList;
       SICAvailableList.value.monthList = response.data.monthList;
@@ -215,10 +143,53 @@ const initSICAvailableList = () => {
       }
       selectedDay.value = new Date(newestYear, newestMonth - 1, newestDate);
       imgIndex.value = 0;
+      loadImg(imgSrc.value);
+      SICLoading.value = false;
+      updateSICChartTitle();
     })
     .catch(error => {
       console.error(error);
+      SICLoading.value = false;
     });
+}
+
+function updateSIEChartTitle() {
+  let year1 = selectedYear.value;
+  let month1 = selectedMonth.value;
+  let year2 = ''
+  let month2 = ''
+  if(Number(month1) == 1) {
+    month2 = '12';
+    year2 = year1;
+  }
+  else {
+    month2 = (Number(month1) - 1).toString().padStart(2, '0');
+    year2 = Number(year1) + 1 + '';
+  }
+  SIEChartTitle.value = year1 + '年' + month1 + '月~' + year2 + '年' + month2 + '月 海冰预测结果';
+  console.log(SIEChartTitle.value);
+  console.log(selectedSIE.value)
+}
+
+function updateSICChartTitle() {
+  SICChartTitle.value = selectedDay.value.getFullYear() + '年' + (selectedDay.value.getMonth() + 1) + '月' + selectedDay.value.getDate() + '日 海冰SIC预测结果';
+}
+
+// 选择的年份改变时，判断之前选择的月份在新的年份中是否可用，不可用则改为最早的可用月份
+function handleYearChange() {
+  for (let i = 0; i < SIEAvailableList.value.length; i++) {
+    if (selectedYear.value == SIEAvailableList.value[i].year && selectedMonth.value == SIEAvailableList.value[i].month) {
+      updateSIEChart();
+      return;
+    }
+  }
+  for (let i = 0; i < SIEAvailableList.value.length; i++) {
+    if (selectedYear.value == SIEAvailableList.value[i].year) {
+      selectedMonth.value = SIEAvailableList.value[i].month < 10 ? '0' + (SIEAvailableList.value[i].month + '') : SIEAvailableList.value[i].month + ''
+      updateSIEChart();
+      return;
+    }
+  }
 }
 
 function disabledYear(day) {
@@ -283,13 +254,25 @@ defineExpose({
 });
 /* 使el-button点击后能正常失焦 End */
 
+// 图片预加载
+const loadImg = (imgList) => {
+  for (let i = 0; i < imgList.length; i++) {
+    let img = new Image();
+    let currentSrc = '';
+    img.src = 'http://www.tjensoprediction.com' + imgList[i];
+    img.onload = function () {
+      console.log('加载完毕', this.currentSrc);
+    }
+    img.onerror = function () {
+      console.log('加载错误', this.currentSrc);
+    }
+  }
+}
+
 onMounted(
   () => {
     initSIEAvailableList();
     initSICAvailableList();
-    nextTick(() => {
-      updateSIEChart();
-    })
   }
 )
 </script>
@@ -312,13 +295,13 @@ onMounted(
       <el-date-picker @change="updateSICChart" v-model="selectedDay" :clearable="false" style="width: 115px; height: 25px" :disabled-date="disabledDate" />
     </div>
     <el-tabs type="border-card" @tab-click="selectChart" :stretch="true">
-      <el-tab-pane label="SIE指数">
+      <el-tab-pane label="SIE指数" v-loading="SIELoading && selectedSIE">
         <v-chart class="SIEChart" :option="SIEOption" autoresize />
         <div class="description">
           {{ SIEDescription }}
         </div>
       </el-tab-pane>
-      <el-tab-pane label="SIC模态">
+      <el-tab-pane label="SIC模态" v-loading="SICLoading && selectedSIC">
         <h3 style="text-align: center; margin-top: 0px; font-size: 18px">{{ SICChartTitle }}</h3>
         <h4 style="text-align: center; margin-top: 0px; font-size: 16px">({{ imgIndex + 1 }}/{{ imgSrc.length }})</h4>
         <div class="imageContainer">
@@ -340,6 +323,7 @@ onMounted(
   .title {
     text-align: center
   }
+
   .SIEChart {
     height: 500px;
   }
@@ -371,6 +355,7 @@ onMounted(
   .image {
     height: 100%;
   }
+
   .el-button.arrowLeft {
     position: absolute;
     top: 50%;

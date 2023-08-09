@@ -34,8 +34,6 @@ SLPSelectedMonth.value = month;
 
 const NAOIChartTitle = ref('')
 const SLPChartTitle = ref('')
-NAOIChartTitle.value = updateNAOIChartTitle();
-SLPChartTitle.value = updateSLPChartTitle();
 
 const NAOIOption = ref({})
 const NAOIDescription = ref('')
@@ -312,6 +310,7 @@ onMounted(
   .title {
     text-align: center
   }
+  
   .NAOIChart {
     height: 500px;
   }
