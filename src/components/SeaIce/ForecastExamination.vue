@@ -14,24 +14,33 @@ const selectedMonth = ref('');
 // selectedYear.value = year;
 // selectedMonth.value = month;
 
-if (year !== '2023') {
-  selectedYear.value = '2023'; // 默认选中2023年
-} else {
-  selectedYear.value = year;
-}
+// if (year !== '2023') {
+//   selectedYear.value = '2023'; // 默认选中2023年
+// } else {
+//   selectedYear.value = year;
+// }
 
-if (month !== '01') {
-  selectedMonth.value = '01'; // 默认选中1月
-} else {
-  selectedMonth.value = month;
-}
+// if (month !== '01') {
+//   selectedMonth.value = '01'; // 默认选中1月
+// } else {
+//   selectedMonth.value = month;
+// }
+selectedYear.value = '2023'
+selectedMonth.value = '01'; 
+
+
 
 const start_year1 = ref(null);
 const start_month1 = ref(null);
 const start_year2 = ref(null);
 const start_month2 = ref(null);
-const end_year = ref(null);
-const end_month = ref(null);
+const start_year3 = ref(null);
+
+
+const start_year = ref(2023);     //可选时间范围
+const end_year = ref(2023);
+const start_month = ref(1);     //可选时间范围
+const end_month = ref(1);
 
 axios.get('http://www.tjensoprediction.com:8080/seaice/initial/SICError')
 .then(res =>{
@@ -45,21 +54,45 @@ axios.get('http://www.tjensoprediction.com:8080/seaice/initial/SICErrorBox')
   start_month2.value = res.data.monthList;
 });
 
+axios.get('http://www.tjensoprediction.com:8080/seaice/initial/SICErrorBox')
+.then(res =>{
+  start_year3.value = res.data.yearList;
+});
+
+
+
+function handleClick(tab, event) {
+  console.log(tab.props.label);
+  if(tab.props.label == 'SIC日预测误差'){
+    start_year.value =  start_year1.value;      
+    end_year.value = start_year1.value;
+    start_month.value =  start_month1.value;     
+    end_month.value = 1;
+    selectedYear.value = '2023'
+    selectedMonth.value = '01'; 
+  }
+  else if(tab.props.label == 'SIC误差统计'){ 
+    start_year.value = start_year2.value;      
+    end_year.value = start_year2.value;
+    start_month.value =  start_month2.value;     
+    end_month.value = 1;
+    selectedYear.value = '2022'
+    selectedMonth.value = '01'; 
+  }
+  else if(tab.props.label == 'SIE误差分析'){
+    start_year.value = 2020;      //暂时写死范围
+    end_year.value = 2022;
+    selectedYear.value = '2022'
+    selectedMonth.value = '01';
+  }
+}
+
 const limitedDateRange = (time) => {
-  return time.getFullYear() < start_year2.value  || time.getFullYear() > start_year1.value;
+  return time.getFullYear() < start_year.value  || time.getFullYear() > end_year.value;
 };
 const limitedDateRange2 = (time) => {
-  return ((time.getFullYear() != start_year1.value && time.getFullYear() != start_year2.value) && (time.getMonth() >= 0 && time.getMonth() <= 11)) ||  ((time.getFullYear() == 2023 || time.getFullYear() == 2022) && (time.getMonth() >= start_month1.value && time.getMonth() <= 11));
+  return ((time.getFullYear() < start_year.value  || time.getFullYear() > end_year.value) && (time.getMonth() >= 0 && time.getMonth() <= 11)) ||  ((time.getFullYear() >= start_year.value  && time.getFullYear() <= end_year.value) && ((time.getMonth() >= end_month.value && time.getMonth() <= 11)));
 };
-// const limitedDateRange2 = (time) => {
-//   return  (time.getMonth() == 2 || time.getMonth() == 3 || time.getMonth() == 4 || time.getMonth() == 5 || time.getMonth() == 6 || time.getMonth() == 7 || time.getMonth() == 8 || time.getMonth() == 9 || time.getMonth() == 10 || time.getMonth() == 11 || time.getMonth() == 12 || time.getMonth() == 1) ;
-// };
-// let SICChartErroPrediction = reactive({single:true, text:'这张图显示了2023年6月的4周SIC预测结果与基线方法的比较。预测结果始终优于persistence，在第28天，预测结果比persistence的RMSE低26'})
-// let SICChartErroAdd = reactive({single:true,text:'此处的12副图分别为从2022年2这张图显示了2022年里四种SIC预测结果提前1到7天的统计结果。MITgcm月~2023年1月起报的预测结果、官方记录结果及二者绝对差值图（柱状）。'})
-// /* chart3 ,chart4 的下方文字描述 */
-// let SIEChartErroAnalyse = reactive({single:true, text:'rmsd用来分析预报误差成因，其由偏差与方差两部分组成。从图b可以看出，除2020与2022年春季外，其他年份季节的rmsd主要由偏差构成，而从图d可知，当预报与观测之间的标准差偏差大时，对应了偏差的大值部分。而对于2020年与2022年春季的rmsd主要由方差构成，对应图c可知，当预报相关性系数较低时会造成较大的方差。'})
-
-
 
 
 const SICChartErroPrediction = ref('这张图显示了2023年1月的4周SIC预测结果与基线方法的比较。预测结果始终优于persistence，在第28天，预测结果比persistence的RMSE低26.48%，证明了预测结果的有效性。')
@@ -115,7 +148,7 @@ chartX.value = [`${selectedYear.value}/${selectedMonth.value}/1`,`${selectedYear
           `${selectedYear.value}/${selectedMonth.value}/25`,`${selectedYear.value}/${selectedMonth.value}/26`,`${selectedYear.value}/${selectedMonth.value}/27`,]
 
 
-function updateChartTitle() {
+function updateChart() {
   //chartTitle.value = `${selectedYear.value}年${selectedMonth.value}月 预测结果误差折线图`;
   chartTitle2.value = `${selectedYear.value}年${selectedMonth.value}月~${Number(selectedYear.value) + 1 + ''}年${selectedMonth.value}月 预测结果误差折线图`;
   chartTitle3.value = `2022年SIC回报结果误差箱型图`;
@@ -259,8 +292,8 @@ axios.get('http://www.tjensoprediction.com:8080/seaice/error?year='+Number(selec
 
 
 
-//axios.get('http://www.tjensoprediction.com:8080/seaice/errorBox?year='+Number(selectedYear.value)+'&month='+Number(selectedMonth.value))
-axios.get('http://www.tjensoprediction.com:8080/seaice/errorBox?year=2022')
+axios.get('http://www.tjensoprediction.com:8080/seaice/errorBox?year='+Number(selectedYear.value)+'&month='+Number(selectedMonth.value))
+//axios.get('http://www.tjensoprediction.com:8080/seaice/errorBox?year=2022')
     .then(response => {
       console.log(response.data);
       const data0 = response.data["withoutDA_withoutBC"];
@@ -573,8 +606,8 @@ axios.get('http://www.tjensoprediction.com:8080/seaice/predictionExamination/err
 
 
 
-//axios.get('http://www.tjensoprediction.com:8080/seaice/error?year=2023&month=1')
- axios.get('http://www.tjensoprediction.com:8080/seaice/error?year='+Number(selectedYear.value)+'&month='+Number(selectedMonth.value))
+axios.get('http://www.tjensoprediction.com:8080/seaice/error?year=2023&month=1')
+// axios.get('http://www.tjensoprediction.com:8080/seaice/error?year='+Number(selectedYear.value)+'&month='+Number(selectedMonth.value))
     .then(response => {
       console.log(response.data);
   option1.value={
@@ -989,11 +1022,11 @@ axios.get('http://www.tjensoprediction.com:8080/seaice/predictionExamination/err
       海冰预测结果检验
     </h1>
     <div class="datePickerContainer">
-      <el-date-picker @change="updateChartTitle" 
+      <el-date-picker @change="updateChart()" 
       :disabledDate="limitedDateRange"
                v-model="selectedYear" type="year" format="YYYY" value-format="YYYY" :clearable="false" style="width: 80px; height: 25px"/>
       <div class="text">年</div>
-      <el-date-picker @change="updateChartTitle"
+      <el-date-picker @change="updateChart()"
       :disabledDate="limitedDateRange2"
        v-model="selectedMonth" type="month" format="MM" value-format="MM" :clearable="false" style="width: 60px; height: 25px"/>
       <div class="text">月</div> 
@@ -1001,10 +1034,10 @@ axios.get('http://www.tjensoprediction.com:8080/seaice/predictionExamination/err
               v-model="selectedDateTime"
               type="datetime"
               placeholder="请选择时间"
-              @change="updateChartTitle"
+              @change="updateChart"
           /> -->
     </div>    
-    <el-tabs type="border-card">
+    <el-tabs type="border-card" @tab-click="handleClick">
       <el-tab-pane label="SIC日预测误差">
         <div class="chart">
           <v-chart :option="option1" autoresize></v-chart>
