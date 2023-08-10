@@ -33,7 +33,7 @@ const start_month1 = ref(null);
 const start_year2 = ref(null);
 const start_month2 = ref(null);
 const start_year3 = ref(null);
-
+const start_month3 = ref(null);
 
 const start_year = ref(2023);     //可选时间范围
 const end_year = ref(2023);
@@ -52,9 +52,10 @@ axios.get('http://www.tjensoprediction.com:8080/seaice/initial/SICErrorBox')
   start_month2.value = res.data.monthList;
 });
 
-axios.get('http://www.tjensoprediction.com:8080/seaice/initial/SICErrorBox')
+axios.get('http://www.tjensoprediction.com:8080/seaice/initial/SIEErrorAnalysis')
 .then(res =>{
   start_year3.value = res.data.yearList;
+  start_month3.value = res.data.monthList;
 });
 
 
@@ -319,10 +320,36 @@ function handleClick(tab, event) {
 
   }
   else if(tab.props.label == 'SIE误差分析'){
-    start_year.value = 2022;      //暂时写死范围
-    end_year.value = 2022;
+    // start_year.value = 2022;      //暂时写死范围
+    // end_year.value = 2022;
+    start_year.value =  start_year3.value;      
+    end_year.value = start_year3.value;
+    start_month.value =  start_month3.value;     
+    end_month.value = 1;
     selectedYear.value = '2022'
     selectedMonth.value = '01';
+
+    chartX1.value = [`${selectedYear.value -2}spring`,`${selectedYear.value - 2}summer`,`${selectedYear.value - 2}fall`, `${selectedYear.value - 2}winter`,
+                 `${selectedYear.value - 1}spring`,`${selectedYear.value - 1}summer`,`${selectedYear.value - 1}fall`, `${selectedYear.value - 1}winter`,
+                 `${selectedYear.value}spring`,`${selectedYear.value}summer`,`${selectedYear.value}fall`, `${selectedYear.value}winter`
+                ]
+
+ option4.value.xAxis= {
+        data: chartX1.value
+ }
+
+ option5.value.xAxis= {
+        data: chartX1.value
+ }
+
+ option6.value.xAxis= {
+        data: chartX1.value
+ }
+  
+
+ option7.value.xAxis= {
+        data: chartX1.value
+ }
   }
 }
 
@@ -376,6 +403,7 @@ const option7 = ref({})
 
 
 const chartX = ref('')
+const chartX1 = ref('')
 chartX.value = [`${selectedYear.value}/${selectedMonth.value}/1`,`${selectedYear.value}/${selectedMonth.value}/2`,`${selectedYear.value}/${selectedMonth.value}/3`,
           `${selectedYear.value}/${selectedMonth.value}/4`,`${selectedYear.value}/${selectedMonth.value}/5`,`${selectedYear.value}/${selectedMonth.value}/6`,
           `${selectedYear.value}/${selectedMonth.value}/7`,`${selectedYear.value}/${selectedMonth.value}/8`,`${selectedYear.value}/${selectedMonth.value}/9`,
@@ -385,6 +413,11 @@ chartX.value = [`${selectedYear.value}/${selectedMonth.value}/1`,`${selectedYear
           `${selectedYear.value}/${selectedMonth.value}/19`,`${selectedYear.value}/${selectedMonth.value}/20`,`${selectedYear.value}/${selectedMonth.value}/21`,
           `${selectedYear.value}/${selectedMonth.value}/22`,`${selectedYear.value}/${selectedMonth.value}/23`,`${selectedYear.value}/${selectedMonth.value}/24`,
           `${selectedYear.value}/${selectedMonth.value}/25`,`${selectedYear.value}/${selectedMonth.value}/26`,`${selectedYear.value}/${selectedMonth.value}/27`,]
+
+chartX1.value = [`${selectedYear.value -2}spring`,`${selectedYear.value - 2}summer`,`${selectedYear.value - 2}fall`, `${selectedYear.value - 2}winter`,
+                 `${selectedYear.value - 1}spring`,`${selectedYear.value - 1}summer`,`${selectedYear.value - 1}fall`, `${selectedYear.value - 1}winter`,
+                 `${selectedYear.value}spring`,`${selectedYear.value}summer`,`${selectedYear.value}fall`, `${selectedYear.value}winter`
+                ]
 
 
 function updateChart() {
@@ -402,6 +435,11 @@ function updateChart() {
           `${selectedYear.value}/${selectedMonth.value}/19`,`${selectedYear.value}/${selectedMonth.value}/20`,`${selectedYear.value}/${selectedMonth.value}/21`,
           `${selectedYear.value}/${selectedMonth.value}/22`,`${selectedYear.value}/${selectedMonth.value}/23`,`${selectedYear.value}/${selectedMonth.value}/24`,
           `${selectedYear.value}/${selectedMonth.value}/25`,`${selectedYear.value}/${selectedMonth.value}/26`,`${selectedYear.value}/${selectedMonth.value}/27`,]
+
+  chartX1.value = [`${selectedYear.value -2}spring`,`${selectedYear.value - 2}summer`,`${selectedYear.value - 2}fall`, `${selectedYear.value - 2}winter`,
+                 `${selectedYear.value - 1}spring`,`${selectedYear.value - 1}summer`,`${selectedYear.value - 1}fall`, `${selectedYear.value - 1}winter`,
+                 `${selectedYear.value}spring`,`${selectedYear.value}summer`,`${selectedYear.value}fall`, `${selectedYear.value}winter`
+                ]
 
  option1.value.title= {
       text: chartTitle.value,
@@ -435,8 +473,22 @@ function updateChart() {
       left: 'center' //标题水平居中
    }
 
+   option4.value.xAxis= {
+        data: chartX1.value
+ }
+
+ option5.value.xAxis= {
+        data: chartX1.value
+ }
+
+ option6.value.xAxis= {
+        data: chartX1.value
+ }
   
-  
+
+ option7.value.xAxis= {
+        data: chartX1.value
+ }
   //22222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222
   
   console.log(tab.props.label);
@@ -652,7 +704,7 @@ axios.get('http://www.tjensoprediction.com:8080/seaice/error?year='+Number(selec
     });
   }
   else if(tab.props.label == 'SIE误差分析'){
-    axios.get('http://www.tjensoprediction.com:8080/seaice/predictionExamination/errorAnalysis?year=2020-2022')
+    axios.get('http://www.tjensoprediction.com:8080/seaice/predictionExamination/errorAnalysis?year'+Number(selectedYear.value))
     .then(response => {
       console.log(response.data);
   option4.value={
@@ -698,7 +750,7 @@ axios.get('http://www.tjensoprediction.com:8080/seaice/error?year='+Number(selec
 
 
 
-axios.get('http://www.tjensoprediction.com:8080/seaice/predictionExamination/errorAnalysis?year=2020-2022')
+  axios.get('http://www.tjensoprediction.com:8080/seaice/predictionExamination/errorAnalysis?year'+Number(selectedYear.value))
     .then(response => {
       console.log(response.data);
       option5.value={
@@ -750,7 +802,7 @@ axios.get('http://www.tjensoprediction.com:8080/seaice/predictionExamination/err
 
 
 
-axios.get('http://www.tjensoprediction.com:8080/seaice/predictionExamination/errorAnalysis?year=2020-2022')
+  axios.get('http://www.tjensoprediction.com:8080/seaice/predictionExamination/errorAnalysis?year'+Number(selectedYear.value))
     .then(response => {
       console.log(response.data);
  option6.value={
@@ -794,7 +846,7 @@ axios.get('http://www.tjensoprediction.com:8080/seaice/predictionExamination/err
 
 
 
-axios.get('http://www.tjensoprediction.com:8080/seaice/predictionExamination/errorAnalysis?year=2020-2022')
+  axios.get('http://www.tjensoprediction.com:8080/seaice/predictionExamination/errorAnalysis?year'+Number(selectedYear.value))
     .then(response => {
       console.log(response.data);
   option7.value={
@@ -1083,7 +1135,7 @@ axios.get('http://www.tjensoprediction.com:8080/seaice/errorBox?year=2022')
 
 
 
- axios.get('http://www.tjensoprediction.com:8080/seaice/predictionExamination/errorAnalysis?year=2020-2022')
+ axios.get('http://www.tjensoprediction.com:8080/seaice/predictionExamination/errorAnalysis?year=2022')
     .then(response => {
       console.log(response.data);
   option4.value={
@@ -1129,7 +1181,7 @@ axios.get('http://www.tjensoprediction.com:8080/seaice/errorBox?year=2022')
 
 
 
-axios.get('http://www.tjensoprediction.com:8080/seaice/predictionExamination/errorAnalysis?year=2020-2022')
+axios.get('http://www.tjensoprediction.com:8080/seaice/predictionExamination/errorAnalysis?year=2022')
     .then(response => {
       console.log(response.data);
       option5.value={
@@ -1181,7 +1233,7 @@ axios.get('http://www.tjensoprediction.com:8080/seaice/predictionExamination/err
 
 
 
-axios.get('http://www.tjensoprediction.com:8080/seaice/predictionExamination/errorAnalysis?year=2020-2022')
+axios.get('http://www.tjensoprediction.com:8080/seaice/predictionExamination/errorAnalysis?year=2022')
     .then(response => {
       console.log(response.data);
  option6.value={
@@ -1225,7 +1277,7 @@ axios.get('http://www.tjensoprediction.com:8080/seaice/predictionExamination/err
 
 
 
-axios.get('http://www.tjensoprediction.com:8080/seaice/predictionExamination/errorAnalysis?year=2020-2022')
+axios.get('http://www.tjensoprediction.com:8080/seaice/predictionExamination/errorAnalysis?year=2022')
     .then(response => {
       console.log(response.data);
   option7.value={
