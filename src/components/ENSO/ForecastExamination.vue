@@ -14,16 +14,16 @@ const start_month = ref(month);   //选择的月
 
 const start_time = ref(null);     //可选时间范围
 const end_time = ref(null);
-/*
-此处调接口获取时间范围
-axios.get('http://www.tjensoprediction.com:8080/imgs/WEA_T2M/getInitData')
-.then(res =>{
-  start_time.value = new Date(res.data.start);
-  end_time.value = new Date(res.data.end);
-});
-*/
-start_time.value = new Date('2023-2');      //暂时写死范围
-end_time.value = new Date('2023-4');
+//此处利用monthly comparison调接口获取未切换标签时的时间范围
+axios.get('http://www.tjensoprediction.com:8080/enso/monthlyComparison/getInitData')
+    .then(res =>{
+      //console.log(res.data.start);
+      start_time.value = new Date(res.data.start);
+      end_time.value = new Date(res.data.end);
+    });
+
+// start_time.value = new Date('2023-1');      //暂时写死范围
+// end_time.value = new Date('2023-6');
 const limitedDateRange = (time) => {
   return time.getTime() < start_time.value || time.getTime() > end_time.value;
 };
@@ -31,20 +31,42 @@ const limitedDateRange = (time) => {
 function handleClick(tab, event) {
   console.log(tab.props.label);
   if(tab.props.label == '逐月比对'){
-    start_time.value = new Date('2023-2');      //暂时写死范围
-    end_time.value = new Date('2023-4');
+    //再次调用接口是为了当从别的标签切换回来时 能将时间选择器对应修改
+    axios.get('http://www.tjensoprediction.com:8080/enso/monthlyComparison/getInitData')
+        .then(res =>{
+          start_time.value = new Date(res.data.start.replace(/-/g,'/'));
+          end_time.value = new Date(res.data.end.replace(/-/g,'/'));
+        });
   }
-  else if(tab.props.label == '预报误差'){ 
-    start_time.value = new Date('2023-2');      //暂时写死范围
-    end_time.value = new Date('2023-4');
+  else if(tab.props.label == '预报误差'){
+    //再次调用接口是为了当从别的标签切换回来时 能将时间选择器对应修改
+    axios.get('http://www.tjensoprediction.com:8080/enso/monthlyComparison/getInitData')
+        .then(res =>{
+          start_time.value = new Date(res.data.start.replace(/-/g,'/'));
+          end_time.value = new Date(res.data.end.replace(/-/g,'/'));
+        });
   }
   else if(tab.props.label == '误差分析'){
-    start_time.value = new Date('2023-2');      //暂时写死范围
-    end_time.value = new Date('2023-2');
+    axios.get('http://www.tjensoprediction.com:8080/enso/errorBox/getInitData')
+        .then(res =>{
+          //console.log(res.data.earliestDate);
+          //console.log(res.data.latestDate);
+          start_time.value = new Date(res.data.earliestDate.replace(/-/g,'/'));
+          end_time.value = new Date(res.data.latestDate.replace(/-/g,'/'));
+          //console.log(start_time.value);
+          //console.log(end_time.value);
+        });
+    // start_time.value = new Date('2023-2');
+    // end_time.value = new Date('2023-2');
   }
   else{        //相关系数
-    start_time.value = new Date('2023-2');      //暂时写死范围
-    end_time.value = new Date('2023-4');
+    axios.get('http://www.tjensoprediction.com:8080/enso/errorCorr/getInitData')
+        .then(res =>{
+          console.log(res.data.earliestDate);
+          console.log(res.data.latestDate);
+          start_time.value = new Date(res.data.earliestDate.replace(/-/g,'/'));
+          end_time.value = new Date(res.data.latestDate.replace(/-/g,'/'));
+        });
   }
 }
 /* 时间选择器 -- end */
