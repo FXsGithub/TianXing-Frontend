@@ -4,10 +4,63 @@ import { ref} from "vue";
 import VChart from 'vue-echarts'
 import axios from 'axios';
 
-// const currentDate = new Date();
-// const year = currentDate.getFullYear() - 1 + '';
-// const month = currentDate.getMonth() < 10 ? '0' + (currentDate.getMonth() + 1 + '') : currentDate.getMonth() + 1 + ''
+const currentDate = new Date();
+const year = currentDate.getFullYear() - 1 + '';
+const month = currentDate.getMonth() < 10 ? '0' + (currentDate.getMonth() + 1 + '') : currentDate.getMonth() + 1 + ''
 
+const selectedYear = ref('');
+const selectedMonth = ref('');
+
+// selectedYear.value = year;
+// selectedMonth.value = month;
+
+if (year !== '2023') {
+  selectedYear.value = '2023'; // 默认选中2023年
+} else {
+  selectedYear.value = year;
+}
+
+if (month !== '01') {
+  selectedMonth.value = '01'; // 默认选中1月
+} else {
+  selectedMonth.value = month;
+}
+
+const disabledYear = () => {
+  const allowedYear = [2023];
+  const disabledYear = [2020,2021,2024,2025,2026,2027,2028,2029];
+
+  // for (let i = 0; i < 60; i++) {
+  //   if (!allowedMinute.includes(i)) {
+  //     disabledMinute.push(i);
+  //   }
+  // }
+
+  return disabledYear;
+};
+
+const disabledMonth = () => {
+  const allowedMonth = [1];
+  const disabledMonth = [2,3,4,5,6,7,8,9,10,11,12];
+
+  // for (let i = 0; i < 60; i++) {
+  //   if (!allowedSecond.includes(i)) {
+  //     disabledSecond.push(i);
+  //   }
+  // }
+
+  return disabledMonth;
+};
+
+const limitedDateRange = (time) => {
+  return time.getFullYear() < 2022  || time.getFullYear() > 2023;
+};
+const limitedDateRange2 = (time) => {
+  return ((time.getFullYear() != 2023 && time.getFullYear() != 2022) && (time.getMonth() >= 0 && time.getMonth() <= 11)) ||  ((time.getFullYear() == 2023 || time.getFullYear() == 2022) && (time.getMonth() >= 1 && time.getMonth() <= 11));
+};
+// const limitedDateRange2 = (time) => {
+//   return  (time.getMonth() == 2 || time.getMonth() == 3 || time.getMonth() == 4 || time.getMonth() == 5 || time.getMonth() == 6 || time.getMonth() == 7 || time.getMonth() == 8 || time.getMonth() == 9 || time.getMonth() == 10 || time.getMonth() == 11 || time.getMonth() == 12 || time.getMonth() == 1) ;
+// };
 // let SICChartErroPrediction = reactive({single:true, text:'这张图显示了2023年6月的4周SIC预测结果与基线方法的比较。预测结果始终优于persistence，在第28天，预测结果比persistence的RMSE低26'})
 // let SICChartErroAdd = reactive({single:true,text:'此处的12副图分别为从2022年2这张图显示了2022年里四种SIC预测结果提前1到7天的统计结果。MITgcm月~2023年1月起报的预测结果、官方记录结果及二者绝对差值图（柱状）。'})
 // /* chart3 ,chart4 的下方文字描述 */
@@ -22,25 +75,21 @@ const SICChartErroAdd = ref('这张图显示了2022年里四种SIC预测结果�
 
 const SIEChartErroAnalyse = ref('rmsd用来分析预报误差成因，其由偏差与方差两部分组成。从图b可以看出，除2020与2022年春季外，其他年份季节的rmsd主要由偏差构成，而从图d可知，当预报与观测之间的标准差偏差大时，对应了偏差的大值部分。而对于2020年与2022年春季的rmsd主要由方差构成，对应图c可知，当预报相关性系数较低时会造成较大的方差。')
 
-// const selectedYear = ref('');
-// const selectedMonth = ref('');
-
-// selectedYear.value = year;
-// selectedMonth.value = month;
 
 
-const selectedDateTime = ref(null);
-const selectedYear = ref(null); // 新变量，用于存储选定的年份
-const selectedMonth = ref(null); // 新变量，用于存储选定的月份
 
-const date = new Date(2023,0,1,0,0,0);
-selectedDateTime.value = date;
-selectedYear.value = date.getFullYear();
-selectedMonth.value = date.getMonth() + 1;
+// const selectedDateTime = ref(null);
+// const selectedYear = ref(null); // 新变量，用于存储选定的年份
+// const selectedMonth = ref(null); // 新变量，用于存储选定的月份
+
+// const date = new Date(2023,0,1,0,0,0);
+// selectedDateTime.value = date;
+// selectedYear.value = date.getFullYear();
+// selectedMonth.value = date.getMonth() + 1;
 
 const chartTitle = ref('')
-chartTitle.value = `${selectedYear.value}年${selectedMonth.value}月 预测结果误差折线图`
-//chartTitle.value = `2023年1月预测结果误差折线图`
+//chartTitle.value = `${selectedYear.value}年${selectedMonth.value}月 预测结果误差折线图`
+chartTitle.value = `2023年1月预测结果误差折线图`
 
 
 const chartTitle2 = ref('')
@@ -74,7 +123,7 @@ chartX.value = [`${selectedYear.value}/${selectedMonth.value}/1`,`${selectedYear
 
 
 function updateChartTitle() {
-  chartTitle.value = `${selectedYear.value}年${selectedMonth.value}月 预测结果误差折线图`;
+  //chartTitle.value = `${selectedYear.value}年${selectedMonth.value}月 预测结果误差折线图`;
   chartTitle2.value = `${selectedYear.value}年${selectedMonth.value}月~${Number(selectedYear.value) + 1 + ''}年${selectedMonth.value}月 预测结果误差折线图`;
   chartTitle3.value = `2022年SIC回报结果误差箱型图`;
   chartTitle4.value = `SIE预测误差分析`;
@@ -120,14 +169,15 @@ function updateChartTitle() {
       left: 'center' //标题水平居中
    }
 
-   // 当日期时间选择发生变化时被调用
-console.log(selectedDateTime.value); // 输出当前选择的日期和时间
+//    // 当日期时间选择发生变化时被调用
+// // console.log(selectedYear.value); // 输出当前选择的日期和时间
+// // console.log(selectedMonth.value); // 输出当前选择的日期和时间
 
-if (selectedDateTime.value) {
-  const selectedDate = new Date(selectedDateTime.value);
-  selectedYear.value = selectedDate.getFullYear(); // 获取年份值并存储到 selectedYear
-  selectedMonth.value = selectedDate.getMonth() + 1; // 获取月份值并存储到 selectedMonth
-}
+// if (selectedDateTime.value) {
+//   const selectedDate = new Date(selectedDateTime.value);
+//   selectedYear.value = selectedDate.getFullYear(); // 获取年份值并存储到 selectedYear
+//   selectedMonth.value = selectedDate.getMonth() + 1; // 获取月份值并存储到 selectedMonth
+// }
 
   
 
@@ -806,16 +856,20 @@ axios.get('http://www.tjensoprediction.com:8080/seaice/predictionExamination/err
       海冰预测结果检验
     </h1>
     <div class="datePickerContainer">
-      <!-- <el-date-picker @change="updateChartTitle" v-model="selectedYear" type="year" format="YYYY" value-format="YYYY" :clearable="false" style="width: 80px; height: 25px"/>
+      <el-date-picker @change="updateChartTitle" 
+      :disabledDate="limitedDateRange"
+               v-model="selectedYear" type="year" format="YYYY" value-format="YYYY" :clearable="false" style="width: 80px; height: 25px"/>
       <div class="text">年</div>
-      <el-date-picker @change="updateChartTitle" v-model="selectedMonth" type="month" format="MM" value-format="MM" :clearable="false" style="width: 60px; height: 25px"/>
-      <div class="text">月</div> -->
-      <el-date-picker
+      <el-date-picker @change="updateChartTitle"
+      :disabledDate="limitedDateRange2"
+       v-model="selectedMonth" type="month" format="MM" value-format="MM" :clearable="false" style="width: 60px; height: 25px"/>
+      <div class="text">月</div> 
+      <!-- <el-date-picker
               v-model="selectedDateTime"
               type="datetime"
               placeholder="请选择时间"
               @change="updateChartTitle"
-          />
+          /> -->
     </div>    
     <el-tabs type="border-card">
       <el-tab-pane label="SIC日预测误差">
