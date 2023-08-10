@@ -28,8 +28,6 @@ const selectedMonth = ref('');
 selectedYear.value = '2023'
 selectedMonth.value = '01'; 
 
-
-
 const start_year1 = ref(null);
 const start_month1 = ref(null);
 const start_year2 = ref(null);
@@ -37,10 +35,10 @@ const start_month2 = ref(null);
 const start_year3 = ref(null);
 
 
-const start_year = ref(null);     //可选时间范围
-const end_year = ref(null);
-const start_month = ref(null);     //可选时间范围
-const end_month = ref(null);
+const start_year = ref(2023);     //可选时间范围
+const end_year = ref(2023);
+const start_month = ref(1);     //可选时间范围
+const end_month = ref(1);
 
 axios.get('http://www.tjensoprediction.com:8080/seaice/initial/SICError')
 .then(res =>{
@@ -71,8 +69,379 @@ function handleClick(tab, event) {
     selectedYear.value = '2023'
     selectedMonth.value = '01'; 
     
-    //接口，每次更新日期产生新的请求：
-  axios.get('http://www.tjensoprediction.com:8080/seaice/error?year='+Number(selectedYear.value)+'&month='+Number(selectedMonth.value))
+    chartTitle.value = `${selectedYear.value}年${selectedMonth.value}月 预测结果误差折线图`;
+    chartX.value = [`${selectedYear.value}/${selectedMonth.value}/1`,`${selectedYear.value}/${selectedMonth.value}/2`,`${selectedYear.value}/${selectedMonth.value}/3`,
+          `${selectedYear.value}/${selectedMonth.value}/4`,`${selectedYear.value}/${selectedMonth.value}/5`,`${selectedYear.value}/${selectedMonth.value}/6`,
+          `${selectedYear.value}/${selectedMonth.value}/7`,`${selectedYear.value}/${selectedMonth.value}/8`,`${selectedYear.value}/${selectedMonth.value}/9`,
+          `${selectedYear.value}/${selectedMonth.value}/10`,`${selectedYear.value}/${selectedMonth.value}/11`,`${selectedYear.value}/${selectedMonth.value}/12`,
+          `${selectedYear.value}/${selectedMonth.value}/13`,`${selectedYear.value}/${selectedMonth.value}/14`,`${selectedYear.value}/${selectedMonth.value}/15`,
+          `${selectedYear.value}/${selectedMonth.value}/16`,`${selectedYear.value}/${selectedMonth.value}/17`,`${selectedYear.value}/${selectedMonth.value}/18`,
+          `${selectedYear.value}/${selectedMonth.value}/19`,`${selectedYear.value}/${selectedMonth.value}/20`,`${selectedYear.value}/${selectedMonth.value}/21`,
+          `${selectedYear.value}/${selectedMonth.value}/22`,`${selectedYear.value}/${selectedMonth.value}/23`,`${selectedYear.value}/${selectedMonth.value}/24`,
+          `${selectedYear.value}/${selectedMonth.value}/25`,`${selectedYear.value}/${selectedMonth.value}/26`,`${selectedYear.value}/${selectedMonth.value}/27`,]
+    
+
+    option1.value.title= {
+      text: chartTitle.value,
+      left: 'center' //标题水平居中
+       }
+
+    option1.value.xAxis= {
+        data: chartX.value
+     }
+
+     option2.value.xAxis= {
+        data: chartX.value
+     }
+
+
+//     //接口，每次更新日期产生新的请求：
+//   axios.get('http://www.tjensoprediction.com:8080/seaice/error?year='+Number(selectedYear.value)+'&month='+Number(selectedMonth.value))
+//     .then(response => {
+//       console.log(response.data);
+//   option1.value={
+//   title: {
+//     text: chartTitle.value,
+//     left: 'center' //标题水平居中
+//   },
+//   tooltip: {},
+//   xAxis: {
+//     type: 'category',
+//     name: '时间',
+//     data: chartX.value
+//   },
+//   yAxis: {
+//     type: 'value',
+//     name: 'BACC(%)',
+//     data: [10, 12, 14, 16, 18]
+//   },
+//   legend: { //图例
+//     data: ['ours', 'persistence'],
+//     orient: 'horizontal',
+//     left: 'center',
+//     bottom: '5',
+//   },
+//   series: [
+//     {
+//       name: 'ours',
+//       type: 'line',
+//       data:  response.data["2023_BACC"],
+              
+//     },
+//     {
+//       name: 'persistence',
+//       type: 'line',
+//       data:  response.data["2023_per_BACC"],
+//     },
+
+//   ]
+// }
+
+//  //SICChartErroPrediction.value = response.data.description;
+//  })
+//     .catch(error => {
+//       console.error(error);
+//  });
+      
+
+
+
+// //axios.get('http://www.tjensoprediction.com:8080/seaice/error?year=2023&month=1')
+// axios.get('http://www.tjensoprediction.com:8080/seaice/error?year='+Number(selectedYear.value)+'&month='+Number(selectedMonth.value))
+//     .then(response => {
+//       console.log(response.data);
+//       option2.value={
+//     tooltip: {},
+//   xAxis: {
+//     type: 'category',
+//     name: '时间',
+//     data: chartX.value
+//   },
+//   yAxis: {
+//     type: 'value',
+//     name: 'RMSE(%)',
+//     data: [10, 12, 14, 16, 18]
+//   },
+//   legend: { //图例
+//     data: ['ours', 'persistence'],
+//     orient: 'horizontal',
+//     left: 'center',
+//     bottom: '5',
+//   },
+//   series: [
+//     {
+//       name: 'ours',
+//       type: 'line',
+//       data: response.data["2023_RMSE"],
+//     },
+//     {
+//       name: 'persistence',
+//       type: 'line',
+//      data: response.data["2023_per_RMSE"],
+//     },
+
+//   ]
+// }
+
+//     // SICChartErroPrediction.value = response.data.description;
+//     })
+//     .catch(error => {
+//       console.error(error);
+//     });
+  }
+  else if(tab.props.label == 'SIC误差统计'){ 
+    start_year.value = start_year2.value;      
+    end_year.value = start_year2.value;
+    start_month.value =  start_month2.value;     
+    end_month.value = 1;
+    selectedYear.value = '2022'
+    selectedMonth.value = '01'; 
+    
+    chartTitle3.value = `${selectedYear.value}年SIC回报结果误差箱型图`
+    option3.value.title={
+      text: chartTitle3.value,
+      left: 'center' //标题水平居中
+    }
+//     axios.get('http://www.tjensoprediction.com:8080/seaice/errorBox?year='+Number(selectedYear.value)+'&month='+Number(selectedMonth.value))
+// //axios.get('http://www.tjensoprediction.com:8080/seaice/errorBox?year=2022')
+//     .then(response => {
+//       console.log(response.data);
+//       const data0 = response.data["withoutDA_withoutBC"];
+//       const data1 = response.data["withoutDA_withBC_RMSE"];
+//       const data2 = response.data["withDA_withoutBC_RMSE"];
+//       const data3 = response.data["MITgcm(with DA)withBC_RMSE"];
+//   option3.value={
+//     title: {
+//     text: chartTitle3.value,
+//     left: 'center' //标题水平居中
+//   },
+
+//     dataset: [
+//       {
+//         source: data0
+//       },
+//       {
+//         source: data1
+//       },
+//       {
+//         source: data2
+//       },
+//       {
+//         source: data3
+//       },
+//       {
+//         fromDatasetIndex: 0,
+//         transform: { type: 'boxplot' }
+//       },
+//       {
+//         fromDatasetIndex: 1,
+//         transform: { type: 'boxplot' }
+//       },
+//       {
+//         fromDatasetIndex: 2,
+//         transform: { type: 'boxplot' }
+//       },
+//       {
+//         fromDatasetIndex: 3,
+//         transform: { type: 'boxplot' }
+//       }
+//     ],
+//     legend: {
+//       top: '10%'
+//     },
+//     tooltip: {
+//       trigger: 'item',
+//       axisPointer: {
+//         type: 'shadow'
+//       }
+//     },
+//     grid: {
+//       left: '10%',
+//       top: '20%',
+//       right: '10%',
+//       bottom: '15%'
+//     },
+//     xAxis: {
+//       type: 'category',
+//       name: 'Lead time',
+//       axisLabel: {
+//          formatter: function(value) {
+//              return (parseInt(value) + 1) + 'day';
+//          },
+//       align: 'center'
+//       },
+//       boundaryGap: true,
+//       nameGap: 30,
+//       splitArea: {
+//         show: true
+//       },
+//       splitLine: {
+//         show: false
+//       }
+//     },
+//     yAxis: {
+//       type: 'value',
+//       name: 'RMSE(%)',
+//       splitArea: {
+//         show: false
+//       }
+//     },
+//     series: [
+//       {
+//         name: 'withDA_withoutBC_RMSE',
+//         type: 'boxplot',
+//         datasetIndex: 4
+//       },
+//       {
+//         name: 'withoutDA_withoutBC',
+//         type: 'boxplot',
+//         datasetIndex: 5
+//       },
+//       {
+//         name: 'withoutDA_withBC_RMSE',
+//         type: 'boxplot',
+//         datasetIndex: 6
+//       },
+//       {
+//         name: 'MITgcm(with DA)withBC_RMSE',
+//         type: 'boxplot',
+//         datasetIndex: 7
+//       }
+//     ]
+
+// }
+
+//     //SICChartErroAdd.value = response.data.description;
+//     })
+//     .catch(error => {
+//       console.error(error);
+//     });
+
+  }
+  else if(tab.props.label == 'SIE误差分析'){
+    start_year.value = 2022;      //暂时写死范围
+    end_year.value = 2022;
+    selectedYear.value = '2022'
+    selectedMonth.value = '01';
+  }
+}
+
+const limitedDateRange = (time) => {
+  return time.getFullYear() < start_year.value  || time.getFullYear() > end_year.value;
+};
+const limitedDateRange2 = (time) => {
+  return ((time.getFullYear() < start_year.value  || time.getFullYear() > end_year.value) && (time.getMonth() >= 0 && time.getMonth() <= 11)) ||  ((time.getFullYear() >= start_year.value  && time.getFullYear() <= end_year.value) && ((time.getMonth() >= end_month.value && time.getMonth() <= 11)));
+};
+
+
+const SICChartErroPrediction = ref('这张图显示了2023年1月的4周SIC预测结果与基线方法的比较。预测结果始终优于persistence，在第28天，预测结果比persistence的RMSE低26.48%，证明了预测结果的有效性。')
+
+const SICChartErroAdd = ref('这张图显示了2022年里四种SIC预测结果提前1到7天的统计结果。MITgcm output (with DA) with BC显著降低了SIC的预测误差，RMSE一直低于0.09，更好地提高了SIC预报结果准确性。')
+
+const SIEChartErroAnalyse = ref('rmsd用来分析预报误差成因，其由偏差与方差两部分组成。从图b可以看出，除2020与2022年春季外，其他年份季节的rmsd主要由偏差构成，而从图d可知，当预报与观测之间的标准差偏差大时，对应了偏差的大值部分。而对于2020年与2022年春季的rmsd主要由方差构成，对应图c可知，当预报相关性系数较低时会造成较大的方差。')
+
+
+
+
+// const selectedDateTime = ref(null);
+// const selectedYear = ref(null); // 新变量，用于存储选定的年份
+// const selectedMonth = ref(null); // 新变量，用于存储选定的月份
+
+// const date = new Date(2023,0,1,0,0,0);
+// selectedDateTime.value = date;
+// selectedYear.value = date.getFullYear();
+// selectedMonth.value = date.getMonth() + 1;
+
+const chartTitle = ref('')
+chartTitle.value = `${selectedYear.value}年${selectedMonth.value}月 预测结果误差折线图`
+//chartTitle.value = `2023年1月预测结果误差折线图`
+
+
+const chartTitle2 = ref('')
+chartTitle2.value = `${selectedYear.value}年${selectedMonth.value}月~${Number(selectedYear.value) + 1 + ''}年${selectedMonth.value}月 预测结果误差折线图`
+
+const chartTitle3 = ref('')
+chartTitle3.value = `${selectedYear.value}年SIC回报结果误差箱型图`
+
+const chartTitle4 = ref('')
+chartTitle4.value = `SIE预测误差分析`
+
+const option1 = ref({})
+const option2 = ref({})
+const option3 = ref({})
+const option4 = ref({})
+const option5 = ref({})
+const option6 = ref({})
+const option7 = ref({})
+
+
+const chartX = ref('')
+chartX.value = [`${selectedYear.value}/${selectedMonth.value}/1`,`${selectedYear.value}/${selectedMonth.value}/2`,`${selectedYear.value}/${selectedMonth.value}/3`,
+          `${selectedYear.value}/${selectedMonth.value}/4`,`${selectedYear.value}/${selectedMonth.value}/5`,`${selectedYear.value}/${selectedMonth.value}/6`,
+          `${selectedYear.value}/${selectedMonth.value}/7`,`${selectedYear.value}/${selectedMonth.value}/8`,`${selectedYear.value}/${selectedMonth.value}/9`,
+          `${selectedYear.value}/${selectedMonth.value}/10`,`${selectedYear.value}/${selectedMonth.value}/11`,`${selectedYear.value}/${selectedMonth.value}/12`,
+          `${selectedYear.value}/${selectedMonth.value}/13`,`${selectedYear.value}/${selectedMonth.value}/14`,`${selectedYear.value}/${selectedMonth.value}/15`,
+          `${selectedYear.value}/${selectedMonth.value}/16`,`${selectedYear.value}/${selectedMonth.value}/17`,`${selectedYear.value}/${selectedMonth.value}/18`,
+          `${selectedYear.value}/${selectedMonth.value}/19`,`${selectedYear.value}/${selectedMonth.value}/20`,`${selectedYear.value}/${selectedMonth.value}/21`,
+          `${selectedYear.value}/${selectedMonth.value}/22`,`${selectedYear.value}/${selectedMonth.value}/23`,`${selectedYear.value}/${selectedMonth.value}/24`,
+          `${selectedYear.value}/${selectedMonth.value}/25`,`${selectedYear.value}/${selectedMonth.value}/26`,`${selectedYear.value}/${selectedMonth.value}/27`,]
+
+
+function updateChart() {
+  chartTitle.value = `${selectedYear.value}年${selectedMonth.value}月 预测结果误差折线图`;
+  //chartTitle2.value = `${selectedYear.value}年${selectedMonth.value}月~${Number(selectedYear.value) + 1 + ''}年${selectedMonth.value}月 预测结果误差折线图`;
+  // chartTitle3.value = `2022年SIC回报结果误差箱型图`;
+  chartTitle3.value = `${selectedYear.value}年SIC回报结果误差箱型图`
+  chartTitle4.value = `SIE预测误差分析`;
+  chartX.value = [`${selectedYear.value}/${selectedMonth.value}/1`,`${selectedYear.value}/${selectedMonth.value}/2`,`${selectedYear.value}/${selectedMonth.value}/3`,
+          `${selectedYear.value}/${selectedMonth.value}/4`,`${selectedYear.value}/${selectedMonth.value}/5`,`${selectedYear.value}/${selectedMonth.value}/6`,
+          `${selectedYear.value}/${selectedMonth.value}/7`,`${selectedYear.value}/${selectedMonth.value}/8`,`${selectedYear.value}/${selectedMonth.value}/9`,
+          `${selectedYear.value}/${selectedMonth.value}/10`,`${selectedYear.value}/${selectedMonth.value}/11`,`${selectedYear.value}/${selectedMonth.value}/12`,
+          `${selectedYear.value}/${selectedMonth.value}/13`,`${selectedYear.value}/${selectedMonth.value}/14`,`${selectedYear.value}/${selectedMonth.value}/15`,
+          `${selectedYear.value}/${selectedMonth.value}/16`,`${selectedYear.value}/${selectedMonth.value}/17`,`${selectedYear.value}/${selectedMonth.value}/18`,
+          `${selectedYear.value}/${selectedMonth.value}/19`,`${selectedYear.value}/${selectedMonth.value}/20`,`${selectedYear.value}/${selectedMonth.value}/21`,
+          `${selectedYear.value}/${selectedMonth.value}/22`,`${selectedYear.value}/${selectedMonth.value}/23`,`${selectedYear.value}/${selectedMonth.value}/24`,
+          `${selectedYear.value}/${selectedMonth.value}/25`,`${selectedYear.value}/${selectedMonth.value}/26`,`${selectedYear.value}/${selectedMonth.value}/27`,]
+
+ option1.value.title= {
+      text: chartTitle.value,
+      left: 'center' //标题水平居中
+ }
+
+ option1.value.xAxis= {
+        data: chartX.value
+ }
+
+ option2.value.xAxis= {
+        data: chartX.value
+ }
+
+
+  // option2.value.title= {
+
+  //     text: chartTitle2.value,
+  //     left: 'center' //标题水平居中
+  //   }
+
+
+  option3.value.title={
+      text: chartTitle3.value,
+      left: 'center' //标题水平居中
+    }
+
+
+  option4.value.title={
+      text: chartTitle4.value,
+      left: 'center' //标题水平居中
+   }
+
+  
+  
+  //22222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222
+  
+  console.log(tab.props.label);
+  if(tab.props.label == 'SIC日预测误差'){
+    axios.get('http://www.tjensoprediction.com:8080/seaice/error?year='+Number(selectedYear.value)+'&month='+Number(selectedMonth.value))
     .then(response => {
       console.log(response.data);
   option1.value={
@@ -164,15 +533,9 @@ axios.get('http://www.tjensoprediction.com:8080/seaice/error?year='+Number(selec
     .catch(error => {
       console.error(error);
     });
+    
   }
   else if(tab.props.label == 'SIC误差统计'){ 
-    start_year.value = start_year2.value;      
-    end_year.value = start_year2.value;
-    start_month.value =  start_month2.value;     
-    end_month.value = 1;
-    selectedYear.value = '2022'
-    selectedMonth.value = '01'; 
-    
     axios.get('http://www.tjensoprediction.com:8080/seaice/errorBox?year='+Number(selectedYear.value)+'&month='+Number(selectedMonth.value))
 //axios.get('http://www.tjensoprediction.com:8080/seaice/errorBox?year=2022')
     .then(response => {
@@ -287,340 +650,9 @@ axios.get('http://www.tjensoprediction.com:8080/seaice/error?year='+Number(selec
     .catch(error => {
       console.error(error);
     });
-
   }
   else if(tab.props.label == 'SIE误差分析'){
-    start_year.value = 2022;      //暂时写死范围
-    end_year.value = 2022;
-    selectedYear.value = '2022'
-    selectedMonth.value = '01';
-  }
-}
-
-const limitedDateRange = (time) => {
-  return time.getFullYear() < start_year.value  || time.getFullYear() > end_year.value;
-};
-const limitedDateRange2 = (time) => {
-  return ((time.getFullYear() < start_year.value  || time.getFullYear() > end_year.value) && (time.getMonth() >= 0 && time.getMonth() <= 11)) ||  ((time.getFullYear() >= start_year.value  && time.getFullYear() <= end_year.value) && ((time.getMonth() >= end_month.value && time.getMonth() <= 11)));
-};
-
-
-const SICChartErroPrediction = ref('这张图显示了2023年1月的4周SIC预测结果与基线方法的比较。预测结果始终优于persistence，在第28天，预测结果比persistence的RMSE低26.48%，证明了预测结果的有效性。')
-
-const SICChartErroAdd = ref('这张图显示了2022年里四种SIC预测结果提前1到7天的统计结果。MITgcm output (with DA) with BC显著降低了SIC的预测误差，RMSE一直低于0.09，更好地提高了SIC预报结果准确性。')
-
-const SIEChartErroAnalyse = ref('rmsd用来分析预报误差成因，其由偏差与方差两部分组成。从图b可以看出，除2020与2022年春季外，其他年份季节的rmsd主要由偏差构成，而从图d可知，当预报与观测之间的标准差偏差大时，对应了偏差的大值部分。而对于2020年与2022年春季的rmsd主要由方差构成，对应图c可知，当预报相关性系数较低时会造成较大的方差。')
-
-
-
-
-// const selectedDateTime = ref(null);
-// const selectedYear = ref(null); // 新变量，用于存储选定的年份
-// const selectedMonth = ref(null); // 新变量，用于存储选定的月份
-
-// const date = new Date(2023,0,1,0,0,0);
-// selectedDateTime.value = date;
-// selectedYear.value = date.getFullYear();
-// selectedMonth.value = date.getMonth() + 1;
-
-const chartTitle = ref('')
-//chartTitle.value = `${selectedYear.value}年${selectedMonth.value}月 预测结果误差折线图`
-chartTitle.value = `2023年1月预测结果误差折线图`
-
-
-const chartTitle2 = ref('')
-chartTitle2.value = `${selectedYear.value}年${selectedMonth.value}月~${Number(selectedYear.value) + 1 + ''}年${selectedMonth.value}月 预测结果误差折线图`
-
-const chartTitle3 = ref('')
-chartTitle3.value = `2022年SIC回报结果误差箱型图`
-
-const chartTitle4 = ref('')
-chartTitle4.value = `SIE预测误差分析`
-
-const option1 = ref({})
-const option2 = ref({})
-const option3 = ref({})
-const option4 = ref({})
-const option5 = ref({})
-const option6 = ref({})
-const option7 = ref({})
-
-
-const chartX = ref('')
-chartX.value = [`${selectedYear.value}/${selectedMonth.value}/1`,`${selectedYear.value}/${selectedMonth.value}/2`,`${selectedYear.value}/${selectedMonth.value}/3`,
-          `${selectedYear.value}/${selectedMonth.value}/4`,`${selectedYear.value}/${selectedMonth.value}/5`,`${selectedYear.value}/${selectedMonth.value}/6`,
-          `${selectedYear.value}/${selectedMonth.value}/7`,`${selectedYear.value}/${selectedMonth.value}/8`,`${selectedYear.value}/${selectedMonth.value}/9`,
-          `${selectedYear.value}/${selectedMonth.value}/10`,`${selectedYear.value}/${selectedMonth.value}/11`,`${selectedYear.value}/${selectedMonth.value}/12`,
-          `${selectedYear.value}/${selectedMonth.value}/13`,`${selectedYear.value}/${selectedMonth.value}/14`,`${selectedYear.value}/${selectedMonth.value}/15`,
-          `${selectedYear.value}/${selectedMonth.value}/16`,`${selectedYear.value}/${selectedMonth.value}/17`,`${selectedYear.value}/${selectedMonth.value}/18`,
-          `${selectedYear.value}/${selectedMonth.value}/19`,`${selectedYear.value}/${selectedMonth.value}/20`,`${selectedYear.value}/${selectedMonth.value}/21`,
-          `${selectedYear.value}/${selectedMonth.value}/22`,`${selectedYear.value}/${selectedMonth.value}/23`,`${selectedYear.value}/${selectedMonth.value}/24`,
-          `${selectedYear.value}/${selectedMonth.value}/25`,`${selectedYear.value}/${selectedMonth.value}/26`,`${selectedYear.value}/${selectedMonth.value}/27`,]
-
-
-function updateChart() {
-  //chartTitle.value = `${selectedYear.value}年${selectedMonth.value}月 预测结果误差折线图`;
-  chartTitle2.value = `${selectedYear.value}年${selectedMonth.value}月~${Number(selectedYear.value) + 1 + ''}年${selectedMonth.value}月 预测结果误差折线图`;
-  chartTitle3.value = `2022年SIC回报结果误差箱型图`;
-  chartTitle4.value = `SIE预测误差分析`;
-  chartX.value = [`${selectedYear.value}/${selectedMonth.value}/1`,`${selectedYear.value}/${selectedMonth.value}/2`,`${selectedYear.value}/${selectedMonth.value}/3`,
-          `${selectedYear.value}/${selectedMonth.value}/4`,`${selectedYear.value}/${selectedMonth.value}/5`,`${selectedYear.value}/${selectedMonth.value}/6`,
-          `${selectedYear.value}/${selectedMonth.value}/7`,`${selectedYear.value}/${selectedMonth.value}/8`,`${selectedYear.value}/${selectedMonth.value}/9`,
-          `${selectedYear.value}/${selectedMonth.value}/10`,`${selectedYear.value}/${selectedMonth.value}/11`,`${selectedYear.value}/${selectedMonth.value}/12`,
-          `${selectedYear.value}/${selectedMonth.value}/13`,`${selectedYear.value}/${selectedMonth.value}/14`,`${selectedYear.value}/${selectedMonth.value}/15`,
-          `${selectedYear.value}/${selectedMonth.value}/16`,`${selectedYear.value}/${selectedMonth.value}/17`,`${selectedYear.value}/${selectedMonth.value}/18`,
-          `${selectedYear.value}/${selectedMonth.value}/19`,`${selectedYear.value}/${selectedMonth.value}/20`,`${selectedYear.value}/${selectedMonth.value}/21`,
-          `${selectedYear.value}/${selectedMonth.value}/22`,`${selectedYear.value}/${selectedMonth.value}/23`,`${selectedYear.value}/${selectedMonth.value}/24`,
-          `${selectedYear.value}/${selectedMonth.value}/25`,`${selectedYear.value}/${selectedMonth.value}/26`,`${selectedYear.value}/${selectedMonth.value}/27`,]
-
- option1.value.title= {
-      text: chartTitle.value,
-      left: 'center' //标题水平居中
- }
-
- option1.value.xAxis= {
-        data: chartX.value
- }
-
- option2.value.xAxis= {
-        data: chartX.value
- }
-
-
-  // option2.value.title= {
-
-  //     text: chartTitle2.value,
-  //     left: 'center' //标题水平居中
-  //   }
-
-
-  option3.value.title={
-      text: chartTitle3.value,
-      left: 'center' //标题水平居中
-    }
-
-
-  option4.value.title={
-      text: chartTitle4.value,
-      left: 'center' //标题水平居中
-   }
-
-  //接口，每次更新日期产生新的请求：
-  axios.get('http://www.tjensoprediction.com:8080/seaice/error?year='+Number(selectedYear.value)+'&month='+Number(selectedMonth.value))
-    .then(response => {
-      console.log(response.data);
-  option1.value={
-  title: {
-    text: chartTitle.value,
-    left: 'center' //标题水平居中
-  },
-  tooltip: {},
-  xAxis: {
-    type: 'category',
-    name: '时间',
-    data: chartX.value
-  },
-  yAxis: {
-    type: 'value',
-    name: 'BACC(%)',
-    data: [10, 12, 14, 16, 18]
-  },
-  legend: { //图例
-    data: ['ours', 'persistence'],
-    orient: 'horizontal',
-    left: 'center',
-    bottom: '5',
-  },
-  series: [
-    {
-      name: 'ours',
-      type: 'line',
-      data:  response.data["2023_BACC"],
-              
-    },
-    {
-      name: 'persistence',
-      type: 'line',
-      data:  response.data["2023_per_BACC"],
-    },
-
-  ]
-}
-
- //SICChartErroPrediction.value = response.data.description;
- })
-    .catch(error => {
-      console.error(error);
- });
-      
-
-
-
-//axios.get('http://www.tjensoprediction.com:8080/seaice/error?year=2023&month=1')
-axios.get('http://www.tjensoprediction.com:8080/seaice/error?year='+Number(selectedYear.value)+'&month='+Number(selectedMonth.value))
-    .then(response => {
-      console.log(response.data);
-      option2.value={
-    tooltip: {},
-  xAxis: {
-    type: 'category',
-    name: '时间',
-    data: chartX.value
-  },
-  yAxis: {
-    type: 'value',
-    name: 'RMSE(%)',
-    data: [10, 12, 14, 16, 18]
-  },
-  legend: { //图例
-    data: ['ours', 'persistence'],
-    orient: 'horizontal',
-    left: 'center',
-    bottom: '5',
-  },
-  series: [
-    {
-      name: 'ours',
-      type: 'line',
-      data: response.data["2023_RMSE"],
-    },
-    {
-      name: 'persistence',
-      type: 'line',
-     data: response.data["2023_per_RMSE"],
-    },
-
-  ]
-}
-
-    // SICChartErroPrediction.value = response.data.description;
-    })
-    .catch(error => {
-      console.error(error);
-    });
-
-
-
-
-axios.get('http://www.tjensoprediction.com:8080/seaice/errorBox?year='+Number(selectedYear.value)+'&month='+Number(selectedMonth.value))
-//axios.get('http://www.tjensoprediction.com:8080/seaice/errorBox?year=2022')
-    .then(response => {
-      console.log(response.data);
-      const data0 = response.data["withoutDA_withoutBC"];
-      const data1 = response.data["withoutDA_withBC_RMSE"];
-      const data2 = response.data["withDA_withoutBC_RMSE"];
-      const data3 = response.data["MITgcm(with DA)withBC_RMSE"];
-  option3.value={
-    title: {
-    text: chartTitle3.value,
-    left: 'center' //标题水平居中
-  },
-
-    dataset: [
-      {
-        source: data0
-      },
-      {
-        source: data1
-      },
-      {
-        source: data2
-      },
-      {
-        source: data3
-      },
-      {
-        fromDatasetIndex: 0,
-        transform: { type: 'boxplot' }
-      },
-      {
-        fromDatasetIndex: 1,
-        transform: { type: 'boxplot' }
-      },
-      {
-        fromDatasetIndex: 2,
-        transform: { type: 'boxplot' }
-      },
-      {
-        fromDatasetIndex: 3,
-        transform: { type: 'boxplot' }
-      }
-    ],
-    legend: {
-      top: '10%'
-    },
-    tooltip: {
-      trigger: 'item',
-      axisPointer: {
-        type: 'shadow'
-      }
-    },
-    grid: {
-      left: '10%',
-      top: '20%',
-      right: '10%',
-      bottom: '15%'
-    },
-    xAxis: {
-      type: 'category',
-      name: 'Lead time',
-      axisLabel: {
-         formatter: function(value) {
-             return (parseInt(value) + 1) + 'day';
-         },
-      align: 'center'
-      },
-      boundaryGap: true,
-      nameGap: 30,
-      splitArea: {
-        show: true
-      },
-      splitLine: {
-        show: false
-      }
-    },
-    yAxis: {
-      type: 'value',
-      name: 'RMSE(%)',
-      splitArea: {
-        show: false
-      }
-    },
-    series: [
-      {
-        name: 'withDA_withoutBC_RMSE',
-        type: 'boxplot',
-        datasetIndex: 4
-      },
-      {
-        name: 'withoutDA_withoutBC',
-        type: 'boxplot',
-        datasetIndex: 5
-      },
-      {
-        name: 'withoutDA_withBC_RMSE',
-        type: 'boxplot',
-        datasetIndex: 6
-      },
-      {
-        name: 'MITgcm(with DA)withBC_RMSE',
-        type: 'boxplot',
-        datasetIndex: 7
-      }
-    ]
-
-}
-
-    //SICChartErroAdd.value = response.data.description;
-    })
-    .catch(error => {
-      console.error(error);
-    });
-
-
-
-
- axios.get('http://www.tjensoprediction.com:8080/seaice/predictionExamination/errorAnalysis?year=2020-2022')
+    axios.get('http://www.tjensoprediction.com:8080/seaice/predictionExamination/errorAnalysis?year=2020-2022')
     .then(response => {
       console.log(response.data);
   option4.value={
@@ -810,6 +842,26 @@ axios.get('http://www.tjensoprediction.com:8080/seaice/predictionExamination/err
     });
 
   
+  }
+
+
+
+
+
+
+
+  //接口，每次更新日期产生新的请求：111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111
+ 
+
+
+
+
+
+
+
+
+
+ 
 
 }
 
