@@ -9,30 +9,18 @@ import VChart from "vue-echarts";
 // const year = currentDate.getFullYear() - 1 + '';
 // const month = currentDate.getMonth() < 10 ? '0' + (currentDate.getMonth() + 1 + '') : currentDate.getMonth() + 1 + ''
 
+const currentDate = new Date();
+const year = currentDate.getFullYear() - 1 + '';
+const month = currentDate.getMonth() < 10 ? '0' + (currentDate.getMonth() + 1 + '') : currentDate.getMonth() + 1 + ''
+
+// const selectedYear = ref('');
+// const selectedMonth = ref('');
+
 //时间选择器范围框定--start
 const start_year = ref(null);
 const start_month = ref(null);
 const end_year = ref(null);
 const end_month = ref(null);
-/* 赋初值————默认为气温预测 */
-axios.get('http://www.tjensoprediction.com:8080/nao/initialize/naoCORR')
-.then(res =>{
-  start_year.value = new Date(res.data.start_year);
-  start_month.value = new Date(res.data.start_month);
-  end_year.value = new Date(res.data.end_year);
-  end_month.value = new Date(res.data.end_month);
-});
-
-const limitedDateRange = (time) => {
-  return time.getFullYear() >= start_year.value  && time.getFullYear() <= end_year.value || time.getMonth() >= start_month.value && time.getMonth() <= end_month.value;
-};
-
-const text_of_option1 = ref('预测误差主要来自于对中纬度和冰岛附近低压的高估，能够预测出NAO的典型两级模态 ，模拟误差随着预测时长逐渐增加。')//表示前六个图底下的文字描述
-
-const text_of_option7 = ref('对于为期1个月的NAOI预测，不如高分辨率模式ECMWF ，但与低分辨率模式ECCC相当。由于只接受月平均数作为输入，忽略了决定短时尺度可预测性的天气现象和初始条件。在超过两个月的提前期的预测技巧远远超过了失去预测能力的数值模式，将NAO的有效预测时间从1个月扩展到了6个月。')
-
-//const selectedYear = ref('');
-//const selectedMonth = ref('');
 
 const selectedDateTime = ref(null);
 const selectedYear = ref(null); // 新变量，用于存储选定的年份
@@ -42,6 +30,43 @@ const date = new Date(2021,11,1,0,0,0);
 selectedDateTime.value = date;
 selectedYear.value = date.getFullYear();
 selectedMonth.value = date.getMonth() + 1;
+
+// if (year < 2015 || year > 2021) {
+//   selectedYear.value = '2021'; // 默认选中2021年
+// } else {
+//   selectedYear.value = year;
+// }
+// selectedMonth.value = month;
+// const pickerOptions = {
+//       disabledDate(year) {
+//         return year < 2015 || year > 2021;
+//       }
+//     }
+/* 赋初值————默认为气温预测 */
+axios.get('http://www.tjensoprediction.com:8080/nao/initialize/naoCORR')
+.then(res =>{
+  start_year.value = res.data.start_year;
+  start_month.value = new Date(res.data.start_month);
+  end_year.value = res.data.end_year;
+  end_month.value = new Date(res.data.end_month);
+});
+
+const limitedDateRange = (time) => {
+  return time.getFullYear() < start_year.value || time.getFullYear() > end_year.value;
+};
+
+// const limitedDateRange = (time) => {
+//   return time.getFullYear() < 2015  || time.getFullYear() > 2021 ;
+// };
+
+const text_of_option1 = ref('预测误差主要来自于对中纬度和冰岛附近低压的高估，能够预测出NAO的典型两级模态 ，模拟误差随着预测时长逐渐增加。')//表示前六个图底下的文字描述
+
+const text_of_option7 = ref('对于为期1个月的NAOI预测，不如高分辨率模式ECMWF ，但与低分辨率模式ECCC相当。由于只接受月平均数作为输入，忽略了决定短时尺度可预测性的天气现象和初始条件。在超过两个月的提前期的预测技巧远远超过了失去预测能力的数值模式，将NAO的有效预测时间从1个月扩展到了6个月。')
+
+//const selectedYear = ref('');
+//const selectedMonth = ref('');
+
+
 
 
 //selectedYear.value = year;
@@ -54,31 +79,11 @@ const imgSrc_of_nao = ref({})
 const title_of_nao = ref({})
 const prefix="https://www.tjensoprediction.com"
 
-const option1 = ref({})
-const option2 = ref({})
-const option3 = ref({})
-const option4 = ref({})
-const option5 = ref({})
-const option6 = ref({})
 const option7 = ref({})
 
-const imgSrc_of_option1 = ref({})
-const imgSrc_of_option2 = ref({})
-const imgSrc_of_option3 = ref({})
-const imgSrc_of_option4 = ref({})
-const imgSrc_of_option5 = ref({})
-const imgSrc_of_option6 = ref({})
-
-const title_of_option1 = ref({})
-const title_of_option2 = ref({})
-const title_of_option3 = ref({})
-const title_of_option4 = ref({})
-const title_of_option5 = ref({})
-const title_of_option6 = ref({})
 
 //赋初值
 // axios.get('http://www.tjensoprediction.com:8080/nao/initialize/naoCORR')
-//   //axios.get("http://www.tjensoprediction.com:8080/nao/findGridData/nao?year=2018&month=6")
 //       .then(res => {
 //         index_nao = 0;
 //         console.log(res.data);
@@ -90,14 +95,14 @@ const title_of_option6 = ref({})
 //         //text_of_nao.value = text_of_nao_Array[0];
 //       });
 
- // 当日期时间选择发生变化时被调用
- console.log(selectedDateTime.value); // 输出当前选择的日期和时间
+//  // 当日期时间选择发生变化时被调用
+//  console.log(selectedDateTime.value); // 输出当前选择的日期和时间
 
-if (selectedDateTime.value) {
-  const selectedDate = new Date(selectedDateTime.value);
-  selectedYear.value = selectedDate.getFullYear(); // 获取年份值并存储到 selectedYear
-  selectedMonth.value = selectedDate.getMonth() + 1; // 获取月份值并存储到 selectedMonth
-}
+// if (selectedDateTime.value) {
+//   const selectedDate = new Date(selectedDateTime.value);
+//   selectedYear.value = selectedDate.getFullYear(); // 获取年份值并存储到 selectedYear
+//   selectedMonth.value = selectedDate.getMonth() + 1; // 获取月份值并存储到 selectedMonth
+// }
 
 // axios.get('http://www.tjensoprediction.com:8080/nao/findGridData/nao?year='+Number(selectedYear.value)+'&month='+Number(selectedMonth.value))
 //     .then(res => {
@@ -111,12 +116,8 @@ if (selectedDateTime.value) {
       .then(res => {
         index_nao = 0;
         console.log(res.data);
-        title_of_nao_Array = ["提前1个月预测","提前2个月预测","提前3个月预测","提前4个月预测","提前5个月预测","提前6个月预测"];//别删，删了图片就没了
         imgSrc_of_nao_Array = res.data;
-        //text_of_nao_Array = res.data.texts;
-        title_of_nao.value = title_of_nao_Array[0];
         imgSrc_of_nao.value = `${prefix}${imgSrc_of_nao_Array[0]}`;
-        //text_of_nao.value = text_of_nao_Array[0];
       });
 axios.get('http://www.tjensoprediction.com:8080/nao/predictionExamination/naoi')
     .then(res => {
@@ -159,17 +160,21 @@ imgSrc_of_nao.value=`${prefix}${imgSrc_of_nao_Array[index_nao]}`;
       NAO预测结果检验
     </h1>
     <div class="datePickerContainer">
-      <!-- <el-date-picker @change="updateChartTitle" v-model="selectedYear" type="year" format="YYYY" value-format="YYYY" :clearable="false" style="width: 80px; height: 25px"/>
+      <el-date-picker @change="updateChartTitle" v-model="selectedYear" 
+      :disabledDate="limitedDateRange"
+      type="year" format="YYYY" value-format="YYYY" :clearable="false"  style="width: 80px; height: 25px"/>
       <div class="text">年</div>
-      <el-date-picker @change="updateChartTitle" v-model="selectedMonth" type="month" format="MM" value-format="MM" :clearable="false" style="width: 60px; height: 25px"/>
-      <div class="text">月</div> -->
-      <el-date-picker
+      <el-date-picker @change="updateChartTitle" v-model="selectedMonth"
+      :disabledDate="limitedDateRange"
+      type="month" format="MM" value-format="MM" :clearable="false" style="width: 60px; height: 25px"/>
+      <div class="text">月</div>
+      <!-- <el-date-picker
               v-model="selectedDateTime"
               type="datetime"
               placeholder="请选择时间"
               @change="handleDateTimeChange"
               :disabledDate="limitedDateRange"
-          />
+          /> -->
     </div>    
     <el-tabs type="border-card">
       <el-tab-pane label="指数预测">
@@ -257,7 +262,7 @@ imgSrc_of_nao.value=`${prefix}${imgSrc_of_nao_Array[index_nao]}`;
   .picture {
   max-width: 100%;
   display: block; /* 将元素设置为块级元素 */
-  margin-left: 378px;
+  margin-left: 450px;
    margin-top: 0px;
   // margin-bottom: -160px;
 }
