@@ -37,10 +37,10 @@ const start_month2 = ref(null);
 const start_year3 = ref(null);
 
 
-const start_year = ref(2023);     //可选时间范围
-const end_year = ref(2023);
-const start_month = ref(1);     //可选时间范围
-const end_month = ref(1);
+const start_year = ref(null);     //可选时间范围
+const end_year = ref(null);
+const start_month = ref(null);     //可选时间范围
+const end_month = ref(null);
 
 axios.get('http://www.tjensoprediction.com:8080/seaice/initial/SICError')
 .then(res =>{
@@ -70,6 +70,100 @@ function handleClick(tab, event) {
     end_month.value = 1;
     selectedYear.value = '2023'
     selectedMonth.value = '01'; 
+    
+    //接口，每次更新日期产生新的请求：
+  axios.get('http://www.tjensoprediction.com:8080/seaice/error?year='+Number(selectedYear.value)+'&month='+Number(selectedMonth.value))
+    .then(response => {
+      console.log(response.data);
+  option1.value={
+  title: {
+    text: chartTitle.value,
+    left: 'center' //标题水平居中
+  },
+  tooltip: {},
+  xAxis: {
+    type: 'category',
+    name: '时间',
+    data: chartX.value
+  },
+  yAxis: {
+    type: 'value',
+    name: 'BACC(%)',
+    data: [10, 12, 14, 16, 18]
+  },
+  legend: { //图例
+    data: ['ours', 'persistence'],
+    orient: 'horizontal',
+    left: 'center',
+    bottom: '5',
+  },
+  series: [
+    {
+      name: 'ours',
+      type: 'line',
+      data:  response.data["2023_BACC"],
+              
+    },
+    {
+      name: 'persistence',
+      type: 'line',
+      data:  response.data["2023_per_BACC"],
+    },
+
+  ]
+}
+
+ //SICChartErroPrediction.value = response.data.description;
+ })
+    .catch(error => {
+      console.error(error);
+ });
+      
+
+
+
+//axios.get('http://www.tjensoprediction.com:8080/seaice/error?year=2023&month=1')
+axios.get('http://www.tjensoprediction.com:8080/seaice/error?year='+Number(selectedYear.value)+'&month='+Number(selectedMonth.value))
+    .then(response => {
+      console.log(response.data);
+      option2.value={
+    tooltip: {},
+  xAxis: {
+    type: 'category',
+    name: '时间',
+    data: chartX.value
+  },
+  yAxis: {
+    type: 'value',
+    name: 'RMSE(%)',
+    data: [10, 12, 14, 16, 18]
+  },
+  legend: { //图例
+    data: ['ours', 'persistence'],
+    orient: 'horizontal',
+    left: 'center',
+    bottom: '5',
+  },
+  series: [
+    {
+      name: 'ours',
+      type: 'line',
+      data: response.data["2023_RMSE"],
+    },
+    {
+      name: 'persistence',
+      type: 'line',
+     data: response.data["2023_per_RMSE"],
+    },
+
+  ]
+}
+
+    // SICChartErroPrediction.value = response.data.description;
+    })
+    .catch(error => {
+      console.error(error);
+    });
   }
   else if(tab.props.label == 'SIC误差统计'){ 
     start_year.value = start_year2.value;      
@@ -78,9 +172,125 @@ function handleClick(tab, event) {
     end_month.value = 1;
     selectedYear.value = '2022'
     selectedMonth.value = '01'; 
+    
+    axios.get('http://www.tjensoprediction.com:8080/seaice/errorBox?year='+Number(selectedYear.value)+'&month='+Number(selectedMonth.value))
+//axios.get('http://www.tjensoprediction.com:8080/seaice/errorBox?year=2022')
+    .then(response => {
+      console.log(response.data);
+      const data0 = response.data["withoutDA_withoutBC"];
+      const data1 = response.data["withoutDA_withBC_RMSE"];
+      const data2 = response.data["withDA_withoutBC_RMSE"];
+      const data3 = response.data["MITgcm(with DA)withBC_RMSE"];
+  option3.value={
+    title: {
+    text: chartTitle3.value,
+    left: 'center' //标题水平居中
+  },
+
+    dataset: [
+      {
+        source: data0
+      },
+      {
+        source: data1
+      },
+      {
+        source: data2
+      },
+      {
+        source: data3
+      },
+      {
+        fromDatasetIndex: 0,
+        transform: { type: 'boxplot' }
+      },
+      {
+        fromDatasetIndex: 1,
+        transform: { type: 'boxplot' }
+      },
+      {
+        fromDatasetIndex: 2,
+        transform: { type: 'boxplot' }
+      },
+      {
+        fromDatasetIndex: 3,
+        transform: { type: 'boxplot' }
+      }
+    ],
+    legend: {
+      top: '10%'
+    },
+    tooltip: {
+      trigger: 'item',
+      axisPointer: {
+        type: 'shadow'
+      }
+    },
+    grid: {
+      left: '10%',
+      top: '20%',
+      right: '10%',
+      bottom: '15%'
+    },
+    xAxis: {
+      type: 'category',
+      name: 'Lead time',
+      axisLabel: {
+         formatter: function(value) {
+             return (parseInt(value) + 1) + 'day';
+         },
+      align: 'center'
+      },
+      boundaryGap: true,
+      nameGap: 30,
+      splitArea: {
+        show: true
+      },
+      splitLine: {
+        show: false
+      }
+    },
+    yAxis: {
+      type: 'value',
+      name: 'RMSE(%)',
+      splitArea: {
+        show: false
+      }
+    },
+    series: [
+      {
+        name: 'withDA_withoutBC_RMSE',
+        type: 'boxplot',
+        datasetIndex: 4
+      },
+      {
+        name: 'withoutDA_withoutBC',
+        type: 'boxplot',
+        datasetIndex: 5
+      },
+      {
+        name: 'withoutDA_withBC_RMSE',
+        type: 'boxplot',
+        datasetIndex: 6
+      },
+      {
+        name: 'MITgcm(with DA)withBC_RMSE',
+        type: 'boxplot',
+        datasetIndex: 7
+      }
+    ]
+
+}
+
+    //SICChartErroAdd.value = response.data.description;
+    })
+    .catch(error => {
+      console.error(error);
+    });
+
   }
   else if(tab.props.label == 'SIE误差分析'){
-    start_year.value = 2020;      //暂时写死范围
+    start_year.value = 2022;      //暂时写死范围
     end_year.value = 2022;
     selectedYear.value = '2022'
     selectedMonth.value = '01';
