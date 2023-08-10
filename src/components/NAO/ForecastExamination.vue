@@ -9,9 +9,9 @@ import VChart from "vue-echarts";
 // const year = currentDate.getFullYear() - 1 + '';
 // const month = currentDate.getMonth() < 10 ? '0' + (currentDate.getMonth() + 1 + '') : currentDate.getMonth() + 1 + ''
 
-const currentDate = new Date();
-const year = currentDate.getFullYear() - 1 + '';
-const month = currentDate.getMonth() < 10 ? '0' + (currentDate.getMonth() + 1 + '') : currentDate.getMonth() + 1 + ''
+//const currentDate = new Date();
+//const year = date.getFullYear() - 1 + '';
+//const month = date.getMonth() < 10 ? '0' + (date.getMonth() + 1 + '') : date.getMonth() + 1 + ''
 
 // const selectedYear = ref('');
 // const selectedMonth = ref('');
@@ -22,27 +22,22 @@ const start_month = ref(null);
 const end_year = ref(null);
 const end_month = ref(null);
 
-const selectedDateTime = ref(null);
-const selectedYear = ref(null); // 新变量，用于存储选定的年份
-const selectedMonth = ref(null); // 新变量，用于存储选定的月份
+//const selectedDateTime = ref(null);
+const selectedYear = ref(''); // 新变量，用于存储选定的年份
+const selectedMonth = ref(''); // 新变量，用于存储选定的月份
 
 const date = new Date(2021,11,1,0,0,0);
-selectedDateTime.value = date;
-selectedYear.value = date.getFullYear();
-selectedMonth.value = date.getMonth() + 1;
+const year = date.getFullYear() + '';
+const month = date.getMonth() < 10 ? '0' + (date.getMonth() + 1 + '') : date.getMonth() + 1 + ''
+//selectedDateTime.value = date;
+// const year = date.getFullYear();
+// const month = date.getMonth() + 1;
 
-// if (year < 2015 || year > 2021) {
-//   selectedYear.value = '2021'; // 默认选中2021年
-// } else {
-//   selectedYear.value = year;
-// }
-// selectedMonth.value = month;
-// const pickerOptions = {
-//       disabledDate(year) {
-//         return year < 2015 || year > 2021;
-//       }
-//     }
-/* 赋初值————默认为气温预测 */
+selectedYear.value = year;
+selectedMonth.value = month;
+
+
+
 axios.get('http://www.tjensoprediction.com:8080/nao/initialize/naoCORR')
 .then(res =>{
   start_year.value = res.data.start_year;
@@ -111,7 +106,40 @@ const option7 = ref({})
 //       list = res.data.imgSrc;
 //       //text_of_option1.value = res.data.text;
 //   });
+
+// selectedYear.addEventListener('change', handleTimeChange);
+// selectedMonth.addEventListener('change', handleTimeChange);
+
+// function handleTimeChange() {
+//   // 获取选中的年份和月份
+//   const year = Number(selectedYear.value);
+//   const month = Number(selectedMonth.value);
+
+//   // 发送请求
+//   axios.get(`http://www.tjensoprediction.com:8080/nao/predictionExamination/nao?year=${year}&month=${month}`)
+//     .then(res => {
+//       index_nao = 0;
+//       console.log(res.data);
+//       imgSrc_of_nao_Array = res.data;
+//       imgSrc_of_nao.value = `${prefix}${imgSrc_of_nao_Array[0]}`;
+//     });
+// }
+
+function updateChartTitle() {
   axios.get('http://www.tjensoprediction.com:8080/nao/predictionExamination/nao?year='+Number(selectedYear.value)+'&month='+Number(selectedMonth.value))
+  //axios.get("http://www.tjensoprediction.com:8080/nao/findGridData/nao?year=2018&month=6")
+      .then(res => {
+        index_nao = 0;
+        console.log(res.data);
+        imgSrc_of_nao_Array = res.data;
+        imgSrc_of_nao.value = `${prefix}${imgSrc_of_nao_Array[0]}`;
+      });
+  
+
+}
+
+
+axios.get('http://www.tjensoprediction.com:8080/nao/predictionExamination/nao?year='+Number(selectedYear.value)+'&month='+Number(selectedMonth.value))
   //axios.get("http://www.tjensoprediction.com:8080/nao/findGridData/nao?year=2018&month=6")
       .then(res => {
         index_nao = 0;
@@ -261,16 +289,23 @@ imgSrc_of_nao.value=`${prefix}${imgSrc_of_nao_Array[index_nao]}`;
 
   .picture {
   max-width: 100%;
-  display: block; /* 将元素设置为块级元素 */
-  margin-left: 450px;
+  display: flex; /* 将元素设置为块级元素 */
+  justify-content:center;
+  //margin-left: 3%;
    margin-top: 0px;
   // margin-bottom: -160px;
 }
 .whole_container {
-  position: relative;
+  //position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 .pic_container{
   overflow: hidden;
+  display: flex;
+  justify-content: center;
 }
 /* 设置左箭头按钮的样式 */
 .el-button.arrow-left {
