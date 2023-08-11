@@ -3,7 +3,7 @@
 import { ref, onMounted, defineExpose } from "vue";
 import axios from 'axios';
 import VChart from 'vue-echarts';
-import { ArrowLeft, ArrowRight } from '@element-plus/icons-vue'
+import { ArrowLeft, ArrowRight } from '@element-plus/icons-vue';
 
 const selectedNAOI = ref(true)
 const selectedSLP = ref(false)
@@ -285,12 +285,7 @@ onMounted(
           </el-col>
           <el-col :span="20">
             <div class="imgContainer">
-              <img
-                v-if="imgSrc.length"
-                :src="'http://www.tjensoprediction.com' + imgSrc[imgIndex]"
-                class="image"
-                alt=""
-              />
+              <img v-if="imgSrc.length" :src="'http://www.tjensoprediction.com' + imgSrc[imgIndex]" class="image" alt="" />
             </div>
           </el-col>
           <el-col :span="2">
@@ -307,67 +302,68 @@ onMounted(
 </template>
 
 <style scoped lang="scss">
-  .title {
-    text-align: center
-  }
-  
-  .NAOIChart {
-    height: 500px;
-  }
+.title {
+  text-align: center
+}
 
-  .description {
-    margin-top: 20px;
-    font-size: 16px;
-    text-align: center;
-  }
+.NAOIChart {
+  height: 500px;
+}
 
-  .datePickerContainer {
-    display: flex;
-    justify-content: flex-end;
-    margin-bottom: 20px;
-  }
+.description {
+  margin-top: 20px;
+  font-size: 16px;
+  text-align: center;
+}
 
-  .text {
-    margin-left: 5px;
-    margin-right: 10px;
-  }
+.datePickerContainer {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 20px;
+}
 
-  .imgContainer {
-    overflow: hidden;
-  }
-  .image {
-    width: 100%;
-    margin-top: -7.5%;
-    transform: translateX(-3%);
-  }
+.text {
+  margin-left: 5px;
+  margin-right: 10px;
+}
 
-  .el-button.arrowLeft {
-    z-index: 1;
-    position: absolute;
-    top: 50%;
-    left: 4%;
-    width: 5%;
-    height: 30%;
-    min-width: 40px;
-    min-height: 80px;
-    max-width: 50px;
-    max-height: 115px;
-    transform: translateY(-65%);
-    font-size: 20px;
-  }
+.imgContainer {
+  overflow: hidden;
+}
 
-  .el-button.arrowRight {
-    z-index: 1;
-    position: absolute;
-    top: 50%;
-    right: 4%;
-    width: 5%;
-    height: 30%;
-    min-width: 40px;
-    min-height: 80px;
-    max-width: 50px;
-    max-height: 115px;
-    transform: translateY(-65%);
-    font-size: 20px;
-  }
+.image {
+  width: 100%;
+  margin-top: -7.5%;
+  transform: translateX(-3%);
+}
+
+.el-button.arrowLeft {
+  z-index: 1;
+  position: absolute;
+  top: 50%;
+  left: 4%;
+  width: 5%;
+  height: 30%;
+  min-width: 40px;
+  min-height: 80px;
+  max-width: 50px;
+  max-height: 115px;
+  transform: translateY(-65%);
+  font-size: 20px;
+}
+
+.el-button.arrowRight {
+  z-index: 1;
+  position: absolute;
+  top: 50%;
+  right: 4%;
+  width: 5%;
+  height: 30%;
+  min-width: 40px;
+  min-height: 80px;
+  max-width: 50px;
+  max-height: 115px;
+  transform: translateY(-65%);
+  font-size: 20px;
+}
 </style>

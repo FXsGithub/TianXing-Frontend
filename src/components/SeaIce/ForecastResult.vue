@@ -3,7 +3,7 @@
 import { ref, onMounted, defineExpose } from "vue";
 import axios from 'axios';
 import VChart from 'vue-echarts';
-import { ArrowLeft, ArrowRight } from '@element-plus/icons-vue'
+import { ArrowLeft, ArrowRight } from '@element-plus/icons-vue';
 
 const selectedSIE = ref(true)
 const selectedSIC = ref(false)
@@ -305,12 +305,7 @@ onMounted(
         <h3 style="text-align: center; margin-top: 0px; font-size: 18px">{{ SICChartTitle }}</h3>
         <h4 style="text-align: center; margin-top: 0px; font-size: 16px">({{ imgIndex + 1 }}/{{ imgSrc.length }})</h4>
         <div class="imageContainer">
-          <img
-            v-if="imgSrc.length"
-            :src="'http://www.tjensoprediction.com' + imgSrc[imgIndex]"
-            class="image"
-            alt=""
-          />
+          <img v-if="imgSrc.length" :src="'http://www.tjensoprediction.com' + imgSrc[imgIndex]" class="image" alt="" />
         </div>
         <el-button ref="buttonLeft" type="primary" class="arrowLeft" :icon="ArrowLeft" @click="changeIndex('left')" />
         <el-button ref="buttonRight" type="primary" class="arrowRight" :icon="ArrowRight" @click="changeIndex('right')" />
@@ -320,57 +315,57 @@ onMounted(
 </template>
 
 <style scoped lang="scss">
-  .title {
-    text-align: center
-  }
+.title {
+  text-align: center
+}
 
-  .SIEChart {
-    height: 500px;
-  }
+.SIEChart {
+  height: 500px;
+}
 
-  .description {
-    margin-top: 20px;
-    font-size: 16px;
-    text-align: center;
-  }
+.description {
+  margin-top: 20px;
+  font-size: 16px;
+  text-align: center;
+}
 
-  .datePickerContainer {
-    display: flex;
-    justify-content: flex-end;
-    margin-bottom: 20px;
-  }
+.datePickerContainer {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 20px;
+}
 
-  .text {
-    margin-left: 5px;
-    margin-right: 10px;
-  }
+.text {
+  margin-left: 5px;
+  margin-right: 10px;
+}
 
-  .imageContainer {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 500px;
-  }
+.imageContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 500px;
+}
 
-  .image {
-    height: 100%;
-  }
+.image {
+  height: 100%;
+}
 
-  .el-button.arrowLeft {
-    position: absolute;
-    top: 50%;
-    left: 10%;
-    width: 40px;
-    height: 80px;
-    transform: translateY(-50%);
-  }
+.el-button.arrowLeft {
+  position: absolute;
+  top: 50%;
+  left: 10%;
+  width: 40px;
+  height: 80px;
+  transform: translateY(-50%);
+}
 
-  .el-button.arrowRight {
-    position: absolute;
-    top: 50%;
-    right: 10%;
-    width: 40px;
-    height: 80px;
-    transform: translateY(-50%);
-  }
+.el-button.arrowRight {
+  position: absolute;
+  top: 50%;
+  right: 10%;
+  width: 40px;
+  height: 80px;
+  transform: translateY(-50%);
+}
 </style>
