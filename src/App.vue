@@ -83,8 +83,8 @@ const handleSelect = (key: string, keyPath: string[]) => {
                       <span>ENSO</span>
                     </template>
 
-                    <el-menu-item index="ENSOForecastResult">预测结果1</el-menu-item>
-                     <el-menu-item index="ENSOForecastResult2">预测结果2</el-menu-item>
+                    <el-menu-item index="ENSOForecastResult">预测结果</el-menu-item>
+<!--                     <el-menu-item index="ENSOForecastResult2">预测结果2</el-menu-item>-->
                     <el-menu-item index="ENSOForecastExamination">预测检验</el-menu-item>
                     
 
@@ -123,12 +123,12 @@ const handleSelect = (key: string, keyPath: string[]) => {
                   </el-sub-menu>
 
 
-                  <el-menu-item index="模态可视化">
-                    <el-icon>
-                      <DataAnalysis/>
-                    </el-icon>
-                    <span>模态可视化</span>
-                  </el-menu-item>
+<!--                  <el-menu-item index="模态可视化">-->
+<!--                    <el-icon>-->
+<!--                      <DataAnalysis/>-->
+<!--                    </el-icon>-->
+<!--                    <span>模态可视化</span>-->
+<!--                  </el-menu-item>-->
 
 
                   <el-sub-menu index="5">
