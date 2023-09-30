@@ -84,7 +84,7 @@ const updateSLPChart = async () => {
     year: Number(SLPSelectedYear.value),
     month: Number(SLPSelectedMonth.value)
   };
-  axios.get('//nao/findGridData/nao', { params })
+  axios.get('/nao/findGridData/nao', { params })
     .then(response => {
       imgSrc.value = response.data;
       // SLPDescription.value = response.data.description; // 接口未提供描述
