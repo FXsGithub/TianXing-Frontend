@@ -9,7 +9,7 @@ import router from './router'
 import axios from 'axios'
 
 // axios 默认的请求地址，真实服务器地址
-// axios.defaults.baseURL = 'https://www.tjensoprediction.com:8888/'
+axios.defaults.baseURL = 'https://tianxing.tongji.edu.cn/api/'
 
 const app = createApp(App)
 

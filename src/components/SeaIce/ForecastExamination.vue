@@ -40,19 +40,19 @@ const end_year = ref(2023);
 const start_month = ref(1);     //可选时间范围
 const end_month = ref(1);
 
-axios.get('http://www.tjensoprediction.com:8080/seaice/initial/SICError')
+axios.get('/seaice/initial/SICError')
 .then(res =>{
   start_year1.value = res.data.yearList;
   start_month1.value = res.data.monthList;
 });
 
-axios.get('http://www.tjensoprediction.com:8080/seaice/initial/SICErrorBox')
+axios.get('/seaice/initial/SICErrorBox')
 .then(res =>{
   start_year2.value = res.data.yearList;
   start_month2.value = res.data.monthList;
 });
 
-axios.get('http://www.tjensoprediction.com:8080/seaice/initial/SIEErrorAnalysis')
+axios.get('/seaice/initial/SIEErrorAnalysis')
 .then(res =>{
   start_year3.value = res.data.yearList;
   start_month3.value = res.data.monthList;
@@ -97,7 +97,7 @@ function handleClick(tab, event) {
 
 
 //     //接口，每次更新日期产生新的请求：
-//   axios.get('http://www.tjensoprediction.com:8080/seaice/error?year='+Number(selectedYear.value)+'&month='+Number(selectedMonth.value))
+//   axios.get('/seaice/error?year='+Number(selectedYear.value)+'&month='+Number(selectedMonth.value))
 //     .then(response => {
 //       console.log(response.data);
 //   option1.value={
@@ -147,8 +147,8 @@ function handleClick(tab, event) {
 
 
 
-// //axios.get('http://www.tjensoprediction.com:8080/seaice/error?year=2023&month=1')
-// axios.get('http://www.tjensoprediction.com:8080/seaice/error?year='+Number(selectedYear.value)+'&month='+Number(selectedMonth.value))
+// //axios.get('/seaice/error?year=2023&month=1')
+// axios.get('/seaice/error?year='+Number(selectedYear.value)+'&month='+Number(selectedMonth.value))
 //     .then(response => {
 //       console.log(response.data);
 //       option2.value={
@@ -203,8 +203,8 @@ function handleClick(tab, event) {
       text: chartTitle3.value,
       left: 'center' //标题水平居中
     }
-//     axios.get('http://www.tjensoprediction.com:8080/seaice/errorBox?year='+Number(selectedYear.value)+'&month='+Number(selectedMonth.value))
-// //axios.get('http://www.tjensoprediction.com:8080/seaice/errorBox?year=2022')
+//     axios.get('/seaice/errorBox?year='+Number(selectedYear.value)+'&month='+Number(selectedMonth.value))
+// //axios.get('/seaice/errorBox?year=2022')
 //     .then(response => {
 //       console.log(response.data);
 //       const data0 = response.data["withoutDA_withoutBC"];
@@ -493,7 +493,7 @@ function updateChart() {
   
   console.log(tab.props.label);
   if(tab.props.label == 'SIC日预测误差'){
-    axios.get('http://www.tjensoprediction.com:8080/seaice/error?year='+Number(selectedYear.value)+'&month='+Number(selectedMonth.value))
+    axios.get('/seaice/error?year='+Number(selectedYear.value)+'&month='+Number(selectedMonth.value))
     .then(response => {
       console.log(response.data);
   option1.value={
@@ -543,8 +543,8 @@ function updateChart() {
 
 
 
-//axios.get('http://www.tjensoprediction.com:8080/seaice/error?year=2023&month=1')
-axios.get('http://www.tjensoprediction.com:8080/seaice/error?year='+Number(selectedYear.value)+'&month='+Number(selectedMonth.value))
+//axios.get('/seaice/error?year=2023&month=1')
+axios.get('/seaice/error?year='+Number(selectedYear.value)+'&month='+Number(selectedMonth.value))
     .then(response => {
       console.log(response.data);
       option2.value={
@@ -588,8 +588,8 @@ axios.get('http://www.tjensoprediction.com:8080/seaice/error?year='+Number(selec
     
   }
   else if(tab.props.label == 'SIC误差统计'){ 
-    axios.get('http://www.tjensoprediction.com:8080/seaice/errorBox?year='+Number(selectedYear.value)+'&month='+Number(selectedMonth.value))
-//axios.get('http://www.tjensoprediction.com:8080/seaice/errorBox?year=2022')
+    axios.get('/seaice/errorBox?year='+Number(selectedYear.value)+'&month='+Number(selectedMonth.value))
+//axios.get('/seaice/errorBox?year=2022')
     .then(response => {
       console.log(response.data);
       const data0 = response.data["withoutDA_withoutBC"];
@@ -704,7 +704,7 @@ axios.get('http://www.tjensoprediction.com:8080/seaice/error?year='+Number(selec
     });
   }
   else if(tab.props.label == 'SIE误差分析'){
-    axios.get('http://www.tjensoprediction.com:8080/seaice/predictionExamination/errorAnalysis?year'+Number(selectedYear.value))
+    axios.get('/seaice/predictionExamination/errorAnalysis?year'+Number(selectedYear.value))
     .then(response => {
       console.log(response.data);
   option4.value={
@@ -750,7 +750,7 @@ axios.get('http://www.tjensoprediction.com:8080/seaice/error?year='+Number(selec
 
 
 
-  axios.get('http://www.tjensoprediction.com:8080/seaice/predictionExamination/errorAnalysis?year'+Number(selectedYear.value))
+  axios.get('/seaice/predictionExamination/errorAnalysis?year'+Number(selectedYear.value))
     .then(response => {
       console.log(response.data);
       option5.value={
@@ -802,7 +802,7 @@ axios.get('http://www.tjensoprediction.com:8080/seaice/error?year='+Number(selec
 
 
 
-  axios.get('http://www.tjensoprediction.com:8080/seaice/predictionExamination/errorAnalysis?year'+Number(selectedYear.value))
+  axios.get('/seaice/predictionExamination/errorAnalysis?year'+Number(selectedYear.value))
     .then(response => {
       console.log(response.data);
  option6.value={
@@ -846,7 +846,7 @@ axios.get('http://www.tjensoprediction.com:8080/seaice/error?year='+Number(selec
 
 
 
-  axios.get('http://www.tjensoprediction.com:8080/seaice/predictionExamination/errorAnalysis?year'+Number(selectedYear.value))
+  axios.get('/seaice/predictionExamination/errorAnalysis?year'+Number(selectedYear.value))
     .then(response => {
       console.log(response.data);
   option7.value={
@@ -920,8 +920,8 @@ axios.get('http://www.tjensoprediction.com:8080/seaice/error?year='+Number(selec
 
 
 
-axios.get('http://www.tjensoprediction.com:8080/seaice/error?year=2023&month=1')
-// axios.get('http://www.tjensoprediction.com:8080/seaice/error?year='+Number(selectedYear.value)+'&month='+Number(selectedMonth.value))
+axios.get('/seaice/error?year=2023&month=1')
+// axios.get('/seaice/error?year='+Number(selectedYear.value)+'&month='+Number(selectedMonth.value))
     .then(response => {
       console.log(response.data);
   option1.value={
@@ -971,8 +971,8 @@ axios.get('http://www.tjensoprediction.com:8080/seaice/error?year=2023&month=1')
 
 
 
-//axios.get('http://www.tjensoprediction.com:8080/seaice/error?year=2023&month=1')
-axios.get('http://www.tjensoprediction.com:8080/seaice/error?year='+Number(selectedYear.value)+'&month='+Number(selectedMonth.value))
+//axios.get('/seaice/error?year=2023&month=1')
+axios.get('/seaice/error?year='+Number(selectedYear.value)+'&month='+Number(selectedMonth.value))
     .then(response => {
       console.log(response.data);
       option2.value={
@@ -1017,8 +1017,8 @@ axios.get('http://www.tjensoprediction.com:8080/seaice/error?year='+Number(selec
 
 
 
-//axios.get('http://www.tjensoprediction.com:8080/seaice/errorBox?year='+Number(selectedYear.value)+'&month='+Number(selectedMonth.value))
-axios.get('http://www.tjensoprediction.com:8080/seaice/errorBox?year=2022')
+//axios.get('/seaice/errorBox?year='+Number(selectedYear.value)+'&month='+Number(selectedMonth.value))
+axios.get('/seaice/errorBox?year=2022')
     .then(response => {
       console.log(response.data);
       const data0 = response.data["withoutDA_withoutBC"];
@@ -1135,7 +1135,7 @@ axios.get('http://www.tjensoprediction.com:8080/seaice/errorBox?year=2022')
 
 
 
- axios.get('http://www.tjensoprediction.com:8080/seaice/predictionExamination/errorAnalysis?year=2022')
+ axios.get('/seaice/predictionExamination/errorAnalysis?year=2022')
     .then(response => {
       console.log(response.data);
   option4.value={
@@ -1181,7 +1181,7 @@ axios.get('http://www.tjensoprediction.com:8080/seaice/errorBox?year=2022')
 
 
 
-axios.get('http://www.tjensoprediction.com:8080/seaice/predictionExamination/errorAnalysis?year=2022')
+axios.get('/seaice/predictionExamination/errorAnalysis?year=2022')
     .then(response => {
       console.log(response.data);
       option5.value={
@@ -1233,7 +1233,7 @@ axios.get('http://www.tjensoprediction.com:8080/seaice/predictionExamination/err
 
 
 
-axios.get('http://www.tjensoprediction.com:8080/seaice/predictionExamination/errorAnalysis?year=2022')
+axios.get('/seaice/predictionExamination/errorAnalysis?year=2022')
     .then(response => {
       console.log(response.data);
  option6.value={
@@ -1277,7 +1277,7 @@ axios.get('http://www.tjensoprediction.com:8080/seaice/predictionExamination/err
 
 
 
-axios.get('http://www.tjensoprediction.com:8080/seaice/predictionExamination/errorAnalysis?year=2022')
+axios.get('/seaice/predictionExamination/errorAnalysis?year=2022')
     .then(response => {
       console.log(response.data);
   option7.value={

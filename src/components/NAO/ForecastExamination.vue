@@ -38,7 +38,7 @@ selectedMonth.value = month;
 
 
 
-axios.get('http://www.tjensoprediction.com:8080/nao/initialize/naoCORR')
+axios.get('/nao/initialize/naoCORR')
 .then(res =>{
   start_year.value = res.data.start_year;
   start_month.value = new Date(res.data.start_month);
@@ -72,13 +72,13 @@ var imgSrc_of_nao_Array;
 var title_of_nao_Array;
 const imgSrc_of_nao = ref({})
 const title_of_nao = ref({})
-const prefix="https://www.tjensoprediction.com"
+const prefix="https://tianxing.tongji.edu.cn"
 
 const option7 = ref({})
 
 
 //赋初值
-// axios.get('http://www.tjensoprediction.com:8080/nao/initialize/naoCORR')
+// axios.get('/nao/initialize/naoCORR')
 //       .then(res => {
 //         index_nao = 0;
 //         console.log(res.data);
@@ -99,7 +99,7 @@ const option7 = ref({})
 //   selectedMonth.value = selectedDate.getMonth() + 1; // 获取月份值并存储到 selectedMonth
 // }
 
-// axios.get('http://www.tjensoprediction.com:8080/nao/findGridData/nao?year='+Number(selectedYear.value)+'&month='+Number(selectedMonth.value))
+// axios.get('/nao/findGridData/nao?year='+Number(selectedYear.value)+'&month='+Number(selectedMonth.value))
 //     .then(res => {
 //       console.log(res.data.imgSrc);
 //       // title_of_option1.value='提前1个月预测';
@@ -116,7 +116,7 @@ const option7 = ref({})
 //   const month = Number(selectedMonth.value);
 
 //   // 发送请求
-//   axios.get(`http://www.tjensoprediction.com:8080/nao/predictionExamination/nao?year=${year}&month=${month}`)
+//   axios.get(`/nao/predictionExamination/nao?year=${year}&month=${month}`)
 //     .then(res => {
 //       index_nao = 0;
 //       console.log(res.data);
@@ -126,8 +126,8 @@ const option7 = ref({})
 // }
 
 function updateChartTitle() {
-  axios.get('http://www.tjensoprediction.com:8080/nao/predictionExamination/nao?year='+Number(selectedYear.value)+'&month='+Number(selectedMonth.value))
-  //axios.get("http://www.tjensoprediction.com:8080/nao/findGridData/nao?year=2018&month=6")
+  axios.get('/nao/predictionExamination/nao?year='+Number(selectedYear.value)+'&month='+Number(selectedMonth.value))
+  //axios.get("/nao/findGridData/nao?year=2018&month=6")
       .then(res => {
         index_nao = 0;
         console.log(res.data);
@@ -139,15 +139,15 @@ function updateChartTitle() {
 }
 
 
-axios.get('http://www.tjensoprediction.com:8080/nao/predictionExamination/nao?year='+Number(selectedYear.value)+'&month='+Number(selectedMonth.value))
-  //axios.get("http://www.tjensoprediction.com:8080/nao/findGridData/nao?year=2018&month=6")
+axios.get('/nao/predictionExamination/nao?year='+Number(selectedYear.value)+'&month='+Number(selectedMonth.value))
+  //axios.get("/nao/findGridData/nao?year=2018&month=6")
       .then(res => {
         index_nao = 0;
         console.log(res.data);
         imgSrc_of_nao_Array = res.data;
         imgSrc_of_nao.value = `${prefix}${imgSrc_of_nao_Array[0]}`;
       });
-axios.get('http://www.tjensoprediction.com:8080/nao/predictionExamination/naoi')
+axios.get('/nao/predictionExamination/naoi')
     .then(res => {
       console.log(res.data);
       // title_of_option1.value='提前1个月预测';

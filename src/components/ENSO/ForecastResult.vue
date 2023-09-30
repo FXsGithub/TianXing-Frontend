@@ -6,13 +6,13 @@ import VChart from 'vue-echarts';
 import { configProviderContextKey } from "element-plus";
 import { ArrowLeft, ArrowRight } from '@element-plus/icons-vue'
 
-const prefix = "https://www.tjensoprediction.com"
+const prefix = "https://tianxing.tongji.edu.cn"
 
 //时间选择器范围框定--start
 const start_time = ref(null);
 const end_time = ref(null);
 /* 赋初值————默认为指数预测 */
-axios.get('http://www.tjensoprediction.com:8080/enso/linechart/getInitData')
+axios.get('/enso/linechart/getInitData')
   .then(res => {
     start_time.value = new Date(res.data.start.replace(/-/g, '/'));
     end_time.value = new Date(res.data.end.replace(/-/g, '/'));
@@ -26,14 +26,14 @@ const limitedDateRange = (time) => {
 function handleClick(tab, event) {
   console.log(tab.props.label);
   if (tab.props.label == '模态预测') {
-    axios.get('http://www.tjensoprediction.com:8080/imgs/predictionResult/ssta/getInitData')
+    axios.get('/imgs/predictionResult/ssta/getInitData')
       .then(res => {
         start_time.value = new Date(res.data.start.replace(/-/g, '/'));
         end_time.value = new Date(res.data.end.replace(/-/g, '/'));
       });
   }
   else if (tab.props.label == '指数预测') {
-    axios.get('http://www.tjensoprediction.com:8080/enso/linechart/getInitData')
+    axios.get('/enso/linechart/getInitData')
       .then(res => {
         start_time.value = new Date(res.data.start.replace(/-/g, '/'));
         end_time.value = new Date(res.data.end.replace(/-/g, '/'));
@@ -49,7 +49,7 @@ const start_year = ref(year);     //选择的年
 const start_month = ref(month);   //选择的月
 
 // 此处调接口获取时间范围
-axios.get('http://www.tjensoprediction.com:8080/imgs/predictionResult/ssta/getInitData')
+axios.get('/imgs/predictionResult/ssta/getInitData')
   .then(res => {
     start_time.value = new Date(res.data.start.replace(/-/g, '/'));
     end_time.value = new Date(res.data.end.replace(/-/g, '/'));
@@ -68,19 +68,19 @@ const title_of_heat = ref({})
 
 /* 赋初值 */
 //指数预测
-axios.get('http://www.tjensoprediction.com:8080/enso/predictionResult/linechart?year=' + Number(start_year.value) + '&month=' + Number(start_month.value))
+axios.get('/enso/predictionResult/linechart?year=' + Number(start_year.value) + '&month=' + Number(start_month.value))
   .then(res => {
     chart1.value = res.data
 
   });
 
 //模态预测（热力图）
-axios.get('http://www.tjensoprediction.com:8080/imgs/predictionResult/ssta?year=' + Number(start_year.value) + '&month=' + Number(start_month.value))
+axios.get('/imgs/predictionResult/ssta?year=' + Number(start_year.value) + '&month=' + Number(start_month.value))
   .then(res => {
     index_heat = 0;//图片数组指针置0
     console.log(res.data.data);
     imgSrc_of_heat_Array = res.data.data;  //res.data.data传递了一个图片数组
-    imgSrc_of_heat.value = `${prefix}${imgSrc_of_heat_Array[0]}`;    //const prefix="https://www.tjensoprediction.com"
+    imgSrc_of_heat.value = `${prefix}${imgSrc_of_heat_Array[0]}`;    //const prefix="https://tianxing.tongji.edu.cn"
 
     title_of_heat_Array = res.data.titles;
     title_of_heat.value = title_of_heat_Array[0];
@@ -97,16 +97,16 @@ function update_charts() {
   start_month.value = start_month.value;
   start_month.value = start_month.value;
 
-  axios.get('http://www.tjensoprediction.com:8080/enso/predictionResult/linechart?year=' + Number(start_year.value) + '&month=' + Number(start_month.value))
+  axios.get('/enso/predictionResult/linechart?year=' + Number(start_year.value) + '&month=' + Number(start_month.value))
     .then(res => {
       chart1.value = res.data
     })
-  axios.get('http://www.tjensoprediction.com:8080/imgs/predictionResult/ssta?year=' + Number(start_year.value) + '&month=' + Number(start_month.value))
+  axios.get('/imgs/predictionResult/ssta?year=' + Number(start_year.value) + '&month=' + Number(start_month.value))
     .then(res => {
       index_heat = 0;//图片数组指针置0
       console.log(res.data.data);
       imgSrc_of_heat_Array = res.data.data;  //res.data.data传递了一个图片数组
-      imgSrc_of_heat.value = `${prefix}${imgSrc_of_heat_Array[0]}`;    //const prefix="https://www.tjensoprediction.com"
+      imgSrc_of_heat.value = `${prefix}${imgSrc_of_heat_Array[0]}`;    //const prefix="https://tianxing.tongji.edu.cn"
 
       title_of_heat_Array = res.data.titles;
       title_of_heat.value = title_of_heat_Array[0];

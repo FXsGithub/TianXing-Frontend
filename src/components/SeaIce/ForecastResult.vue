@@ -55,7 +55,7 @@ const updateSIEChart = async () => {
     year: Number(selectedYear.value),
     month: Number(selectedMonth.value)
   };
-  axios.get('http://www.tjensoprediction.com:8080/seaice/predictionResult/SIE', { params })
+  axios.get('/seaice/predictionResult/SIE', { params })
     .then(response => {
       SIEOption.value = response.data.option;
       SIEDescription.value = response.data.description;
@@ -76,7 +76,7 @@ const updateSICChart = async () => {
     month: selectedDay.value.getMonth() + 1,
     day: selectedDay.value.getDate()
   };
-  axios.get('http://www.tjensoprediction.com:8080/seaice/predictionResult/SIC', { params })
+  axios.get('/seaice/predictionResult/SIC', { params })
     .then(response => {
       imgSrc.value = response.data;
       imgIndex.value = 0;
@@ -97,7 +97,7 @@ const initSIEAvailableList = () => {
     year: 2023,
     month: 1
   };
-  axios.get('http://www.tjensoprediction.com:8080/seaice/predictionResult/SIE', { params })
+  axios.get('/seaice/predictionResult/SIE', { params })
     .then(response => {
       SIEAvailableList.value = response.data.availableList;
       SIEOption.value = response.data.option;
@@ -114,7 +114,7 @@ const initSIEAvailableList = () => {
 const initSICAvailableList = () => {
   updateSICChartTitle();
   SICLoading.value = true;
-  axios.get('http://www.tjensoprediction.com:8080/seaice/initial/SICprediction')
+  axios.get('/seaice/initial/SICprediction')
     .then(response => {
       SICAvailableList.value.yearList = response.data.yearList;
       SICAvailableList.value.monthList = response.data.monthList;
@@ -259,7 +259,7 @@ const loadImg = (imgList) => {
   for (let i = 0; i < imgList.length; i++) {
     let img = new Image();
     let currentSrc = '';
-    img.src = 'http://www.tjensoprediction.com' + imgList[i];
+    img.src = 'http://tianxing.tongji.edu.cn' + imgList[i];
     img.onload = function () {
       console.log('加载完毕', this.currentSrc);
     }
@@ -305,7 +305,7 @@ onMounted(
         <h3 style="text-align: center; margin-top: 0px; font-size: 18px">{{ SICChartTitle }}</h3>
         <h4 style="text-align: center; margin-top: 0px; font-size: 16px">({{ imgIndex + 1 }}/{{ imgSrc.length }})</h4>
         <div class="imageContainer">
-          <img v-if="imgSrc.length" :src="'http://www.tjensoprediction.com' + imgSrc[imgIndex]" class="image" alt="" />
+          <img v-if="imgSrc.length" :src="'http://tianxing.tongji.edu.cn' + imgSrc[imgIndex]" class="image" alt="" />
         </div>
         <el-button ref="buttonLeft" type="primary" class="arrowLeft" :icon="ArrowLeft" @click="changeIndex('left')" />
         <el-button ref="buttonRight" type="primary" class="arrowRight" :icon="ArrowRight" @click="changeIndex('right')" />

@@ -1,7 +1,7 @@
 ---
 title: "穆斌教授在全国“人工智能气象应用发展研讨会”上做特邀报告"
 date: "2023-05-19"
-image: 'https://www.tjensoprediction.com/imgs/News/new2_img1.png'
+image: 'https://tianxing.tongji.edu.cn/imgs/News/new2_img1.png'
 ---
 
 # 穆斌教授在全国“人工智能气象应用发展研讨会”上做特邀报告

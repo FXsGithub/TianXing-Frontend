@@ -9,7 +9,7 @@ import VChart from "vue-echarts";
 const start_time = ref(null);
 const end_time = ref(null);
 /* 赋初值————默认为气温预测 */
-axios.get('http://www.tjensoprediction.com:8080/imgs/WEA_T2M/getInitData')
+axios.get('/imgs/WEA_T2M/getInitData')
 .then(res =>{
   start_time.value = new Date(res.data.earliestDate);
   end_time.value = new Date(res.data.latestDate);
@@ -48,14 +48,14 @@ const limitedDateRange = (time) => {
 function handleClick(tab, event) {
   console.log(tab.props.label);
   if(tab.props.label == '气温预测'){
-    axios.get('http://www.tjensoprediction.com:8080/imgs/WEA_T2M/getInitData')
+    axios.get('/imgs/WEA_T2M/getInitData')
     .then(res =>{
       start_time.value = new Date(res.data.earliestDate);
       end_time.value = new Date(res.data.latestDate);
     });
   }
   else if(tab.props.label == '降水预测'){ 
-    axios.get('http://www.tjensoprediction.com:8080/imgs/WEA_TP/getInitData')
+    axios.get('/imgs/WEA_TP/getInitData')
     .then(res =>{
       start_time.value = new Date(res.data.earliestDate);
       end_time.value = new Date(res.data.latestDate);
@@ -63,7 +63,7 @@ function handleClick(tab, event) {
     });
   }
   else{     //风场预测
-    axios.get('http://www.tjensoprediction.com:8080/imgs/WEA_U10/getInitData')
+    axios.get('/imgs/WEA_U10/getInitData')
     .then(res =>{
       start_time.value = new Date(res.data.earliestDate);
       end_time.value = new Date(res.data.latestDate);
@@ -91,7 +91,7 @@ var index_tempe=0; //切换气温预测时修改这个索引
 var index_rain=0; //切换降水预测时修改这个索引
 var index_wind=0;//切换风场的第一张图修改这个索引
 var index_wind2=0;//切换风场的第二张图修改这个索引
-const prefix="https://www.tjensoprediction.com"
+const prefix="https://tianxing.tongji.edu.cn"
 
 var title_of_temperature_Array;
 var imgSrc_of_temperature_Array;
@@ -133,8 +133,8 @@ title_of_wind2.value = '';
 text_of_wind2.value = '';
 
 /* 赋初值 */
-axios.get('http://www.tjensoprediction.com:8080/imgs/WEA_T2M/getImgsPath?year='+selectedYear.value+'&month='+selectedMonth.value+'&day='+selectedDay.value+'&hour='+selectedHour.value)
-//axios.get("http://www.tjensoprediction.com:8080/imgs/WEA_T2M/getImgsPath?year=2019&month=1&day=1&hour=0")
+axios.get('/imgs/WEA_T2M/getImgsPath?year='+selectedYear.value+'&month='+selectedMonth.value+'&day='+selectedDay.value+'&hour='+selectedHour.value)
+//axios.get("/imgs/WEA_T2M/getImgsPath?year=2019&month=1&day=1&hour=0")
     .then(res => {
       index_tempe = 0;
       //console.log(res.data.titles);
@@ -145,8 +145,8 @@ axios.get('http://www.tjensoprediction.com:8080/imgs/WEA_T2M/getImgsPath?year='+
       imgSrc_of_temperature.value = `${prefix}${imgSrc_of_temperature_Array[0]}`;
       text_of_temperature.value = text_of_temperature_Array[0];
     });
-axios.get('http://www.tjensoprediction.com:8080/imgs/WEA_TP/getImgsPath?year='+selectedYear.value+'&month='+selectedMonth.value+'&day='+selectedDay.value+'&hour='+selectedHour.value)
-//axios.get("http://www.tjensoprediction.com:8080/imgs/WEA_TP/getImgsPath?year=2019&month=1&day=1&hour=0")
+axios.get('/imgs/WEA_TP/getImgsPath?year='+selectedYear.value+'&month='+selectedMonth.value+'&day='+selectedDay.value+'&hour='+selectedHour.value)
+//axios.get("/imgs/WEA_TP/getImgsPath?year=2019&month=1&day=1&hour=0")
       .then(res => {
       index_rain = 0;
       //console.log(res.data.titles);
@@ -158,7 +158,7 @@ axios.get('http://www.tjensoprediction.com:8080/imgs/WEA_TP/getImgsPath?year='+s
       imgSrc_of_rain.value = `${prefix}${imgSrc_of_rain_Array[0]}`;
       text_of_rain.value = text_of_rain_Array[0];
     });
-axios.get('http://www.tjensoprediction.com:8080/imgs/WEA_U10/getImgsPath?year='+selectedYear.value+'&month='+selectedMonth.value+'&day='+selectedDay.value+'&hour='+selectedHour.value)
+axios.get('/imgs/WEA_U10/getImgsPath?year='+selectedYear.value+'&month='+selectedMonth.value+'&day='+selectedDay.value+'&hour='+selectedHour.value)
     .then(res => {
       index_wind = 0;
       console.log(res.data.titles);
@@ -170,7 +170,7 @@ axios.get('http://www.tjensoprediction.com:8080/imgs/WEA_U10/getImgsPath?year='+
       imgSrc_of_wind.value = `${prefix}${imgSrc_of_wind_Array[0]}`;
       text_of_wind.value = text_of_wind_Array[0];
     });
-axios.get('http://www.tjensoprediction.com:8080/imgs/WEA_MSLP/getImgsPath?year='+selectedYear.value+'&month='+selectedMonth.value+'&day='+selectedDay.value+'&hour='+selectedHour.value)
+axios.get('/imgs/WEA_MSLP/getImgsPath?year='+selectedYear.value+'&month='+selectedMonth.value+'&day='+selectedDay.value+'&hour='+selectedHour.value)
     .then(res => {
       index_wind2 = 0;
       console.log(res.data.titles);
@@ -196,8 +196,8 @@ const handleDateTimeChange = () => {
     selectedHour.value = selectedDate.getHours(); // 获取小时值并存储到 selectedHour
   }
 
-  axios.get('http://www.tjensoprediction.com:8080/imgs/WEA_T2M/getImgsPath?year='+selectedYear.value+'&month='+selectedMonth.value+'&day='+selectedDay.value+'&hour='+selectedHour.value)
-  //axios.get("http://www.tjensoprediction.com:8080/imgs/WEA_T2M/getImgsPath?year=2019&month=1&day=1&hour=0")
+  axios.get('/imgs/WEA_T2M/getImgsPath?year='+selectedYear.value+'&month='+selectedMonth.value+'&day='+selectedDay.value+'&hour='+selectedHour.value)
+  //axios.get("/imgs/WEA_T2M/getImgsPath?year=2019&month=1&day=1&hour=0")
       .then(res => {
         index_tempe = 0;
         //console.log(res.data.title);
@@ -209,8 +209,8 @@ const handleDateTimeChange = () => {
         text_of_temperature.value = text_of_temperature_Array[0];
       });
 
-  axios.get('http://www.tjensoprediction.com:8080/imgs/WEA_TP/getImgsPath?year='+selectedYear.value+'&month='+selectedMonth.value+'&day='+selectedDay.value+'&hour='+selectedHour.value)
-  //axios.get("http://www.tjensoprediction.com:8080/imgs/WEA_TP/getImgsPath?year=2019&month=1&day=1&hour=0")
+  axios.get('/imgs/WEA_TP/getImgsPath?year='+selectedYear.value+'&month='+selectedMonth.value+'&day='+selectedDay.value+'&hour='+selectedHour.value)
+  //axios.get("/imgs/WEA_TP/getImgsPath?year=2019&month=1&day=1&hour=0")
       .then(res => {
         index_rain = 0;
         //console.log(res.data.imgSrc);
@@ -221,7 +221,7 @@ const handleDateTimeChange = () => {
         imgSrc_of_rain.value = `${prefix}${imgSrc_of_rain_Array[0]}`;
         text_of_rain.value = text_of_rain_Array[0];
       });
-  axios.get('http://www.tjensoprediction.com:8080/imgs/WEA_U10/getImgsPath?year='+selectedYear.value+'&month='+selectedMonth.value+'&day='+selectedDay.value+'&hour='+selectedHour.value)
+  axios.get('/imgs/WEA_U10/getImgsPath?year='+selectedYear.value+'&month='+selectedMonth.value+'&day='+selectedDay.value+'&hour='+selectedHour.value)
     .then(res => {
         index_wind = 0;
         console.log(res.data.imgSrc);
@@ -232,7 +232,7 @@ const handleDateTimeChange = () => {
         imgSrc_of_wind.value = `${prefix}${imgSrc_of_wind_Array[0]}`;
         text_of_wind.value = text_of_wind_Array[0];
     });
-  axios.get('http://www.tjensoprediction.com:8080/imgs/WEA_MSLP/getImgsPath?year='+selectedYear.value+'&month='+selectedMonth.value+'&day='+selectedDay.value+'&hour='+selectedHour.value)
+  axios.get('/imgs/WEA_MSLP/getImgsPath?year='+selectedYear.value+'&month='+selectedMonth.value+'&day='+selectedDay.value+'&hour='+selectedHour.value)
       .then(res => {
         index_wind2 = 0;
         console.log(res.data.imgSrc);

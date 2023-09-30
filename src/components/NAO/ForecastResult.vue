@@ -64,7 +64,7 @@ const updateNAOIChart = async () => {
     year: Number(NAOISelectedYear.value),
     month: Number(NAOISelectedMonth.value)
   };
-  axios.get('http://www.tjensoprediction.com:8080/nao/predictionResult/nao', { params })
+  axios.get('/nao/predictionResult/nao', { params })
     .then(response => {
       NAOIOption.value = response.data.option;
       NAOIDescription.value = response.data.description;
@@ -84,7 +84,7 @@ const updateSLPChart = async () => {
     year: Number(SLPSelectedYear.value),
     month: Number(SLPSelectedMonth.value)
   };
-  axios.get('http://www.tjensoprediction.com:8080//nao/findGridData/nao', { params })
+  axios.get('//nao/findGridData/nao', { params })
     .then(response => {
       imgSrc.value = response.data;
       // SLPDescription.value = response.data.description; // 接口未提供描述
@@ -102,7 +102,7 @@ const updateSLPChart = async () => {
 const initNAOIChart = () => {
   updateNAOIChartTitle();
   NAOILoading.value = true;
-  axios.get('http://www.tjensoprediction.com:8080/nao/initialize/naoPrediction')
+  axios.get('/nao/initialize/naoPrediction')
     .then(response => {
       NAOIStartYear = response.data.start_year;
       NAOIStartMonth = response.data.start_month;
@@ -125,7 +125,7 @@ const initNAOIChart = () => {
 const initSLPChart = () => {
   updateSLPChartTitle();
   SLPLoading.value = true;
-  axios.get('http://www.tjensoprediction.com:8080/nao/initialize/naoGrid')
+  axios.get('/nao/initialize/naoGrid')
     .then(response => {
       SLPStartYear = response.data.start_year;
       SLPStartMonth = response.data.start_month;
@@ -235,7 +235,7 @@ const loadImg = (imgList) => {
   for (let i = 0; i < imgList.length; i++) {
     let img = new Image();
     let currentSrc = '';
-    img.src = 'http://www.tjensoprediction.com' + imgList[i];
+    img.src = 'http://tianxing.tongji.edu.cn' + imgList[i];
     img.onload = function () {
       console.log('加载完毕', this.currentSrc);
     }
@@ -285,7 +285,7 @@ onMounted(
           </el-col>
           <el-col :span="20">
             <div class="imgContainer">
-              <img v-if="imgSrc.length" :src="'http://www.tjensoprediction.com' + imgSrc[imgIndex]" class="image" alt="" />
+              <img v-if="imgSrc.length" :src="'http://tianxing.tongji.edu.cn' + imgSrc[imgIndex]" class="image" alt="" />
             </div>
           </el-col>
           <el-col :span="2">
