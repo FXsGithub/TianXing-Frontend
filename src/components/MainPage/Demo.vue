@@ -10,8 +10,12 @@ import axios  from "axios";
 function handleClick() {
   axios.get('/ice/prediction?year=2023')
       .then(res => {
-        console.log(res.data)
         option1.value = res.data
+      })
+
+  axios.get('/api/getStyData')
+      .then(res => {
+        console.log(res.data)
       })
 }
 
